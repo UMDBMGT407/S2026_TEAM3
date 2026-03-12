@@ -1,0 +1,130 @@
+.landing-page-admin,
+.landing-page-admin * {
+  box-sizing: border-box;
+}
+.landing-page-admin {
+  background: linear-gradient(
+    180deg,
+    rgba(46, 65, 158, 1) 45.673078298568726%,
+    rgba(16, 23, 56, 1) 100%
+  );
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.frame-22 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 52px;
+  top: 22px;
+}
+.logo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  height: auto;
+  position: relative;
+  overflow: visible;
+}
+.left-text {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 89px;
+  top: 441px;
+}
+.welcome-text {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Montserrat-Black", sans-serif;
+  font-size: 110px;
+  font-weight: 900;
+  position: relative;
+}
+.right-text {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 826px;
+  top: 334px;
+}
+.where-fitness-meets-community {
+  text-align: right;
+  font-family: "Montserrat-Black", sans-serif;
+  font-size: 60px;
+  line-height: 90px;
+  letter-spacing: 3px;
+  font-weight: 900;
+  text-transform: uppercase;
+  position: relative;
+  width: 507px;
+}
+.where-fitness-meets-community-span {
+  color: #eeeeee;
+}
+.where-fitness-meets-community-span2 {
+  color: #c9f0ff;
+}
+.login-button {
+  position: absolute;
+  inset: 0;
+}
+.group-20 {
+  width: 486px;
+  height: 62.45px;
+  position: static;
+}
+.rectangle-14 {
+  border-radius: 0px;
+  width: 486px;
+  height: 62.45px;
+  position: absolute;
+  left: 99px;
+  top: 628px;
+  overflow: visible;
+}
+.vector {
+  width: 109px;
+  height: 21px;
+  position: absolute;
+  left: 437px;
+  top: 648px;
+  overflow: visible;
+}
+.frame-1707482009 {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 249px;
+  height: 60px;
+  position: absolute;
+  left: 154px;
+  top: 630px;
+}
+.login {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 36px;
+  letter-spacing: 20px;
+  font-weight: 600;
+  position: relative;
+}

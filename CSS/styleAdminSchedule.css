@@ -1,0 +1,587 @@
+.workout-schedule-admin,
+.workout-schedule-admin * {
+  box-sizing: border-box;
+}
+.workout-schedule-admin {
+  background: #ffffff;
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.frame-1707482019 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 786px;
+  position: absolute;
+  left: 422px;
+  top: 42px;
+}
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.sections {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.profile {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.dashboard {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.group {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.workout-log {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.schedule {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.challenges {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.posts {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.frame-1707482020 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 188px;
+  position: absolute;
+  left: 1219px;
+  top: 29px;
+}
+.logout-button {
+  background: #2e419e;
+  border-radius: 20px;
+  padding: 13px 38px 13px 35px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 46px;
+  position: relative;
+}
+.logout {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.vector {
+  flex-shrink: 0;
+  width: 25.42px;
+  height: 12.48px;
+  position: relative;
+  overflow: visible;
+}
+.frame-1707482021 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 373px;
+  position: absolute;
+  left: 32px;
+  top: 5px;
+}
+.logo {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.logo2 {
+  flex-shrink: 0;
+  width: 93px;
+  height: 93px;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+.rectangle-25 {
+  background: linear-gradient(
+    90deg,
+    rgba(46, 65, 158, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  flex-shrink: 0;
+  width: 244px;
+  height: 12px;
+  position: relative;
+}
+.frame-1707482022 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 711px;
+  position: absolute;
+  left: 6px;
+  top: 111px;
+}
+.workout-text {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.workout-scheduling {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 62px;
+  font-weight: 700;
+  position: relative;
+}
+.frame-1707482024 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 1460px;
+  position: absolute;
+  left: -10px;
+  top: 412px;
+}
+.attendance {
+  background: #f5f5f5;
+  padding: 20px 371px 23px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 90px;
+  position: relative;
+}
+.frame-2 {
+  display: flex;
+  flex-direction: row;
+  gap: 83px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 1005px;
+  height: 47px;
+  position: relative;
+}
+.attendance-analytics {
+  color: #000000;
+  text-align: left;
+  font-family: "Poppins-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: relative;
+}
+.arrow-1 {
+  flex-shrink: 0;
+  width: 1px;
+  height: 0px;
+  position: relative;
+  overflow: visible;
+}
+.activity {
+  color: #000000;
+  text-align: left;
+  font-family: "Poppins-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: relative;
+}
+.workouts {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-16 {
+  background: #2e419e;
+  width: 812px;
+  height: 87px;
+  position: absolute;
+  left: 577px;
+  top: 549px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.scheduled-workouts {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  position: absolute;
+  left: 760px;
+  top: 567px;
+}
+.line-4 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 354px;
+  height: 0px;
+  position: absolute;
+  left: 1064px;
+  top: 626px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+.line-2 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 354px;
+  height: 0px;
+  position: absolute;
+  left: 680px;
+  top: 627px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+.rectangle-15 {
+  width: 812px;
+  height: 348px;
+  position: absolute;
+  left: 577px;
+  top: 633px;
+  overflow: visible;
+}
+.line-3 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 354px;
+  height: 0px;
+  position: absolute;
+  left: 823px;
+  top: 633px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+.line-5 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 354px;
+  height: 0px;
+  position: absolute;
+  left: 1218px;
+  top: 636px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+.title {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 587px;
+  top: 662px;
+}
+.date {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 705px;
+  top: 662px;
+}
+.actions-edit-cancel {
+  color: #000000;
+  text-align: left;
+  position: absolute;
+  left: 1241px;
+  top: 662px;
+}
+.actions-edit-cancel-span {
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+}
+.actions-edit-cancel-span2 {
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+.created-by {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 843px;
+  top: 663px;
+}
+.going {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 1088px;
+  top: 663px;
+}
+.line-6 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 812px;
+  height: 0px;
+  position: absolute;
+  left: 1389px;
+  top: 716px;
+  transform-origin: 0 0;
+  transform: rotate(179.929deg) scale(1, 1);
+}
+.frame-1707482025 {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 54px;
+  top: 539px;
+}
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 430px;
+  position: relative;
+}
+.rectangle-20 {
+  background: #2e419e;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 87px;
+  position: relative;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-17 {
+  background: #f5f5f5;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 355px;
+  position: relative;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.calendar-month-view {
+  color: #ffffff;
+  text-align: center;
+  position: absolute;
+  left: 100px;
+  top: 5px;
+}
+.calendar-month-view-span {
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+}
+.calendar-month-view-span2 {
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.rectangle-19 {
+  background: #2e419e;
+  flex-shrink: 0;
+  width: 430px;
+  height: 87px;
+  position: absolute;
+  left: 0px;
+  top: 217px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.list-view {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  position: absolute;
+  left: 113px;
+  top: 231px;
+  width: 204px;
+  height: 49px;
+}
+.frame-1707482023 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 689px;
+  position: absolute;
+  left: 5px;
+  top: 321px;
+}
+.scheduled-workouts2 {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame-1707482018 {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.total-scheduled-this-month {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  position: relative;
+}
+.group-drop-down {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-29 {
+  background: #2e419e;
+  border-radius: 15px;
+  width: 657px;
+  height: 89.48px;
+  position: absolute;
+  left: 26px;
+  top: 234px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.group2 {
+  color: #f5f5f5;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 50px;
+  font-weight: 700;
+  position: absolute;
+  left: 48.63px;
+  top: 257.37px;
+  width: 162.7px;
+  height: 93.63px;
+}
+.rectangle-30 {
+  background: #d9d9d9;
+  width: 406.53px;
+  height: 46.74px;
+  position: absolute;
+  left: 248.38px;
+  top: 257.37px;
+}
+.div {
+  color: #383b47;
+  text-align: left;
+  font-family: "Poppins-Regular", sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  position: absolute;
+  left: 617.46px;
+  top: 280.08px;
+  width: 17.81px;
+  height: 43.21px;
+}

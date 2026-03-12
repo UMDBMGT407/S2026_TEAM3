@@ -1,0 +1,530 @@
+.group-membership-management-admin,
+.group-membership-management-admin * {
+  box-sizing: border-box;
+}
+.group-membership-management-admin {
+  background: #ffffff;
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.group-information {
+  position: absolute;
+  inset: 0;
+}
+.group-name {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  position: absolute;
+  left: 44px;
+  top: 134px;
+}
+.group-id {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  position: absolute;
+  left: 836px;
+  top: 134px;
+}
+.group-description {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 46px;
+  top: 228px;
+}
+.search-member {
+  color: #000000;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  position: absolute;
+  left: 64px;
+  top: 305px;
+}
+.image-16 {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 366px;
+  top: 306px;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+.line-5 {
+  margin-top: -3px;
+  border-style: solid;
+  border-color: #383b47;
+  border-width: 3px 0 0 0;
+  width: 396px;
+  height: 0px;
+  position: absolute;
+  left: 353px;
+  top: 183px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+.line-12 {
+  margin-top: -2px;
+  border-style: solid;
+  border-color: #383b47;
+  border-width: 2px 0 0 0;
+  width: 983px;
+  height: 0px;
+  position: absolute;
+  left: 411px;
+  top: 272.01px;
+  transform-origin: 0 0;
+  transform: rotate(-0.12deg) scale(1, 1);
+}
+.navigation {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 781px;
+  position: absolute;
+  left: 422px;
+  top: 42px;
+}
+.frame-1707482016 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.sections {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.profile {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.dashboard {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.group {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.workout-log {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.schedule {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.challenges {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.posts {
+  color: #383b47;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.logout-b-utton {
+  display: flex;
+  flex-direction: row;
+  row-gap: 0px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  width: 209px;
+  position: absolute;
+  left: 1229px;
+  top: 39px;
+}
+.frame-23 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 168px;
+  height: auto;
+  position: relative;
+  overflow: visible;
+}
+.vector {
+  margin: 0 0 0 -39px;
+  flex-shrink: 0;
+  width: 25.42px;
+  height: 12.48px;
+  position: absolute;
+  left: 105px;
+  top: 17px;
+  overflow: visible;
+}
+.frame-1707482009 {
+  margin: 0 0 0 -39px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: absolute;
+  left: 25px;
+  top: 3px;
+}
+.logout {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 16.049999237060547px;
+  font-weight: 600;
+  position: relative;
+}
+.logo {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 42px;
+  top: 15px;
+}
+.logo2 {
+  flex-shrink: 0;
+  width: 93px;
+  height: 93px;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+.rectangle-25 {
+  background: linear-gradient(
+    90deg,
+    rgba(46, 65, 158, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  flex-shrink: 0;
+  width: 244px;
+  height: 12px;
+  position: relative;
+}
+.member-information {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-89 {
+  background: #f5f5f5;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 2px;
+  width: 1333px;
+  height: 590px;
+  position: absolute;
+  left: 53px;
+  top: 368px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-97 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 902px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-28 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 449px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-93 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 537px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-94 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 626px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-95 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 716px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-96 {
+  background: #c9f0ff;
+  border-radius: 50px;
+  width: 165px;
+  height: 39px;
+  position: absolute;
+  left: 1141px;
+  top: 804px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-38 {
+  width: 1329px;
+  height: 59px;
+  position: absolute;
+  left: 55px;
+  top: 370px;
+  overflow: visible;
+}
+.all-members {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 134px;
+  top: 381px;
+}
+.role {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 882px;
+  top: 381px;
+}
+.user-id {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 556px;
+  top: 378px;
+}
+.actions {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+  left: 1152px;
+  top: 378px;
+}
+.line-8 {
+  width: 1331px;
+  height: 0px;
+  position: absolute;
+  left: 53px;
+  top: 430px;
+  overflow: visible;
+}
+.line-9 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 579.02px;
+  height: 0px;
+  position: absolute;
+  left: 779px;
+  top: 372px;
+  transform-origin: 0 0;
+  transform: rotate(90.503deg) scale(1, 1);
+}
+.line-13 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 579.01px;
+  height: 0px;
+  position: absolute;
+  left: 476px;
+  top: 372px;
+  transform-origin: 0 0;
+  transform: rotate(89.712deg) scale(1, 1);
+}
+.line-10 {
+  margin-top: -1px;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px 0 0 0;
+  width: 587.01px;
+  height: 0px;
+  position: absolute;
+  left: 1083px;
+  top: 371px;
+  transform-origin: 0 0;
+  transform: rotate(89.605deg) scale(1, 1);
+}
+.remove {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 454px;
+}
+.remove2 {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 542px;
+}
+.remove3 {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 631px;
+}
+.remove4 {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 907px;
+}
+.remove5 {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 807px;
+}
+.remove6 {
+  color: #383b47;
+  text-align: left;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: absolute;
+  left: 1170px;
+  top: 720px;
+}
+.back-button {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 125px;
+  position: absolute;
+  left: 19px;
+  top: 974px;
+}
+.frame-22 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.vector2 {
+  flex-shrink: 0;
+  width: 35px;
+  height: 21px;
+  position: relative;
+  overflow: visible;
+}
+.back {
+  color: #000000;
+  text-align: center;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  position: relative;
+}
