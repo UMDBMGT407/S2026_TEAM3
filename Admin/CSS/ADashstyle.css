@@ -1,0 +1,1360 @@
+._3-1-3-2-3-3-3-4,
+._3-1-3-2-3-3-3-4 * {
+  box-sizing: border-box;
+}
+._3-1-3-2-3-3-3-4 {
+  background: #ffffff;
+  height: 1175px;
+  position: relative;
+  overflow: hidden;
+}
+.rectangle-background {
+  background: #f5f7fa;
+  width: 1213px;
+  height: 1074px;
+  position: absolute;
+  left: 227px;
+  top: 101px;
+}
+.rectangle-divider-2 {
+  background: #e6eff5;
+  width: 1190px;
+  height: 1px;
+  position: absolute;
+  left: 250px;
+  top: 100px;
+}
+.rectangle-divider {
+  background: #e6eff5;
+  width: 1px;
+  height: 1175px;
+  position: absolute;
+  left: 227px;
+  top: 0px;
+}
+.rectangle-highlight {
+  background: #1814f3;
+  border-radius: 0px 10px 10px 0px;
+  width: 6px;
+  height: 60px;
+  position: absolute;
+  left: 0px;
+  top: 141px;
+}
+.dashboard {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 266px;
+  top: 34px;
+}
+.motiv-logo {
+  width: 101px;
+  height: 101px;
+  position: absolute;
+  left: 68px;
+  top: 17px;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+.profile-picture {
+  border-radius: 200px;
+  width: 63px;
+  height: 64px;
+  position: absolute;
+  left: 1315px;
+  top: 19px;
+  object-fit: cover;
+  aspect-ratio: 63/64;
+}
+.navigation-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 39px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 145px;
+  position: absolute;
+  left: 41px;
+  top: 157px;
+}
+.dashboard2 {
+  flex-shrink: 0;
+  width: 144px;
+  height: 25px;
+  position: static;
+}
+.dashboard3 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 3px;
+  width: 96px;
+}
+.vector {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 1px;
+  top: 0px;
+  overflow: visible;
+}
+.groups {
+  flex-shrink: 0;
+  width: 145px;
+  height: 25px;
+  position: static;
+}
+.groups2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 66px;
+  width: 96px;
+}
+.vector2 {
+  width: 27px;
+  height: 25px;
+  position: absolute;
+  left: 0px;
+  top: 64px;
+  overflow: visible;
+}
+.vector3 {
+  width: 27px;
+  height: 25px;
+  position: absolute;
+  left: 0px;
+  top: 64px;
+  overflow: visible;
+}
+.scheduling {
+  flex-shrink: 0;
+  width: 143px;
+  height: 24px;
+  position: static;
+}
+.scheduling2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 129px;
+  width: 96px;
+}
+.vector4 {
+  width: 23px;
+  height: 24px;
+  position: absolute;
+  left: 2px;
+  top: 128px;
+  overflow: visible;
+}
+.challenges {
+  flex-shrink: 0;
+  width: 142px;
+  height: 26px;
+  position: static;
+}
+.challenges2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 192px;
+  width: 96px;
+}
+.vector5 {
+  width: 21px;
+  height: 26px;
+  position: absolute;
+  left: 3px;
+  top: 191px;
+  overflow: visible;
+}
+.posts {
+  flex-shrink: 0;
+  width: 142.5px;
+  height: 23px;
+  position: static;
+}
+.posts2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 256px;
+  width: 96px;
+}
+.vector6 {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 2.5px;
+  top: 257px;
+  overflow: visible;
+}
+.profile {
+  flex-shrink: 0;
+  width: 141.93px;
+  height: 25px;
+  position: static;
+}
+.profile2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 319px;
+  width: 96px;
+}
+.vector-profile-icon {
+  width: 14.38%;
+  height: 7.29%;
+  position: absolute;
+  right: 83.5%;
+  left: 2.12%;
+  bottom: 0%;
+  top: 92.71%;
+  overflow: visible;
+}
+.selected-data-graph-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 437px;
+  position: absolute;
+  left: 959px;
+  top: 843px;
+}
+.selected-data-graph {
+  flex-shrink: 0;
+  width: 437px;
+  height: 318px;
+  position: static;
+}
+.selected-data-header {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  position: absolute;
+  left: 96px;
+  top: 0px;
+}
+.select-data-type-header {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: relative;
+}
+.selected-data-graph-frame {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 437px;
+  height: 276px;
+  position: absolute;
+  left: 0px;
+  top: 42px;
+}
+.graph-bars {
+  width: 301.91px;
+  height: 178px;
+  position: static;
+}
+.group-27 {
+  width: 21.79px;
+  height: 178px;
+  position: static;
+}
+.rectangle-33 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 178px;
+  position: absolute;
+  left: 60.55px;
+  top: 57px;
+}
+.rectangle-34 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 91px;
+  position: absolute;
+  left: 74.55px;
+  top: 144px;
+}
+.group-28 {
+  width: 21.79px;
+  height: 130px;
+  position: static;
+}
+.rectangle-332 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 130px;
+  position: absolute;
+  left: 107.23px;
+  top: 105px;
+}
+.rectangle-342 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 49px;
+  position: absolute;
+  left: 121.24px;
+  top: 186px;
+}
+.group-29 {
+  width: 21.79px;
+  height: 122px;
+  position: static;
+}
+.rectangle-333 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 122px;
+  position: absolute;
+  left: 153.92px;
+  top: 113px;
+}
+.rectangle-343 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 98px;
+  position: absolute;
+  left: 167.93px;
+  top: 137px;
+}
+.group-30 {
+  width: 21.79px;
+  height: 178px;
+  position: static;
+}
+.rectangle-334 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 178px;
+  position: absolute;
+  left: 200.61px;
+  top: 57px;
+}
+.rectangle-344 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 138px;
+  position: absolute;
+  left: 214.61px;
+  top: 97px;
+}
+.group-31 {
+  width: 21.79px;
+  height: 91px;
+  position: static;
+}
+.rectangle-335 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 57px;
+  position: absolute;
+  left: 247.29px;
+  top: 178px;
+}
+.rectangle-345 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 91px;
+  position: absolute;
+  left: 261.3px;
+  top: 144px;
+}
+.group-32 {
+  width: 21.79px;
+  height: 145px;
+  position: static;
+}
+.rectangle-336 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 145px;
+  position: absolute;
+  left: 293.98px;
+  top: 90px;
+}
+.rectangle-346 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 91px;
+  position: absolute;
+  left: 307.99px;
+  top: 144px;
+}
+.group-33 {
+  width: 21.79px;
+  height: 147px;
+  position: static;
+}
+.rectangle-337 {
+  background: #1814f3;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 147px;
+  position: absolute;
+  left: 340.67px;
+  top: 88px;
+}
+.rectangle-347 {
+  background: #16dbcc;
+  border-radius: 30px;
+  width: 7.78px;
+  height: 126px;
+  position: absolute;
+  left: 354.67px;
+  top: 109px;
+}
+.graph-days {
+  width: 289.46px;
+  height: 48px;
+  position: static;
+}
+.sat {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 66.77px;
+  top: 252px;
+  width: 10.89px;
+}
+.sun {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 112.42px;
+  top: 252px;
+  width: 12.45px;
+}
+.mon {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 158.59px;
+  top: 252px;
+  width: 14.01px;
+}
+.tue {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 206.31px;
+  top: 252px;
+  width: 11.93px;
+}
+.wed {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 251.44px;
+  top: 252px;
+  width: 14.52px;
+}
+.thu {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 299.17px;
+  top: 252px;
+  width: 12.45px;
+}
+.fri {
+  color: #718ebf;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  left: 347.93px;
+  top: 252px;
+  width: 8.3px;
+}
+.data-file-download-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 350px;
+  position: absolute;
+  left: 239px;
+  top: 845px;
+}
+.data-file-header {
+  flex-shrink: 0;
+  width: 211px;
+  height: 27px;
+  position: relative;
+}
+.select-data-type-header2 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: absolute;
+  left: 66px;
+  top: 5px;
+  width: 211px;
+}
+.select-data-frame {
+  background: #ffffff;
+  border-radius: 25px;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 276px;
+  position: relative;
+}
+.admin-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 53px;
+  width: 146px;
+  height: 19px;
+}
+.group-admin-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 80px;
+  width: 146px;
+  height: 19px;
+}
+.user-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 107px;
+  width: 146px;
+  height: 19px;
+}
+.post-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 134px;
+  width: 146px;
+  height: 19px;
+}
+.group-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 161px;
+  width: 146px;
+  height: 19px;
+}
+.workout-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 188px;
+  width: 146px;
+  height: 19px;
+}
+.exercise-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 215px;
+  width: 146px;
+  height: 19px;
+}
+.workout-log-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 242px;
+  width: 146px;
+  height: 19px;
+}
+.challenge-data {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 21px;
+  top: 269px;
+  width: 146px;
+  height: 19px;
+}
+.select-data-type-for-graph-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 350px;
+  position: absolute;
+  left: 599px;
+  top: 849px;
+}
+.data-file-header2 {
+  flex-shrink: 0;
+  width: 341px;
+  height: 27px;
+  position: relative;
+}
+.select-data-type-header3 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: absolute;
+  left: 26px;
+  top: 5px;
+  width: 296px;
+}
+.user-analytic-info {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 269px;
+  top: 192px;
+}
+.group-497 {
+  flex-shrink: 0;
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.rectangle-64 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 255px;
+  height: 120px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+.group-406 {
+  width: 102px;
+  height: 63px;
+  position: static;
+}
+.group-110 {
+  width: 102px;
+  height: 63px;
+  position: static;
+}
+._6-029 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 43px;
+  top: 57px;
+}
+.of-users {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 43px;
+  top: 28px;
+}
+.group-512 {
+  flex-shrink: 0;
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.rectangle-642 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 255px;
+  height: 120px;
+  position: absolute;
+  left: 291px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+.group-4062 {
+  width: 115px;
+  height: 63px;
+  position: static;
+}
+.group-1102 {
+  width: 115px;
+  height: 63px;
+  position: static;
+}
+._2-043 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 334px;
+  top: 57px;
+}
+.of-groups {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 334px;
+  top: 28px;
+}
+.group-513 {
+  flex-shrink: 0;
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.rectangle-643 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 255px;
+  height: 120px;
+  position: absolute;
+  left: 582px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+.group-4063 {
+  width: 99px;
+  height: 63px;
+  position: static;
+}
+.group-1103 {
+  width: 99px;
+  height: 63px;
+  position: static;
+}
+._10-349 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 625px;
+  top: 57px;
+}
+.of-posts {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 625px;
+  top: 28px;
+}
+.challenge-analytics-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 1120px;
+  position: absolute;
+  left: 271px;
+  top: 680px;
+}
+.group-1171274891 {
+  flex-shrink: 0;
+  width: 1120px;
+  height: 120px;
+  position: static;
+}
+.group-517 {
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.group-4064 {
+  width: 136px;
+  height: 63px;
+  position: static;
+}
+.group-1104 {
+  width: 136px;
+  height: 63px;
+  position: static;
+}
+.of-challenges {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  position: absolute;
+  left: 43px;
+  top: 28px;
+}
+.group-518 {
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.group-4065 {
+  width: 195px;
+  height: 63px;
+  position: static;
+}
+.group-1105 {
+  width: 195px;
+  height: 63px;
+  position: static;
+}
+._10-3492 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 612px;
+  top: 57px;
+}
+.of-active-challenges {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  position: absolute;
+  left: 612px;
+  top: 28px;
+}
+.group-520 {
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.rectangle-644 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 255px;
+  height: 120px;
+  position: absolute;
+  left: 865px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+.group-4066 {
+  width: 210px;
+  height: 63px;
+  position: static;
+}
+.group-1106 {
+  width: 210px;
+  height: 63px;
+  position: static;
+}
+._10-3493 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 896px;
+  top: 57px;
+}
+.avg-users-per-challenge {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  position: absolute;
+  left: 896px;
+  top: 28px;
+}
+.group-519 {
+  width: 255px;
+  height: 120px;
+  position: static;
+}
+.group-4067 {
+  width: 169px;
+  height: 63px;
+  position: static;
+}
+.group-1107 {
+  width: 169px;
+  height: 63px;
+  position: static;
+}
+.avg-challenge-time {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  position: absolute;
+  left: 334px;
+  top: 28px;
+}
+.workout-analytics-info {
+  display: flex;
+  flex-direction: row;
+  gap: 39px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 260px;
+  top: 395px;
+}
+.group-381 {
+  flex-shrink: 0;
+  width: 350px;
+  height: 199px;
+  position: static;
+}
+.rectangle-174 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 350px;
+  height: 199px;
+  position: absolute;
+  left: 0px;
+  top: 6.5px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.2);
+}
+.group-378 {
+  width: 196px;
+  height: 86.43px;
+  position: static;
+}
+.group-409 {
+  width: 196px;
+  height: 86.43px;
+  position: static;
+}
+.group-103 {
+  width: 196px;
+  height: 86.43px;
+  position: static;
+}
+.monday {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 33px;
+  top: 63.96px;
+  width: 177px;
+  height: 50.97px;
+}
+.busiest-workout-day {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 33px;
+  top: 28.5px;
+  width: 196px;
+  height: 41px;
+}
+.group-379 {
+  width: 283px;
+  height: 86.43px;
+  position: static;
+}
+.group-4092 {
+  width: 283px;
+  height: 86.43px;
+  position: static;
+}
+.group-1032 {
+  width: 283px;
+  height: 86.43px;
+  position: static;
+}
+._1-h-36-m {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  position: absolute;
+  left: 33px;
+  top: 153.96px;
+  width: 177px;
+  height: 50.97px;
+}
+.avg-duration-of-a-workout {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 33px;
+  top: 118.5px;
+  width: 283px;
+  height: 41px;
+}
+.frame-1171274893 {
+  display: flex;
+  flex-direction: row;
+  gap: 35px;
+  row-gap: 28px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex-shrink: 0;
+  width: 713px;
+  position: relative;
+}
+.group-500 {
+  flex-shrink: 0;
+  width: 339px;
+  height: 92px;
+  position: static;
+}
+.rectangle-66 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 339px;
+  height: 92px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+.group-4093 {
+  width: 256px;
+  height: 54.62px;
+  position: static;
+}
+.group-1033 {
+  width: 256px;
+  height: 54.62px;
+  position: static;
+}
+._5-038 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 44px;
+  top: 46px;
+  width: 112.98px;
+  height: 28.62px;
+}
+.of-workouts-logged {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 44px;
+  top: 20px;
+  width: 256px;
+  height: 20.2px;
+}
+.group-522 {
+  flex-shrink: 0;
+  width: 339px;
+  height: 92px;
+  position: static;
+}
+.rectangle-662 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 339px;
+  height: 92px;
+  position: absolute;
+  left: 374px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+._7-920 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 418px;
+  top: 46px;
+  width: 112.98px;
+  height: 28.62px;
+}
+.of-sets-done {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 418px;
+  top: 20px;
+  width: 256px;
+  height: 20.2px;
+}
+.group-521 {
+  flex-shrink: 0;
+  width: 339px;
+  height: 92px;
+  position: static;
+}
+.rectangle-663 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 339px;
+  height: 92px;
+  position: absolute;
+  left: 0px;
+  top: 120px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+._10-304 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 44px;
+  top: 166px;
+  width: 112.98px;
+  height: 28.62px;
+}
+.of-exercises-done {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 44px;
+  top: 140px;
+  width: 256px;
+  height: 20.2px;
+}
+.group-523 {
+  flex-shrink: 0;
+  width: 339px;
+  height: 92px;
+  position: static;
+}
+.rectangle-664 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 339px;
+  height: 92px;
+  position: absolute;
+  left: 374px;
+  top: 120px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+}
+._16-382 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 418px;
+  top: 166px;
+  width: 112.98px;
+  height: 28.62px;
+}
+.of-reps-done {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 418px;
+  top: 140px;
+  width: 256px;
+  height: 20.2px;
+}
+.user-analytics-and-logo {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 269px;
+  top: 126px;
+}
+.select-data-type-header4 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: relative;
+  width: 166px;
+}
+.vector7 {
+  flex-shrink: 0;
+  width: 44px;
+  height: 42px;
+  position: relative;
+  overflow: visible;
+}
+.workout-analytics-and-logo {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 271px;
+  top: 336px;
+}
+.select-data-type-header5 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: relative;
+  width: 218px;
+}
+.vector-log {
+  flex-shrink: 0;
+  width: 53px;
+  height: 43px;
+  position: relative;
+  overflow: visible;
+}
+.challenge-analytics-and-logo {
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 267px;
+  top: 619px;
+}
+.vector8 {
+  flex-shrink: 0;
+  width: 39px;
+  height: 44px;
+  position: relative;
+  overflow: visible;
+}

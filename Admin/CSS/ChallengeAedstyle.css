@@ -1,0 +1,575 @@
+.scheduling-edit-2-7,
+.scheduling-edit-2-7 * {
+  box-sizing: border-box;
+}
+.scheduling-edit-2-7 {
+  background: #ffffff;
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.rectangle-background {
+  background: #f5f7fa;
+  width: 1190px;
+  height: 923px;
+  position: absolute;
+  left: 250px;
+  top: 101px;
+}
+.rectangle-divider-2 {
+  background: #e6eff5;
+  width: 1190px;
+  height: 1px;
+  position: absolute;
+  left: 250px;
+  top: 100px;
+}
+.rectangle-divider {
+  background: #e6eff5;
+  width: 1px;
+  height: 1024px;
+  position: absolute;
+  left: 249px;
+  top: 0px;
+}
+.rectangle-highlight {
+  background: #1814f3;
+  border-radius: 0px 10px 10px 0px;
+  width: 6px;
+  height: 60px;
+  position: absolute;
+  left: 0px;
+  top: 267px;
+}
+.scheduling {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  left: 296px;
+  top: 34px;
+}
+.motiv-logo {
+  width: 101px;
+  height: 101px;
+  position: absolute;
+  left: 68px;
+  top: 17px;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+.profile-picture {
+  border-radius: 200px;
+  width: 63px;
+  height: 64px;
+  position: absolute;
+  left: 1315px;
+  top: 19px;
+  object-fit: cover;
+  aspect-ratio: 63/64;
+}
+.navigation-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 39px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 162px;
+  position: absolute;
+  left: 41px;
+  top: 157px;
+}
+.dashboard {
+  flex-shrink: 0;
+  width: 144px;
+  height: 25px;
+  position: static;
+}
+.dashboard2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 48px;
+  top: 3px;
+  width: 96px;
+}
+.vector {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.groups {
+  flex-shrink: 0;
+  width: 145px;
+  height: 25px;
+  position: static;
+}
+.groups2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 49px;
+  top: 66px;
+  width: 96px;
+}
+.vector2 {
+  width: 27px;
+  height: 25px;
+  position: absolute;
+  left: 0px;
+  top: 64px;
+  overflow: visible;
+}
+.scheduling2 {
+  flex-shrink: 0;
+  width: 143px;
+  height: 24px;
+  position: static;
+}
+.scheduling3 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 47px;
+  top: 129px;
+  width: 96px;
+}
+.vector3 {
+  width: 23px;
+  height: 24px;
+  position: absolute;
+  left: 0px;
+  top: 128px;
+  overflow: visible;
+}
+.challenges {
+  flex-shrink: 0;
+  width: 142px;
+  height: 26px;
+  position: static;
+}
+.challenges2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 46px;
+  top: 192px;
+  width: 96px;
+}
+.vector4 {
+  width: 21px;
+  height: 26px;
+  position: absolute;
+  left: 0px;
+  top: 191px;
+  overflow: visible;
+}
+.posts {
+  flex-shrink: 0;
+  width: 142.5px;
+  height: 23px;
+  position: static;
+}
+.posts2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 46.5px;
+  top: 256px;
+  width: 96px;
+}
+.vector5 {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 0px;
+  top: 257px;
+  overflow: visible;
+}
+.workout-log {
+  flex-shrink: 0;
+  width: 159px;
+  height: 26px;
+  position: static;
+}
+.workout-log2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 46px;
+  top: 320px;
+  width: 113px;
+}
+.vector-log {
+  width: 15.43%;
+  height: 6.37%;
+  position: absolute;
+  right: 84.57%;
+  left: 0%;
+  bottom: 15.69%;
+  top: 77.94%;
+  overflow: visible;
+}
+.profile {
+  flex-shrink: 0;
+  width: 141.93px;
+  height: 25px;
+  position: static;
+}
+.profile2 {
+  color: #b1b1b1;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 46px;
+  top: 320px;
+  width: 113px;
+}
+.vector-profile-icon {
+  width: 12.88%;
+  height: 6.13%;
+  position: absolute;
+  right: 87.12%;
+  left: 0%;
+  bottom: 0%;
+  top: 93.87%;
+  overflow: visible;
+}
+.edit-scheduling {
+  position: absolute;
+  inset: 0;
+}
+.challenge-edit-selection {
+  width: 913px;
+  height: 623px;
+  position: static;
+}
+.rectangle-198 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 913px;
+  height: 623px;
+  position: absolute;
+  left: 388px;
+  top: 189px;
+}
+.text-inputs {
+  width: 741px;
+  height: 321px;
+  position: static;
+}
+.group-name-input {
+  width: 418px;
+  height: 80px;
+  position: static;
+}
+.group {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 445px;
+  top: 417px;
+}
+.group-box {
+  width: 418px;
+  height: 50px;
+  position: static;
+}
+.rectangle-151 {
+  background: #ffffff;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: #dfeaf2;
+  border-width: 1px;
+  width: 418px;
+  height: 50px;
+  position: absolute;
+  left: 445px;
+  top: 447px;
+}
+.group2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 465px;
+  top: 463px;
+}
+.workout-name-input {
+  width: 418px;
+  height: 80px;
+  position: static;
+}
+.session-name {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 445px;
+  top: 300px;
+}
+.challenge-name-box {
+  width: 418px;
+  height: 50px;
+  position: static;
+}
+.rectangle-1512 {
+  background: #ffffff;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: #dfeaf2;
+  border-width: 1px;
+  width: 418px;
+  height: 50px;
+  position: absolute;
+  left: 445px;
+  top: 330px;
+}
+.session-name2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 465px;
+  top: 346px;
+}
+.start-date-input {
+  width: 149px;
+  height: 80px;
+  position: static;
+}
+.date {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 445px;
+  top: 541px;
+}
+.start-date-box {
+  width: 149px;
+  height: 50px;
+  position: static;
+}
+.rectangle-1513 {
+  background: #ffffff;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: #dfeaf2;
+  border-width: 1px;
+  width: 149px;
+  height: 50px;
+  position: absolute;
+  left: 445px;
+  top: 571px;
+}
+.date2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 465px;
+  top: 587px;
+}
+.end-date-input {
+  width: 149px;
+  height: 80px;
+  position: static;
+}
+.time {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 714px;
+  top: 541px;
+}
+.end-date-box {
+  width: 149px;
+  height: 50px;
+  position: static;
+}
+.rectangle-1514 {
+  background: #ffffff;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: #dfeaf2;
+  border-width: 1px;
+  width: 149px;
+  height: 50px;
+  position: absolute;
+  left: 714px;
+  top: 571px;
+}
+.time2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 734px;
+  top: 587px;
+}
+.target-input {
+  width: 234px;
+  height: 80px;
+  position: static;
+}
+.location {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 952px;
+  top: 300px;
+}
+.target-box {
+  width: 234px;
+  height: 50px;
+  position: static;
+}
+.rectangle-1515 {
+  background: #ffffff;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: #dfeaf2;
+  border-width: 1px;
+  width: 234px;
+  height: 50px;
+  position: absolute;
+  left: 952px;
+  top: 330px;
+}
+.location2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 972px;
+  top: 346px;
+}
+.edit-group-text {
+  width: 729px;
+  height: 30px;
+  position: static;
+}
+.edit-scheduling2 {
+  color: #1814f3;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 426px;
+  top: 229px;
+}
+.rectangle-199 {
+  background: #f4f5f7;
+  width: 729px;
+  height: 1px;
+  position: absolute;
+  left: 418px;
+  top: 258px;
+}
+.rectangle-201 {
+  background: #1814f3;
+  border-radius: 10px 10px 0px 0px;
+  width: 136px;
+  height: 3px;
+  position: absolute;
+  left: 418px;
+  top: 256px;
+}
+.save-button {
+  width: 190px;
+  height: 50px;
+  position: static;
+}
+.save-rectangle {
+  background: #1814f3;
+  border-radius: 15px;
+  width: 190px;
+  height: 50px;
+  position: absolute;
+  left: 673px;
+  top: 717px;
+}
+.cancel {
+  color: #ffffff;
+  text-align: center;
+  font-family: var(--button-medium-18p-font-family, "Inter-Medium", sans-serif);
+  font-size: var(--button-medium-18p-font-size, 18px);
+  font-weight: var(--button-medium-18p-font-weight, 500);
+  position: absolute;
+  left: 738px;
+  top: 731px;
+}
+.cancel-button {
+  width: 190px;
+  height: 50px;
+  position: static;
+}
+.save-rectangle2 {
+  background: #1814f3;
+  border-radius: 15px;
+  width: 190px;
+  height: 50px;
+  position: absolute;
+  left: 453px;
+  top: 717px;
+}
+.save {
+  color: #ffffff;
+  text-align: center;
+  font-family: var(--button-medium-18p-font-family, "Inter-Medium", sans-serif);
+  font-size: var(--button-medium-18p-font-size, 18px);
+  font-weight: var(--button-medium-18p-font-weight, 500);
+  position: absolute;
+  left: 527px;
+  top: 731px;
+}
