@@ -1,0 +1,298 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.ccga-layout,
+.ccga-layout * {
+  box-sizing: border-box;
+}
+
+.ccga-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.ccga-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.ccga-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.ccga-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ccga-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ccga-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.ccga-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.ccga-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.ccga-main {
+  min-height: 100vh;
+}
+
+.ccga-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ccga-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ccga-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ccga-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.ccga-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  display: block;
+  object-fit: contain;
+}
+
+.ccga-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ccga-main-canvas {
+  padding: 20px 28px 36px;
+}
+
+.ccga-tabs {
+  display: inline-flex;
+  gap: 36px;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-tab {
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 0 12px;
+}
+
+.ccga-tab--active {
+  color: #1814f3;
+  border-bottom: 3px solid #1814f3;
+}
+
+.ccga-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 18px 22px;
+}
+
+.ccga-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.ccga-card-head h2 {
+  margin: 0;
+  color: #343c6a;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ccga-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ccga-search-pill,
+.ccga-challenge-pill {
+  min-height: 48px;
+  border-radius: 40px;
+  background: #ffffff;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+  display: inline-flex;
+  align-items: center;
+}
+
+.ccga-search-pill {
+  padding: 0 18px;
+  gap: 10px;
+  color: #8ba3cb;
+  font-size: 15px;
+}
+
+.ccga-search-pill img {
+  width: 20px;
+  height: 20px;
+}
+
+.ccga-challenge-pill {
+  padding: 0 20px;
+  color: #343c6a;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ccga-create-btn {
+  min-height: 50px;
+  padding: 0 18px;
+  border-radius: 15px;
+  background: #1814f3;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.ccga-table thead th {
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-table tbody td {
+  color: #232323;
+  font-size: 16px;
+  border-color: #f2f4f7;
+  vertical-align: middle;
+}
+
+.ccga-view-btn {
+  min-width: 104px;
+  height: 35px;
+  border-radius: 50px;
+  border: 1px solid #1814f3;
+  background: #fff;
+  color: #1814f3;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.ccga-actions {
+  white-space: nowrap;
+}
+
+.ccga-actions img {
+  width: 17px;
+  height: 20px;
+  margin-left: 12px;
+}
+
+.ccga-rank-badge {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  background: #e7edff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 991px) {
+  .ccga-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .ccga-topbar,
+  .ccga-main-canvas {
+    padding: 16px;
+  }
+
+  .ccga-card {
+    padding: 14px;
+  }
+
+  .ccga-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .ccga-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

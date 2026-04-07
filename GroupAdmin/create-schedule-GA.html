@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/vars.css">
+  <link rel="stylesheet" href="css/create-schedule-GA.css">
+  <title>Create Schedule</title>
+</head>
+<body>
+  <div class="csga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 csga-sidebar">
+        <div class="csga-sidebar-inner">
+          <img class="csga-logo" src="images/CSGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="csga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="csga-nav-link active"><img class="csga-nav-icon" src="images/CSGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="csga-nav-link"><img class="csga-nav-icon" src="images/CSGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 csga-main d-flex flex-column">
+        <header class="csga-topbar">
+          <h1 class="csga-page-title">Scheduling</h1>
+          <div class="csga-topbar-actions">
+            <a href="notifications-GA.html" class="csga-notify-btn" aria-label="Notifications">
+              <span class="csga-notify-bg"></span>
+              <img class="csga-notify-icon" src="images/CGGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="csga-avatar" src="images/CSGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="csga-main-canvas flex-grow-1">
+          <section class="csga-card">
+            <div class="csga-card-head">
+              <h2 class="csga-card-title">Create Group Schedule</h2>
+            </div>
+
+            <form class="csga-form" action="#" method="post">
+              <div class="row g-4">
+                <div class="col-12 col-lg-6">
+                  <label class="csga-label" for="csga-session-name">Session Name</label>
+                  <input id="csga-session-name" class="csga-input" type="text" value="Workout Name" />
+                </div>
+                <div class="col-12 col-lg-6">
+                  <label class="csga-label" for="csga-location">Location</label>
+                  <input id="csga-location" class="csga-input" type="text" value="Location" />
+                </div>
+                <div class="col-12">
+                  <label class="csga-label" for="csga-group">Group</label>
+                  <div class="csga-select-wrap">
+                    <select id="csga-group" class="csga-select" aria-label="Group">
+                      <option>Group</option>
+                    </select>
+                    <img class="csga-select-chevron" src="images/CSGAvector-40.svg" alt="" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                  <label class="csga-label" for="csga-date">Date</label>
+                  <input id="csga-date" class="csga-input" type="text" value="Date" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                  <label class="csga-label" for="csga-time">Time</label>
+                  <input id="csga-time" class="csga-input" type="text" value="Time" />
+                </div>
+              </div>
+
+              <div class="csga-actions">
+                <a href="scheduling-GA.html" class="csga-btn csga-btn--primary">Create</a>
+                <a href="scheduling-GA.html" class="csga-btn csga-btn--secondary">Cancel</a>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

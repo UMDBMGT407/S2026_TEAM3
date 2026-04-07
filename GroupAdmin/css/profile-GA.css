@@ -1,0 +1,259 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.pga-profile-layout,
+.pga-profile-layout * {
+  box-sizing: border-box;
+}
+
+.pga-profile-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.pga-profile-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.pga-profile-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.pga-profile-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.pga-profile-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.pga-profile-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.pga-profile-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.pga-profile-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.pga-profile-main {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.pga-profile-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.pga-profile-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.pga-profile-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pga-profile-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pga-profile-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.pga-profile-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.pga-profile-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pga-profile-main-canvas {
+  padding: 24px 28px 36px;
+}
+
+.pga-profile-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 24px;
+}
+
+.pga-profile-tabs {
+  border-bottom: 1px solid #f4f5f7;
+  margin-bottom: 28px;
+  padding-bottom: 10px;
+}
+
+.pga-profile-tab {
+  color: #1814f3;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 3px solid #1814f3;
+  padding-bottom: 8px;
+}
+
+.pga-profile-photo-wrap {
+  position: relative;
+  width: 86px;
+  height: 87px;
+}
+
+.pga-profile-photo {
+  width: 86px;
+  height: 87px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pga-profile-photo-edit-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0;
+  background: #1814f3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.pga-profile-photo-edit-btn img {
+  width: 15px;
+  height: 15px;
+}
+
+.pga-profile-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #232323;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.pga-profile-input {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #dfeaf2;
+  border-radius: 15px;
+  padding: 0 16px;
+  color: #718ebf;
+  font-size: 15px;
+  background: #ffffff;
+}
+
+.pga-profile-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pga-profile-btn {
+  min-width: 190px;
+  min-height: 50px;
+  border-radius: 15px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.pga-profile-btn--primary {
+  background: #1814f3;
+  color: #ffffff;
+}
+
+@media (max-width: 991px) {
+  .pga-profile-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .pga-profile-topbar {
+    padding: 16px;
+  }
+
+  .pga-profile-main-canvas {
+    padding: 16px;
+  }
+
+  .pga-profile-card {
+    padding: 18px 14px 20px;
+  }
+
+  .pga-profile-actions {
+    justify-content: stretch;
+  }
+
+  .pga-profile-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

@@ -1,0 +1,365 @@
+/* Group creation (user) — Bootstrap-friendly layout */
+
+.gcu-layout,
+.gcu-layout * {
+  box-sizing: border-box;
+}
+
+.gcu-layout > .row {
+  overflow: visible;
+}
+
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.gcu-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+  overflow: visible;
+}
+
+.gcu-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+  overflow: visible;
+}
+
+.gcu-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+  display: block;
+}
+
+.gcu-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  overflow: visible;
+}
+
+.gcu-nav-link {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.gcu-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.gcu-nav-link.active {
+  color: #b1b1b1;
+  background: transparent;
+}
+
+.gcu-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+  z-index: 2;
+}
+
+.gcu-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.gcu-nav-icon--log {
+  width: 26px;
+  height: 22px;
+}
+
+.gcu-nav-icon--profile {
+  width: 22px;
+  height: 22px;
+}
+
+.gcu-main {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.gcu-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 28px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.gcu-page-title {
+  color: #343c6a;
+  font-family: "Inter", "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gcu-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gcu-notify-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.gcu-notify-bg {
+  position: absolute;
+  inset: 0;
+  background: #f5f7fa;
+  border-radius: 50%;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gcu-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.gcu-avatar-top {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gcu-main-canvas {
+  padding: 24px 28px 40px;
+}
+
+.gcu-card {
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 28px 28px 32px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  max-width: 100%;
+}
+
+.gcu-card-header {
+  border-bottom: 1px solid #f4f5f7;
+  margin-bottom: 28px;
+  padding-bottom: 0;
+}
+
+.gcu-card-tab {
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #1814f3;
+  color: #1814f3;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.gcu-card-body {
+  margin-bottom: 8px;
+}
+
+.gcu-avatar-block {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.gcu-avatar-large {
+  display: block;
+  width: 128px;
+  height: 130px;
+  max-width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gcu-avatar-edit {
+  position: absolute;
+  right: -2px;
+  bottom: 4px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.gcu-avatar-edit-bg {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #1814f3;
+}
+
+.gcu-avatar-edit-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.gcu-form {
+  max-width: 420px;
+}
+
+.gcu-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #232323;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.gcu-input,
+.gcu-textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #dfeaf2;
+  border-radius: 15px;
+  color: #232323;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 14px 18px;
+  background: #ffffff;
+}
+
+.gcu-input::placeholder,
+.gcu-textarea::placeholder {
+  color: #718ebf;
+}
+
+.gcu-input {
+  min-height: 50px;
+}
+
+.gcu-textarea {
+  min-height: 99px;
+  resize: vertical;
+}
+
+.gcu-input:focus,
+.gcu-textarea:focus {
+  outline: none;
+  border-color: #1814f3;
+  box-shadow: none;
+}
+
+.gcu-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px 32px;
+  margin-top: 32px;
+  padding-top: 8px;
+}
+
+.gcu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 190px;
+  min-height: 50px;
+  padding: 14px 28px;
+  border-radius: 15px;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.gcu-btn--primary {
+  background: #1814f3;
+  color: #ffffff !important;
+}
+
+.gcu-btn--primary:hover {
+  color: #ffffff !important;
+  filter: brightness(1.06);
+}
+
+/* Original comp used blue for both; cancel reads clearer as neutral */
+.gcu-btn--cancel {
+  background: #edf1f7;
+  color: #718ebf !important;
+}
+
+.gcu-btn--cancel:hover {
+  color: #343c6a !important;
+  filter: brightness(0.98);
+}
+
+@media (max-width: 991px) {
+  .gcu-sidebar-inner {
+    position: static;
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+
+  .gcu-form {
+    max-width: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .gcu-topbar {
+    padding: 16px 16px;
+  }
+
+  .gcu-main-canvas {
+    padding: 16px 16px 28px;
+  }
+
+  .gcu-card {
+    padding: 20px 18px 24px;
+  }
+
+  .gcu-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

@@ -1,0 +1,331 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.du-layout,
+.du-layout * {
+  box-sizing: border-box;
+}
+
+.du-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.du-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.du-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.du-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.du-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.du-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.du-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.du-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.du-main {
+  min-height: 100vh;
+}
+
+.du-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.du-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.du-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.du-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.du-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.du-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.du-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.du-main-canvas {
+  padding: 24px 28px 36px;
+}
+
+.du-section-title {
+  margin: 0;
+  color: #000000;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.du-workouts-overview .row {
+  margin-top: 2px;
+}
+
+.du-stat-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
+  padding: 22px 20px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.du-stat-icon-wrap {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #e7edff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.du-stat-icon-wrap img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.du-stat-icon--minutes {
+  width: 58px;
+  height: 58px;
+}
+
+.du-stat-label {
+  margin: 0;
+  color: #718ebf;
+  font-size: 16px;
+}
+
+.du-stat-value {
+  margin: 4px 0 0;
+  color: #232323;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.du-stat-value span {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.du-leaderboard-card {
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 24px;
+}
+
+.du-leaderboard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.du-section-subtitle {
+  margin: 3px 0 0;
+  color: #232323;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.du-rank-filter label {
+  display: block;
+  color: #718ebf;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.du-rank-filter select,
+.du-challenge-filter select {
+  min-width: 132px;
+  height: 30px;
+  border: 1px solid #1814f3;
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.du-table thead th {
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid #f4f5f7;
+}
+
+.du-table tbody td {
+  color: #232323;
+  font-size: 16px;
+  border-color: #f4f5f7;
+  vertical-align: middle;
+}
+
+.du-rank-badge {
+  width: 30px;
+  height: 35px;
+  border-radius: 999px;
+  background: rgba(231, 228, 232, 0.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.du-table tbody tr:first-child .du-rank-badge {
+  background: #fff5d9;
+}
+
+.du-challenge-banner {
+  background: #e7edff;
+  border-radius: 20px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.du-challenge-icon {
+  width: 75px;
+  height: 75px;
+}
+
+.du-challenge-text {
+  flex: 1;
+}
+
+.du-challenge-kicker {
+  margin: 0;
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.du-challenge-text h3 {
+  margin: 2px 0;
+  color: #232323;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.du-challenge-text p {
+  margin: 0;
+  color: #232323;
+  font-size: 14px;
+}
+
+@media (max-width: 991px) {
+  .du-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .du-topbar {
+    padding: 16px;
+  }
+
+  .du-main-canvas {
+    padding: 16px;
+  }
+
+  .du-section-title {
+    font-size: 24px;
+  }
+
+  .du-leaderboard-top {
+    flex-direction: column;
+  }
+
+  .du-challenge-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,555 +1,212 @@
-.challenge-edit-2-3,
-.challenge-edit-2-3 * {
+.schedule-aed-layout,
+.schedule-aed-layout * {
   box-sizing: border-box;
 }
-.challenge-edit-2-3 {
-  background: #ffffff;
-  height: 1024px;
-  position: relative;
-  overflow: hidden;
-}
-.rectangle-background {
+
+body {
   background: #f5f7fa;
-  width: 1190px;
-  height: 923px;
-  position: absolute;
-  left: 250px;
-  top: 101px;
+  font-family: "Inter", "Inter-Regular", sans-serif;
 }
-.rectangle-divider-2 {
-  background: #e6eff5;
-  width: 1190px;
-  height: 1px;
-  position: absolute;
-  left: 250px;
-  top: 100px;
+
+.sidebar-wrap {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
 }
-.rectangle-divider {
-  background: #e6eff5;
-  width: 1px;
-  height: 1024px;
-  position: absolute;
-  left: 249px;
-  top: 0px;
+
+.sidebar-content {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
 }
-.challenge {
-  color: #343c6a;
-  text-align: left;
-  font-family: "Inter-SemiBold", sans-serif;
-  font-size: 28px;
-  font-weight: 600;
-  position: absolute;
-  left: 296px;
-  top: 34px;
-}
+
 .motiv-logo {
-  width: 101px;
-  height: 101px;
-  position: absolute;
-  left: 68px;
-  top: 17px;
-  object-fit: cover;
-  aspect-ratio: 1;
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
 }
-.profile-picture {
-  border-radius: 200px;
-  width: 63px;
-  height: 64px;
-  position: absolute;
-  left: 1315px;
-  top: 19px;
-  object-fit: cover;
-  aspect-ratio: 63/64;
-}
+
 .navigation-bar {
+  margin-top: 36px;
   display: flex;
   flex-direction: column;
-  gap: 39px;
-  align-items: flex-end;
-  justify-content: flex-start;
-  width: 145px;
-  position: absolute;
-  left: 41px;
-  top: 157px;
-}
-.dashboard {
-  flex-shrink: 0;
-  width: 144px;
-  height: 25px;
-  position: static;
-}
-.dashboard2 {
-  color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  position: absolute;
-  left: 49px;
-  top: 3px;
-  width: 96px;
-}
-.vector {
-  width: 25px;
-  height: 25px;
-  position: absolute;
-  left: 1px;
-  top: 0px;
+  gap: 26px;
   overflow: visible;
 }
-.groups {
-  flex-shrink: 0;
-  width: 145px;
-  height: 25px;
-  position: static;
-}
-.groups2 {
+
+.nav-item-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 26px;
+  padding: 0 8px;
   color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
   font-size: 18px;
   font-weight: 500;
+}
+
+.nav-item-link.active::before {
+  content: "";
   position: absolute;
-  left: 49px;
-  top: 66px;
-  width: 96px;
-}
-.vector2 {
-  width: 27px;
-  height: 25px;
-  position: absolute;
-  left: 0px;
-  top: 64px;
-  overflow: visible;
-}
-.scheduling {
-  flex-shrink: 0;
-  width: 143px;
-  height: 24px;
-  position: static;
-}
-.scheduling2 {
-  color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  position: absolute;
-  left: 49px;
-  top: 129px;
-  width: 96px;
-}
-.vector3 {
-  width: 23px;
-  height: 24px;
-  position: absolute;
-  left: 2px;
-  top: 128px;
-  overflow: visible;
-}
-.challenges {
-  flex-shrink: 0;
-  width: 142px;
-  height: 26px;
-  position: static;
-}
-.challenges2 {
-  color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  position: absolute;
-  left: 49px;
-  top: 192px;
-  width: 96px;
-}
-.vector4 {
-  width: 21px;
-  height: 26px;
-  position: absolute;
-  left: 3px;
-  top: 191px;
-  overflow: visible;
-}
-.posts {
-  flex-shrink: 0;
-  width: 142.5px;
-  height: 23px;
-  position: static;
-}
-.posts2 {
-  color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  position: absolute;
-  left: 49px;
-  top: 256px;
-  width: 96px;
-}
-.vector5 {
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  left: 2.5px;
-  top: 257px;
-  overflow: visible;
-}
-.profile {
-  flex-shrink: 0;
-  width: 141.93px;
-  height: 25px;
-  position: static;
-}
-.profile2 {
-  color: #b1b1b1;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  position: absolute;
-  left: 49px;
-  top: 319px;
-  width: 96px;
-}
-.vector-profile-icon {
-  width: 14.38%;
-  height: 7.29%;
-  position: absolute;
-  right: 83.5%;
-  left: 2.12%;
-  bottom: 0%;
-  top: 92.71%;
-  overflow: visible;
-}
-.rectangle-highlight {
-  background: #1814f3;
-  border-radius: 0px 10px 10px 0px;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 6px;
   height: 60px;
-  position: absolute;
-  left: 0px;
-  top: 331px;
+  border-radius: 0 10px 10px 0;
+  background: #1814f3;
 }
-.challenge-edit-selection {
-  position: absolute;
-  inset: 0;
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
-.rectangle-198 {
+
+.main-wrap {
+  background: #f5f7fa;
+  padding: 24px 20px 32px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  margin: -24px -20px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.profile-picture {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-card {
+  max-width: 760px;
+  margin: 20px auto 0;
   background: #ffffff;
   border-radius: 25px;
-  width: 913px;
-  height: 623px;
-  position: absolute;
-  left: 388px;
-  top: 200px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 24px;
 }
-.text-inputs {
-  width: 741px;
-  height: 321px;
-  position: static;
+
+.card-header-line {
+  border-bottom: 1px solid #f4f5f7;
+  margin-bottom: 24px;
 }
-.group-input {
-  width: 418px;
-  height: 80px;
-  position: static;
-}
-.group {
-  color: #232323;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  position: absolute;
-  left: 445px;
-  top: 428px;
-}
-.group-name-box {
-  width: 418px;
-  height: 50px;
-  position: static;
-}
-.rectangle-151 {
-  background: #ffffff;
-  border-radius: 15px;
-  border-style: solid;
-  border-color: #dfeaf2;
-  border-width: 1px;
-  width: 418px;
-  height: 50px;
-  position: absolute;
-  left: 445px;
-  top: 458px;
-}
-.group2 {
-  color: #718ebf;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  position: absolute;
-  left: 465px;
-  top: 474px;
-}
-.challenge-name-input {
-  width: 418px;
-  height: 80px;
-  position: static;
-}
-.challenge-name {
-  color: #232323;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  position: absolute;
-  left: 445px;
-  top: 311px;
-}
-.challenge-name-box {
-  width: 418px;
-  height: 50px;
-  position: static;
-}
-.rectangle-1512 {
-  background: #ffffff;
-  border-radius: 15px;
-  border-style: solid;
-  border-color: #dfeaf2;
-  border-width: 1px;
-  width: 418px;
-  height: 50px;
-  position: absolute;
-  left: 445px;
-  top: 341px;
-}
-.challenge-name2 {
-  color: #718ebf;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  position: absolute;
-  left: 465px;
-  top: 357px;
-}
-.start-date-input {
-  width: 149px;
-  height: 80px;
-  position: static;
-}
-.start-date {
-  color: #232323;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  position: absolute;
-  left: 445px;
-  top: 552px;
-}
-.start-date-box {
-  width: 149px;
-  height: 50px;
-  position: static;
-}
-.rectangle-1513 {
-  background: #ffffff;
-  border-radius: 15px;
-  border-style: solid;
-  border-color: #dfeaf2;
-  border-width: 1px;
-  width: 149px;
-  height: 50px;
-  position: absolute;
-  left: 445px;
-  top: 582px;
-}
-.start-date2 {
-  color: #718ebf;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  position: absolute;
-  left: 465px;
-  top: 598px;
-}
-.end-date-input {
-  width: 149px;
-  height: 80px;
-  position: static;
-}
-.end-date {
-  color: #232323;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  position: absolute;
-  left: 714px;
-  top: 552px;
-}
-.end-date-box {
-  width: 149px;
-  height: 50px;
-  position: static;
-}
-.rectangle-1514 {
-  background: #ffffff;
-  border-radius: 15px;
-  border-style: solid;
-  border-color: #dfeaf2;
-  border-width: 1px;
-  width: 149px;
-  height: 50px;
-  position: absolute;
-  left: 714px;
-  top: 582px;
-}
-.end-date2 {
-  color: #718ebf;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  position: absolute;
-  left: 734px;
-  top: 598px;
-}
-.challenge-goal-input {
-  width: 234px;
-  height: 80px;
-  position: static;
-}
-.challenge-goal {
-  color: #232323;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  position: absolute;
-  left: 952px;
-  top: 311px;
-}
-.type-box {
-  width: 234px;
-  height: 50px;
-  position: static;
-}
-.rectangle-1515 {
-  background: #ffffff;
-  border-radius: 15px;
-  border-style: solid;
-  border-color: #dfeaf2;
-  border-width: 1px;
-  width: 234px;
-  height: 50px;
-  position: absolute;
-  left: 952px;
-  top: 341px;
-}
-.of-workouts {
-  color: #718ebf;
-  text-align: left;
-  font-family: "Inter-Regular", sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  position: absolute;
-  left: 972px;
-  top: 357px;
-}
-.edit-group-text {
-  width: 729px;
-  height: 30px;
-  position: static;
-}
-.edit-challenge {
+
+.edit-group {
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #1814f3;
   color: #1814f3;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
   font-size: 16px;
   font-weight: 500;
-  position: absolute;
-  left: 428px;
-  top: 240px;
 }
-.rectangle-199 {
-  background: #f4f5f7;
-  width: 729px;
-  height: 1px;
-  position: absolute;
-  left: 418px;
-  top: 269px;
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.rectangle-201 {
-  background: #1814f3;
-  border-radius: 10px 10px 0px 0px;
-  width: 136px;
-  height: 3px;
-  position: absolute;
-  left: 418px;
-  top: 267px;
+
+.form-label-custom {
+  display: block;
+  margin-bottom: 10px;
+  color: #232323;
+  font-size: 16px;
 }
-.save-button {
-  width: 190px;
-  height: 50px;
-  position: static;
-}
-.save-rectangle {
-  background: #1814f3;
+
+.custom-input,
+.custom-textarea {
+  border: 1px solid #dfeaf2;
   border-radius: 15px;
+  color: #718ebf;
+  font-size: 15px;
+}
+
+.custom-input {
+  height: 50px;
+  padding: 0 16px;
+}
+
+.custom-textarea {
+  min-height: 126px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.custom-input:focus,
+.custom-textarea:focus {
+  border-color: #1814f3;
+  box-shadow: none;
+}
+
+.button-row {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.action-btn {
   width: 190px;
   height: 50px;
-  position: absolute;
-  left: 673px;
-  top: 728px;
-}
-.cancel {
-  color: #ffffff;
-  text-align: center;
-  font-family: var(--button-medium-18p-font-family, "Inter-Medium", sans-serif);
-  font-size: var(--button-medium-18p-font-size, 18px);
-  font-weight: var(--button-medium-18p-font-weight, 500);
-  position: absolute;
-  left: 738px;
-  top: 742px;
-}
-.cancel-button {
-  width: 190px;
-  height: 50px;
-  position: static;
-}
-.save-rectangle2 {
-  background: #1814f3;
   border-radius: 15px;
-  width: 190px;
-  height: 50px;
-  position: absolute;
-  left: 453px;
-  top: 728px;
-}
-.save {
-  color: #ffffff;
-  text-align: center;
-  font-family: var(--button-medium-18p-font-family, "Inter-Medium", sans-serif);
-  font-size: var(--button-medium-18p-font-size, 18px);
-  font-weight: var(--button-medium-18p-font-weight, 500);
-  position: absolute;
-  left: 527px;
-  top: 742px;
-}
-.done {
-  color: #27f011;
-  text-align: left;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 75px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
   font-weight: 500;
-  position: absolute;
-  left: 43px;
-  top: 903px;
-  width: 232px;
-  height: 55px;
+  color: #ffffff;
+  background: #1814f3;
+}
+
+.secondary-btn {
+  opacity: 0.9;
+}
+
+@media (max-width: 991px) {
+  .sidebar-content {
+    position: static;
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-wrap {
+    padding: 16px 12px 24px;
+  }
+
+  .topbar {
+    margin: -16px -12px 14px;
+    padding: 10px 12px;
+  }
+
+  .edit-card {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+
+  .button-row {
+    flex-direction: column-reverse;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
 }

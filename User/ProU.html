@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./CSS/ProUstyle.css">
+  <title>Profile</title>
+</head>
+<body>
+  <div class="prou-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 prou-sidebar">
+        <div class="prou-sidebar-inner">
+          <img class="prou-logo" src="./Images/ProUmotiv-logo0.png" alt="Motiv logo" />
+
+          <nav class="prou-nav" aria-label="Main navigation">
+            <a href="UDash.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GJU.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="SU.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="CHU.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PU.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="WLU.html" class="prou-nav-link"><img class="prou-nav-icon" src="./Images/ProUvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="ProU.html" class="prou-nav-link active"><img class="prou-nav-icon" src="./Images/ProUvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 prou-main d-flex flex-column">
+        <header class="prou-topbar">
+          <h1 class="prou-page-title">Profile</h1>
+          <div class="prou-topbar-actions">
+            <a href="NU.html" class="prou-notify-btn" aria-label="Notifications">
+              <span class="prou-notify-bg"></span>
+              <img class="prou-notify-icon" src="./Images/ProU_002-notification-10.svg" alt="" />
+            </a>
+            <img class="prou-avatar" src="./Images/ProUprofile-picture0.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="prou-main-canvas flex-grow-1">
+          <section class="prou-card">
+            <div class="prou-tabs">
+              <span class="prou-tab active">Edit Profile</span>
+            </div>
+
+            <form class="prou-form" action="#" method="post">
+              <div class="row g-4 align-items-start">
+                <div class="col-12 col-xl-auto">
+                  <div class="prou-photo-wrap">
+                    <img class="prou-profile-photo" src="./Images/ProUprofile-image-10.png" alt="Profile" />
+                    <button class="prou-photo-edit-btn" type="button" aria-label="Edit profile photo">
+                      <img src="./Images/ProUpencil-alt-10.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl">
+                  <div class="row g-4">
+                    <div class="col-12 col-lg-6">
+                      <label class="prou-label" for="prou-first-name">First Name</label>
+                      <input id="prou-first-name" class="prou-input" type="text" value="John" />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <label class="prou-label" for="prou-last-name">Last Name</label>
+                      <input id="prou-last-name" class="prou-input" type="text" value="Doe" />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <label class="prou-label" for="prou-email">Email</label>
+                      <input id="prou-email" class="prou-input" type="email" value="johndoe@gmail.com" />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <label class="prou-label" for="prou-password">Password</label>
+                      <input id="prou-password" class="prou-input" type="password" value="**********" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="prou-actions">
+                <button class="prou-btn prou-btn--primary" type="submit">Save</button>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

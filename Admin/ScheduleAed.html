@@ -41,101 +41,65 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="challenge-edit-2-3">
-    <div class="rectangle-background"></div>
-    <div class="rectangle-divider-2"></div>
-    <div class="rectangle-divider"></div>
-    <div class="challenge">Challenge</div>
-    <img class="motiv-logo" src="./Images 1/ScheduleAEDmotiv-logo0.png" />
-    <img class="profile-picture" src="./Images 1/ScheduleAEDprofile-picture0.png" />
-    <div class="navigation-bar">
+  <div class="schedule-aed-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="./Images 1/ScheduleAEDmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAEDvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GroupA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAEDvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="ChallengeA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="ScheduleA.html" class="nav-item-link active"><img class="nav-icon" src="./Images 1/ScheduleAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PostA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAEDvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="AProfile.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAEDvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
 
-  <a href="ADash.html" class="dashboard">
-    <div class="dashboard2">Dashboard</div>
-    <img class="vector" src="./Images 1/ScheduleAEDvector0.svg" />
-  </a>
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="page-title">Challenge</h1>
+          <img class="profile-picture" src="./Images 1/ScheduleAEDprofile-picture0.png" alt="Profile picture" />
+        </header>
 
-  <a href="GroupA.html" class="groups">
-    <div class="groups2">Groups</div>
-    <img class="vector2" src="./Images 1/ScheduleAEDvector1.svg" />
-  </a>
+        <section class="edit-card">
+          <div class="card-header-line">
+            <h2 class="edit-group">Edit Challenge</h2>
+          </div>
 
-  <a href="ChallengeA.html" class="scheduling">
-    <div class="scheduling2">Scheduling</div>
-    <img class="vector3" src="./Images 1/ScheduleAvector2.svg" />
-  </a>
+          <form class="edit-form">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="groupField">Group</label>
+                <input id="groupField" class="form-control custom-input" type="text" value="Group" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="challengeName">Challenge Name</label>
+                <input id="challengeName" class="form-control custom-input" type="text" value="Challenge Name" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="startDate">Start Date</label>
+                <input id="startDate" class="form-control custom-input" type="text" value="Start Date" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="endDate">End Date</label>
+                <input id="endDate" class="form-control custom-input" type="text" value="End Date" />
+              </div>
+              <div class="col-12">
+                <label class="form-label-custom" for="challengeGoal">Challenge Goal</label>
+                <input id="challengeGoal" class="form-control custom-input" type="text" value="# Of Workouts" />
+              </div>
+            </div>
 
-  <a href="ScheduleA.html" class="challenges">
-    <div class="challenges2">Challenges</div>
-    <img class="vector4" src="./Images 1/ScheduleAvector3.svg" />
-  </a>
-
-  <a href="PostA.html" class="posts">
-    <div class="posts2">Posts</div>
-    <img class="vector5" src="./Images 1/ScheduleAEDvector4.svg" />
-  </a>
-
-  <a href="AProfile.html" class="profile">
-    <div class="profile2">Profile</div>
-    <img class="vector-profile-icon" src="./Images 1/ScheduleAEDvector-profile-icon0.svg" />
-  </a>
-
-</div>
+            <div class="button-row">
+              <a href="ScheduleA.html" class="action-btn secondary-btn">Cancel</a>
+              <a href="ScheduleA.html" class="action-btn primary-btn">Save</a>
+            </div>
+          </form>
+        </section>
+      </main>
     </div>
-    <div class="rectangle-highlight"></div>
-    <div class="rectangle-198"></div>
-    <div class="text-inputs">
-      <div class="group-input">
-        <div class="group">Group</div>
-        <div class="group-name-box">
-          <div class="rectangle-151"></div>
-          <div class="group2">Group</div>
-        </div>
-      </div>
-      <div class="challenge-name-input">
-        <div class="challenge-name">Challenge Name</div>
-        <div class="challenge-name-box">
-          <div class="rectangle-1512"></div>
-          <div class="challenge-name2">Challenge Name</div>
-        </div>
-      </div>
-      <div class="start-date-input">
-        <div class="start-date">Start Date</div>
-        <div class="start-date-box">
-          <div class="rectangle-1513"></div>
-          <div class="start-date2">Start Date</div>
-        </div>
-      </div>
-      <div class="end-date-input">
-        <div class="end-date">End Date</div>
-        <div class="end-date-box">
-          <div class="rectangle-1514"></div>
-          <div class="end-date2">End Date</div>
-        </div>
-      </div>
-      <div class="challenge-goal-input">
-        <div class="challenge-goal">Challenge Goal</div>
-        <div class="type-box">
-          <div class="rectangle-1515"></div>
-          <div class="of-workouts"># Of Workouts</div>
-        </div>
-      </div>
-    </div>
-    <div class="edit-group-text">
-      <div class="edit-challenge">Edit Challenge</div>
-      <div class="rectangle-199"></div>
-      <div class="rectangle-201"></div>
-    </div>
-   <a href="ScheduleA.html" class="save-button">
-  <div class="save-rectangle"></div>
-  <div class="cancel">Cancel</div>
-</a>
-
-<a href="ScheduleA.html" class="cancel-button">
-  <div class="save-rectangle2"></div>
-  <div class="save">Save</div>
-</a>
   </div>
-  
 </body>
 </html>

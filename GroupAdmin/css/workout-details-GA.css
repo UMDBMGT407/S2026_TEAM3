@@ -1,0 +1,256 @@
+.wdga-layout,
+.wdga-layout * {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.wdga-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.wdga-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.wdga-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.wdga-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.wdga-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.wdga-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.wdga-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.wdga-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.wdga-main {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.wdga-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.wdga-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.wdga-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.wdga-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wdga-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.wdga-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.wdga-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.wdga-main-canvas {
+  padding: 24px 28px 36px;
+}
+
+.wdga-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.wdga-title {
+  margin: 0;
+  color: #333b69;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.wdga-actions-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wdga-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 20px;
+  border-radius: 15px;
+  background: #1814f3;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.wdga-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 20px;
+}
+
+.wdga-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wdga-table th {
+  color: #718ebf;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 8px;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.wdga-table td {
+  color: #232323;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 16px 8px;
+  border-bottom: 1px solid #f2f4f7;
+}
+
+.wdga-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.wdga-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wdga-edit-btn,
+.wdga-trash-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.wdga-edit-btn img {
+  width: 18px;
+  height: 17px;
+}
+
+.wdga-trash-btn img {
+  width: 16px;
+  height: 20px;
+}
+
+@media (max-width: 991px) {
+  .wdga-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .wdga-topbar {
+    padding: 16px;
+  }
+  .wdga-main-canvas {
+    padding: 16px;
+  }
+  .wdga-head-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .wdga-actions-top {
+    width: 100%;
+    flex-direction: column;
+  }
+  .wdga-btn {
+    width: 100%;
+  }
+}

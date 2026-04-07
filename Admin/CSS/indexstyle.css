@@ -191,3 +191,35 @@
 .col-md-6 {
   position: relative;
 }
+
+a.auth-login-btn {
+  width: 220px;
+  max-width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #2e419e !important;
+  color: #ffffff !important;
+  font-family: "Poppins-Medium", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0;
+  text-decoration: none;
+}
+
+a.auth-login-btn .login-btn-label {
+  display: block;
+  height: 36px;
+  line-height: 36px;
+}
+
+a.auth-login-btn:hover,
+a.auth-login-btn:focus,
+a.auth-login-btn:active {
+  background-color: #2e419e !important;
+  color: #ffffff !important;
+  text-decoration: none;
+}

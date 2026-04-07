@@ -1,0 +1,458 @@
+/* Groups (user) — Bootstrap-friendly layout */
+
+.gju-layout,
+.gju-layout * {
+  box-sizing: border-box;
+}
+
+.gju-layout > .row {
+  overflow: visible;
+}
+
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.gju-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+  overflow: visible;
+}
+
+.gju-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+  overflow: visible;
+}
+
+.gju-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+  display: block;
+}
+
+.gju-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  overflow: visible;
+}
+
+.gju-nav-link {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.gju-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.gju-nav-link.active {
+  color: #b1b1b1;
+  background: transparent;
+}
+
+.gju-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+  z-index: 2;
+}
+
+.gju-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.gju-nav-icon--log {
+  width: 26px;
+  height: 22px;
+}
+
+.gju-nav-icon--profile {
+  width: 22px;
+  height: 22px;
+}
+
+.gju-main {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.gju-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 28px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.gju-page-title {
+  color: #343c6a;
+  font-family: "Inter", "Inter-SemiBold", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gju-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gju-notify-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.gju-notify-bg {
+  position: absolute;
+  inset: 0;
+  background: #f5f7fa;
+  border-radius: 50%;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gju-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.gju-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gju-main-canvas {
+  padding: 24px 28px 40px;
+}
+
+.gju-toolbar-title {
+  color: #343c6a;
+  font-family: "Inter", "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.gju-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  min-height: 50px;
+  padding: 0 22px;
+  background: #ffffff;
+  border-radius: 40px;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+  max-width: 100%;
+}
+
+.gju-search-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.gju-search-placeholder {
+  color: #8ba3cb;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.gju-btn-create {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 14px 24px;
+  background: #1814f3;
+  border-radius: 15px;
+  color: #ffffff !important;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gju-btn-create:hover {
+  filter: brightness(1.05);
+  color: #ffffff !important;
+}
+
+.gju-arrows-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.gju-arrows {
+  display: block;
+  width: 100%;
+  max-width: 1038px;
+  height: auto;
+}
+
+.gju-group-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  min-height: 220px;
+  padding: 48px 36px 56px;
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gju-card-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.gju-card-kicker {
+  color: #718ebf;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.gju-card-name {
+  color: #000000;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.gju-card-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.gju-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1.2;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gju-btn--primary {
+  background: #1814f3;
+  color: #ffffff;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-weight: 400;
+}
+
+.gju-btn--muted {
+  background: #edf1f7;
+  color: #718ebf;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-weight: 500;
+}
+
+.gju-members-heading {
+  color: #343c6a;
+  font-family: "Inter", "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.gju-pill-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 24px;
+  background: #ffffff;
+  border-radius: 40px;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+}
+
+.gju-pill-select-text {
+  color: #343c6a;
+  font-family: "Inter", "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.gju-member-panel {
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 24px 24px 28px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.gju-member-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 16px 24px;
+  align-items: center;
+}
+
+.gju-member-grid--head {
+  padding-bottom: 4px;
+}
+
+.gju-member-head {
+  color: #718ebf;
+  font-family: "Inter", "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.gju-member-row {
+  padding: 10px 0;
+}
+
+.gju-member-cell {
+  color: #232323;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+.gju-member-cell--name {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gju-member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  flex-shrink: 0;
+}
+
+.gju-member-divider {
+  height: 1px;
+  background: #f2f4f7;
+  margin: 0;
+}
+
+.gju-member-divider--strong {
+  background: #e6eff5;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 991px) {
+  .gju-sidebar-inner {
+    position: static;
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+
+  .gju-member-grid,
+  .gju-member-grid--head {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .gju-member-grid--head {
+    display: none;
+  }
+
+  .gju-member-row {
+    padding: 16px 0;
+    border-bottom: 1px solid #f2f4f7;
+  }
+
+  .gju-member-row:last-of-type {
+    border-bottom: none;
+  }
+
+  .gju-member-cell--name {
+    font-weight: 500;
+  }
+
+  .gju-member-divider {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .gju-topbar {
+    padding: 16px 16px;
+  }
+
+  .gju-main-canvas {
+    padding: 16px 16px 28px;
+  }
+
+  .gju-toolbar-title,
+  .gju-members-heading,
+  .gju-pill-select-text {
+    font-size: 18px;
+  }
+
+  .gju-pill-select {
+    min-height: 44px;
+    padding: 0 18px;
+  }
+
+  .gju-btn-create {
+    width: 100%;
+    font-size: 16px;
+  }
+}

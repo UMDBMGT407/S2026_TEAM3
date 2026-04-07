@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/vars.css">
+  <link rel="stylesheet" href="css/created-challenges-GA-grid.css">
+  <title>Challenges</title>
+</head>
+<body>
+  <div class="ccga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 ccga-sidebar">
+        <div class="ccga-sidebar-inner">
+          <img class="ccga-logo" src="images/CCGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="ccga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="ccga-nav-link active"><img class="ccga-nav-icon" src="images/CCGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="ccga-nav-link"><img class="ccga-nav-icon" src="images/CCGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 ccga-main d-flex flex-column">
+        <header class="ccga-topbar">
+          <h1 class="ccga-page-title">Challenge</h1>
+          <div class="ccga-topbar-actions">
+            <a href="notifications-GA.html" class="ccga-notify-btn" aria-label="Notifications">
+              <span class="ccga-notify-bg"></span>
+              <img class="ccga-notify-icon" src="images/CGGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="ccga-avatar" src="images/CCGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="ccga-main-canvas flex-grow-1">
+          <div class="ccga-tabs-row">
+            <div class="ccga-tabs">
+              <span class="ccga-tab ccga-tab--active">Created Challenges</span>
+              <a href="joined-challenges-GA.html" class="ccga-tab">Joined Challenges</a>
+            </div>
+          </div>
+
+          <section class="ccga-card mb-4">
+            <div class="ccga-card-head">
+              <h2>Challenge Management</h2>
+              <div class="ccga-head-actions">
+                <div class="ccga-search-pill"><img src="images/CCGAgroup0.svg" alt="" /><span>Search Challenge</span></div>
+                <a href="challenge-creation-GA.html" class="ccga-create-btn">Create New Challenge</a>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table ccga-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Group Name</th>
+                    <th>Challenge Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Goal</th>
+                    <th>Participation</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Group Name 1</td><td>Challenge Name 1</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>15</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="images/CCGAedit-button0.svg" alt="Edit" /></a><img src="images/CCGAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 2</td><td>Challenge Name 2</td><td>#/##/##</td><td>#/##/##</td><td>Upcoming</td><td>5</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="images/CCGAedit-button1.svg" alt="Edit" /></a><img src="images/CCGAtrash-can-button1.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 3</td><td>Challenge Name 3</td><td>#/##/##</td><td>#/##/##</td><td>Completed</td><td>10</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="images/CCGAedit-button2.svg" alt="Edit" /></a><img src="images/CCGAtrash-can-button2.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 4</td><td>Challenge Name 4</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>20</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="images/CCGAedit-button3.svg" alt="Edit" /></a><img src="images/CCGAtrash-can-button3.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 5</td><td>Challenge Name 5</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>3</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="images/CCGAedit-button4.svg" alt="Edit" /></a><img src="images/CCGAtrash-can-button4.svg" alt="Delete" /></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="ccga-card">
+            <div class="ccga-card-head ccga-members-head">
+              <div class="d-flex align-items-center gap-3 flex-wrap">
+                <h2 class="mb-0">Participation -</h2>
+                <div class="ccga-challenge-pill">Challenge Name</div>
+              </div>
+              <div class="ccga-search-pill"><img src="images/CCGAgroup1.svg" alt="" /><span>Search Member</span></div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table ccga-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Member Name</th>
+                    <th>Rank</th>
+                    <th>Goal</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">1</span></td><td>7/15</td><td class="text-end"><img src="images/CCGAtrash-can-button5.svg" alt="Delete" /></td></tr>
+                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">2</span></td><td>2/15</td><td class="text-end"><img src="images/CCGAtrash-can-button6.svg" alt="Delete" /></td></tr>
+                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">10</span></td><td>2/15</td><td class="text-end"><img src="images/CCGAtrash-can-button7.svg" alt="Delete" /></td></tr>
+                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">7</span></td><td>2/15</td><td class="text-end"><img src="images/CCGAtrash-can-button8.svg" alt="Delete" /></td></tr>
+                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">5</span></td><td>2/15</td><td class="text-end"><img src="images/CCGAtrash-can-button9.svg" alt="Delete" /></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

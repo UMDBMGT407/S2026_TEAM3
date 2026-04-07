@@ -1,0 +1,259 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.prou-layout,
+.prou-layout * {
+  box-sizing: border-box;
+}
+
+.prou-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.prou-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.prou-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.prou-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.prou-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.prou-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.prou-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.prou-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.prou-main {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.prou-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.prou-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.prou-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.prou-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prou-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.prou-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.prou-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.prou-main-canvas {
+  padding: 24px 28px 36px;
+}
+
+.prou-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 24px;
+}
+
+.prou-tabs {
+  border-bottom: 1px solid #f4f5f7;
+  margin-bottom: 28px;
+  padding-bottom: 10px;
+}
+
+.prou-tab {
+  color: #1814f3;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 3px solid #1814f3;
+  padding-bottom: 8px;
+}
+
+.prou-photo-wrap {
+  position: relative;
+  width: 86px;
+  height: 87px;
+}
+
+.prou-profile-photo {
+  width: 86px;
+  height: 87px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.prou-photo-edit-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0;
+  background: #1814f3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.prou-photo-edit-btn img {
+  width: 15px;
+  height: 15px;
+}
+
+.prou-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #232323;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.prou-input {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #dfeaf2;
+  border-radius: 15px;
+  padding: 0 16px;
+  color: #718ebf;
+  font-size: 15px;
+  background: #ffffff;
+}
+
+.prou-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.prou-btn {
+  min-width: 190px;
+  min-height: 50px;
+  border-radius: 15px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.prou-btn--primary {
+  background: #1814f3;
+  color: #ffffff;
+}
+
+@media (max-width: 991px) {
+  .prou-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .prou-topbar {
+    padding: 16px;
+  }
+
+  .prou-main-canvas {
+    padding: 16px;
+  }
+
+  .prou-card {
+    padding: 18px 14px 20px;
+  }
+
+  .prou-actions {
+    justify-content: stretch;
+  }
+
+  .prou-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

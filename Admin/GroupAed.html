@@ -41,80 +41,52 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="_1-3-group-edit">
-    <div class="rectangle-background"></div>
-    <div class="rectangle-divider-2"></div>
-    <div class="rectangle-divider"></div>
-    <div class="groups">Groups</div>
-    <img class="motiv-logo" src="./Images 1/GroupAedmotiv-logo0.png" />
-    <img class="profile-picture" src="./Images 1/GroupAedprofile-picture0.png" />
-    <div class="navigation-bar">
-
-  <a href="ADash.html" class="dashboard d-flex align-items-center">
-    <div class="dashboard2">Dashboard</div>
-    <img class="vector ms-2" src="./Images 1/GroupAedvector0.svg" />
-  </a>
-
-  <a href="GroupA.html" class="groups2 d-flex align-items-center">
-    <div class="groups3">Groups</div>
-    <img class="vector2 ms-2" src="./Images 1/GroupAedvector1.svg" />
-  </a>
-
-  <a href="ChallengeA.html" class="scheduling">
-    <div class="scheduling2">Scheduling</div>
-    <img class="vector3" src="./Images 1/ScheduleAvector2.svg" />
-  </a>
-
-  <a href="ScheduleA.html" class="challenges">
-    <div class="challenges2">Challenges</div>
-    <img class="vector4" src="./Images 1/ScheduleAvector3.svg" />
-  </a>
-
-  <a href="PostA.html" class="posts d-flex align-items-center">
-    <div class="posts2">Posts</div>
-    <img class="vector5 ms-2" src="./Images 1/GroupAedvector4.svg" />
-  </a>
-
-  <a href="AProfile.html" class="profile d-flex align-items-center">
-    <div class="profile2">Profile</div>
-    <img class="vector-profile-icon ms-2" src="./Images 1/GroupAedvector-profile-icon0.svg" />
-  </a>
-
-</div>
-    </div>
-    <div class="rectangle-highlight"></div>
-    <div class="rectangle-198"></div>
-    <div class="edit-group-text">
-      <div class="edit-group">Edit Group</div>
-      <div class="rectangle-199"></div>
-      <div class="rectangle-201"></div>
-    </div>
-    <div class="text-inputs">
-      <div class="group-name-input">
-        <div class="group-name">Group Name</div>
-        <div class="group-name-box">
-          <div class="rectangle-151"></div>
-          <div class="group-name2">Group Name</div>
+  <div class="group-edit-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="./Images 1/GroupAedmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/GroupAedvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GroupA.html" class="nav-item-link active"><img class="nav-icon" src="./Images 1/GroupAedvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="ChallengeA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="ScheduleA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/ScheduleAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PostA.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/GroupAedvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="AProfile.html" class="nav-item-link"><img class="nav-icon" src="./Images 1/GroupAedvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
         </div>
-      </div>
-      <div class="description-input">
-        <div class="description">Description</div>
-        <div class="email-box">
-          <div class="rectangle-1512"></div>
-          <div class="group-description">Group Description</div>
-        </div>
-      </div>
-    </div>
-    <a href="GroupA.html" class="save-button d-block">
-  <div class="save-rectangle"></div>
-  <div class="cancel">Cancel</div>
-</a>
+      </aside>
 
-<a href="GroupA.html" class="cancel-button d-block">
-  <div class="save-rectangle2"></div>
-  <div class="save">Save</div>
-</a>
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="page-title">Groups</h1>
+          <img class="profile-picture" src="./Images 1/GroupAedprofile-picture0.png" alt="Profile picture" />
+        </header>
+
+        <section class="edit-card">
+          <div class="card-header-line">
+            <h2 class="edit-group">Edit Group</h2>
+          </div>
+
+          <form class="edit-form">
+            <div>
+              <label class="form-label-custom" for="groupName">Group Name</label>
+              <input id="groupName" class="form-control custom-input" type="text" value="Group Name" />
+            </div>
+
+            <div>
+              <label class="form-label-custom" for="groupDescription">Description</label>
+              <textarea id="groupDescription" class="form-control custom-textarea" rows="5">Group Description</textarea>
+            </div>
+
+            <div class="button-row">
+              <a href="GroupA.html" class="action-btn secondary-btn">Cancel</a>
+              <a href="GroupA.html" class="action-btn primary-btn">Save</a>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
   </div>
-  
 </body>
 </html>

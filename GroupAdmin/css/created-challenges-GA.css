@@ -1,0 +1,1586 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.ccga-layout,
+.ccga-layout * {
+  box-sizing: border-box;
+}
+
+.ccga-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.ccga-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.ccga-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.ccga-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ccga-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ccga-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.ccga-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.ccga-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.ccga-main {
+  min-height: 100vh;
+}
+
+.ccga-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ccga-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ccga-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ccga-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.ccga-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  display: block;
+  object-fit: contain;
+}
+
+.ccga-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ccga-main-canvas {
+  padding: 20px 28px 36px;
+}
+
+.ccga-tabs {
+  display: inline-flex;
+  gap: 36px;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-tab {
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 0 12px;
+}
+
+.ccga-tab--active {
+  color: #1814f3;
+  border-bottom: 3px solid #1814f3;
+}
+
+.ccga-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 18px 22px;
+}
+
+.ccga-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.ccga-card-head h2 {
+  margin: 0;
+  color: #343c6a;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ccga-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ccga-search-pill,
+.ccga-challenge-pill {
+  min-height: 48px;
+  border-radius: 40px;
+  background: #ffffff;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+  display: inline-flex;
+  align-items: center;
+}
+
+.ccga-search-pill {
+  padding: 0 18px;
+  gap: 10px;
+  color: #8ba3cb;
+  font-size: 15px;
+}
+
+.ccga-search-pill img {
+  width: 20px;
+  height: 20px;
+}
+
+.ccga-challenge-pill {
+  padding: 0 20px;
+  color: #343c6a;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ccga-create-btn {
+  min-height: 50px;
+  padding: 0 18px;
+  border-radius: 15px;
+  background: #1814f3;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.ccga-table thead th {
+  color: #718ebf;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ccga-table tbody td {
+  color: #232323;
+  font-size: 16px;
+  border-color: #f2f4f7;
+  vertical-align: middle;
+}
+
+.ccga-view-btn {
+  min-width: 104px;
+  height: 35px;
+  border-radius: 50px;
+  border: 1px solid #1814f3;
+  background: #fff;
+  color: #1814f3;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.ccga-actions {
+  white-space: nowrap;
+}
+
+.ccga-actions img {
+  width: 17px;
+  height: 20px;
+  margin-left: 12px;
+}
+
+.ccga-rank-badge {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  background: #e7edff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 991px) {
+  .ccga-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .ccga-topbar,
+  .ccga-main-canvas {
+    padding: 16px;
+  }
+
+  .ccga-card {
+    padding: 14px;
+  }
+
+  .ccga-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .ccga-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+.header-for-challenge-list {
+  flex-shrink: 0;
+  width: 1005px;
+  height: 20px;
+  position: static;
+}
+.actions {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 999.5px;
+  top: 20px;
+}
+.participation {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 830.5px;
+  top: 20px;
+}
+.challenge-name {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 195.5px;
+  top: 20px;
+}
+.start-date {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 378.5px;
+  top: 20px;
+}
+.end-date {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 475.5px;
+  top: 20px;
+}
+.status {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 591.5px;
+  top: 21px;
+}
+.group-name {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 52.5px;
+  top: 20px;
+}
+.rectangle-dividers {
+  flex-shrink: 0;
+  width: 1050px;
+  height: 265px;
+  position: static;
+}
+.rectangle-224 {
+  background: #e6eff5;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 30px;
+  top: 52px;
+}
+.rectangle-161 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 30px;
+  top: 118px;
+}
+.rectangle-225 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 30px;
+  top: 184px;
+}
+.rectangle-226 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 30px;
+  top: 250px;
+}
+.rectangle-227 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 30px;
+  top: 316px;
+}
+.group-400 {
+  width: 1017.09px;
+  height: 290px;
+  position: static;
+}
+.challenge-information {
+  width: 1017.09px;
+  height: 22px;
+  position: static;
+}
+.challenge-name-1 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 480px;
+  top: 312px;
+}
+.div {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 666px;
+  top: 311px;
+}
+.div2 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 762px;
+  top: 311px;
+}
+.group-name-1 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 337px;
+  top: 312px;
+}
+.status-button {
+  width: 71.79px;
+  height: 18px;
+  position: static;
+}
+.active {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 865.01px;
+  top: 314px;
+  width: 71.79px;
+}
+.edit-button {
+  width: 17.51px;
+  height: 16.95px;
+  position: absolute;
+  left: 1279px;
+  top: 313px;
+  overflow: visible;
+}
+.trash-can-button {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 1338px;
+  top: 310px;
+  overflow: visible;
+}
+.challenge-name-2 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 480px;
+  top: 379px;
+}
+.div3 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 666px;
+  top: 378px;
+}
+.div4 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 762px;
+  top: 378px;
+}
+.group-name-2 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 337px;
+  top: 379px;
+}
+.status-button2 {
+  width: 78px;
+  height: 18px;
+  position: static;
+}
+.upcoming {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 862px;
+  top: 382px;
+  width: 78px;
+}
+.edit-button2 {
+  width: 17.51px;
+  height: 16.95px;
+  position: absolute;
+  left: 1279px;
+  top: 381px;
+  overflow: visible;
+}
+.trash-can-button2 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 1338px;
+  top: 378px;
+  overflow: visible;
+}
+.challenge-name-3 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 480px;
+  top: 446px;
+}
+.div5 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 666px;
+  top: 445px;
+}
+.div6 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 762px;
+  top: 445px;
+}
+.group-name-3 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 337px;
+  top: 446px;
+}
+.status-button3 {
+  width: 80px;
+  height: 18px;
+  position: static;
+}
+.completed {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 861px;
+  top: 448px;
+  width: 80px;
+}
+.edit-button3 {
+  width: 17.51px;
+  height: 16.95px;
+  position: absolute;
+  left: 1279px;
+  top: 447px;
+  overflow: visible;
+}
+.trash-can-button3 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 1338px;
+  top: 444px;
+  overflow: visible;
+}
+.challenge-name-4 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 480px;
+  top: 513px;
+}
+.div7 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 666px;
+  top: 512px;
+}
+.div8 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 762px;
+  top: 512px;
+}
+.group-name-4 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 337px;
+  top: 513px;
+}
+.active2 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 865.01px;
+  top: 515px;
+  width: 71.79px;
+}
+.edit-button4 {
+  width: 17.51px;
+  height: 16.95px;
+  position: absolute;
+  left: 1279px;
+  top: 514px;
+  overflow: visible;
+}
+.trash-can-button4 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 1338px;
+  top: 511px;
+  overflow: visible;
+}
+.challenge-name-5 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 480px;
+  top: 580px;
+}
+.div9 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 666px;
+  top: 579px;
+}
+.div10 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 762px;
+  top: 579px;
+}
+.group-name-5 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 337px;
+  top: 580px;
+}
+.active3 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 865.01px;
+  top: 582px;
+  width: 71.79px;
+}
+.edit-button5 {
+  width: 17.51px;
+  height: 16.95px;
+  position: absolute;
+  left: 1279px;
+  top: 581px;
+  overflow: visible;
+}
+.trash-can-button5 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 1338px;
+  top: 578px;
+  overflow: visible;
+}
+.goal {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 985px;
+  top: 258px;
+}
+._15 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 967.01px;
+  top: 316px;
+  width: 71.79px;
+}
+._5 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 964px;
+  top: 384px;
+  width: 78px;
+}
+._10 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 963px;
+  top: 450px;
+  width: 80px;
+}
+._20 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 967.01px;
+  top: 517px;
+  width: 71.79px;
+}
+._3 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 967.01px;
+  top: 584px;
+  width: 71.79px;
+}
+.challenge-management2 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: absolute;
+  left: 298px;
+  top: 170px;
+}
+.search-challenge-bar {
+  width: 255px;
+  height: 50px;
+  position: static;
+}
+.rectangle-19 {
+  background: #ffffff;
+  border-radius: 40px;
+  width: 255px;
+  height: 50px;
+  position: absolute;
+  left: 580px;
+  top: 159px;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+}
+.magnifying-glass-1 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 605px;
+  top: 174px;
+  overflow: hidden;
+}
+.group {
+  width: 95.7%;
+  height: 95.7%;
+  position: absolute;
+  right: 2.15%;
+  left: 2.15%;
+  bottom: 2.15%;
+  top: 2.15%;
+  overflow: visible;
+}
+.search-challenge {
+  color: #8ba3cb;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 640px;
+  top: 175px;
+}
+.create-new-challenge-button {
+  width: 226px;
+  height: 50px;
+  position: static;
+}
+.save-button {
+  width: 226px;
+  height: 50px;
+  position: static;
+}
+.save-rectangle {
+  background: #1814f3;
+  border-radius: 15px;
+  width: 226px;
+  height: 50px;
+  position: absolute;
+  left: 1115px;
+  top: 145px;
+}
+.create-new-challenge {
+  color: #ffffff;
+  text-align: center;
+  font-family: var(--button-medium-18p-font-family, "Inter-Medium", sans-serif);
+  font-size: var(--button-medium-18p-font-size, 18px);
+  font-weight: var(--button-medium-18p-font-weight, 500);
+  position: absolute;
+  left: 1131px;
+  top: 159px;
+}
+.notification-icon {
+  background: #f5f7fa;
+  border-radius: 25px;
+  padding: 12px 12px 13px 13px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 1224px;
+  top: 26px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+._002-notification-1 {
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  overflow: visible;
+}
+.join-created-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 26px;
+  row-gap: 5px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 318px;
+  position: absolute;
+  left: 285px;
+  top: 110px;
+}
+.created-challenges {
+  color: #1814f3;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+}
+.joined-challenges {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+}
+.rectangle-201 {
+  background: #1814f3;
+  border-radius: 10px 10px 0px 0px;
+  flex-shrink: 0;
+  width: 157px;
+  height: 3px;
+  position: relative;
+}
+.frame-26 {
+  flex-shrink: 0;
+  width: 330px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.view-buttons-selection {
+  width: 104px;
+  height: 303px;
+  position: absolute;
+  left: 1115px;
+  top: 303px;
+}
+.view-details-button {
+  position: absolute;
+  inset: 0;
+}
+.view {
+  color: #1814f3;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 34px;
+  top: 9px;
+  width: 36px;
+}
+.rectangle-62 {
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1814f3;
+  border-width: 1px;
+  width: 103.31px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.rectangle-622 {
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1814f3;
+  border-width: 1px;
+  width: 103.31px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 67px;
+}
+.view2 {
+  color: #1814f3;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 27px;
+  top: 143px;
+  width: 51px;
+}
+.rectangle-623 {
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1814f3;
+  border-width: 1px;
+  width: 103.31px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 134px;
+}
+.view3 {
+  color: #1814f3;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 34px;
+  top: 209px;
+  width: 38px;
+}
+.rectangle-624 {
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1814f3;
+  border-width: 1px;
+  width: 103.31px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 201px;
+}
+.view4 {
+  color: #1814f3;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 34px;
+  top: 277px;
+  width: 39px;
+}
+.rectangle-625 {
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1814f3;
+  border-width: 1px;
+  width: 103.31px;
+  height: 35px;
+  position: absolute;
+  left: 0px;
+  top: 268px;
+}
+.view5 {
+  color: #1814f3;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 34px;
+  top: 78px;
+  width: 36px;
+  height: 18px;
+}
+.group-member-list-box {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-157 {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 1110px;
+  height: 397px;
+  position: absolute;
+  left: 290px;
+  top: 729px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+.paricipation-informations {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 1003.09px;
+  position: absolute;
+  left: 350px;
+  top: 794px;
+}
+.participation-information {
+  flex-shrink: 0;
+  width: 963.09px;
+  height: 39px;
+  position: static;
+}
+.john-doe {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 14px;
+}
+.trash-can-button6 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 947px;
+  top: 11px;
+  overflow: visible;
+}
+.rank-number {
+  width: 39px;
+  height: 39px;
+  position: static;
+}
+.ellipse-30 {
+  background: #e7edff;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  position: absolute;
+  left: 212px;
+  top: 0px;
+}
+._1 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 228px;
+  top: 10px;
+}
+._7-15 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 417px;
+  top: 11px;
+  width: 47px;
+}
+.john-doe2 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 78px;
+}
+.trash-can-button7 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 947px;
+  top: 75px;
+  overflow: visible;
+}
+.ellipse-302 {
+  background: #e7edff;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  position: absolute;
+  left: 212px;
+  top: 64px;
+}
+._2 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 228px;
+  top: 74px;
+}
+._2-15 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 417px;
+  top: 75px;
+  width: 47px;
+}
+.john-doe3 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 142px;
+}
+.trash-can-button8 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 947px;
+  top: 139px;
+  overflow: visible;
+}
+.ellipse-303 {
+  background: #e7edff;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  position: absolute;
+  left: 212px;
+  top: 128px;
+}
+._102 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 223px;
+  top: 138px;
+}
+._2-152 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 417px;
+  top: 139px;
+  width: 47px;
+}
+.john-doe4 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 206px;
+}
+.trash-can-button9 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 947px;
+  top: 203px;
+  overflow: visible;
+}
+.ellipse-304 {
+  background: #e7edff;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  position: absolute;
+  left: 212px;
+  top: 192px;
+}
+._7 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 228px;
+  top: 202px;
+}
+._2-153 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 417px;
+  top: 203px;
+  width: 47px;
+}
+.john-doe5 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 270px;
+}
+.trash-can-button10 {
+  width: 16.09px;
+  height: 19.75px;
+  position: absolute;
+  left: 947px;
+  top: 267px;
+  overflow: visible;
+}
+.ellipse-305 {
+  background: #e7edff;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  position: absolute;
+  left: 212px;
+  top: 256px;
+}
+._52 {
+  color: #232323;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 228px;
+  top: 266px;
+}
+._2-154 {
+  color: #232323;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  position: absolute;
+  left: 417px;
+  top: 267px;
+  width: 47px;
+}
+.header-for-partcipants-list {
+  width: 980px;
+  height: 24px;
+  position: static;
+}
+.actions2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 1259px;
+  top: 756px;
+}
+.rank {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 564px;
+  top: 751px;
+}
+.goal2 {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 767px;
+  top: 751px;
+}
+.member-name {
+  color: #718ebf;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: 337px;
+  top: 751px;
+}
+.rectangle-dividers2 {
+  width: 1050px;
+  height: 265px;
+  position: static;
+}
+.rectangle-2242 {
+  background: #e6eff5;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 320px;
+  top: 781px;
+}
+.rectangle-1612 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 320px;
+  top: 847px;
+}
+.rectangle-2252 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 320px;
+  top: 913px;
+}
+.rectangle-2262 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 320px;
+  top: 979px;
+}
+.rectangle-2272 {
+  background: #f2f4f7;
+  width: 1050px;
+  height: 1px;
+  position: absolute;
+  left: 320px;
+  top: 1045px;
+}
+.participation-heading {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 296px;
+  top: 652px;
+}
+.heading-participation {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: relative;
+}
+.selected-group-for-view {
+  flex-shrink: 0;
+  width: 203px;
+  height: 48px;
+  position: static;
+}
+.rectangle-20 {
+  background: #ffffff;
+  border-radius: 40px;
+  width: 203px;
+  height: 48px;
+  position: absolute;
+  left: 172px;
+  top: 1px;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+}
+.challenge-name2 {
+  color: #343c6a;
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  position: absolute;
+  left: 186px;
+  top: 12px;
+}
+.search-member-bar {
+  flex-shrink: 0;
+  width: 255px;
+  height: 50px;
+  position: static;
+}
+.rectangle-192 {
+  background: #ffffff;
+  border-radius: 40px;
+  width: 255px;
+  height: 50px;
+  position: absolute;
+  left: 395px;
+  top: 0px;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.8);
+}
+.magnifying-glass-12 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 420px;
+  top: 15px;
+  overflow: hidden;
+}
+.group2 {
+  width: 95.7%;
+  height: 95.7%;
+  position: absolute;
+  right: 2.15%;
+  left: 2.15%;
+  bottom: 2.15%;
+  top: 2.15%;
+  overflow: visible;
+}
+.search-member {
+  color: #8ba3cb;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  position: absolute;
+  left: 455px;
+  top: 16px;
+}
+
+
+
+.joined-challenges {
+  position: relative;
+  z-index: 2;
+}
+
+.rectangle-201,
+.frame-26 {
+  position: relative;
+  z-index: 1;
+}

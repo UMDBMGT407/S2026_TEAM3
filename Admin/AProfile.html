@@ -41,97 +41,93 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="profile-1-2">
-    <div class="rectangle-background"></div>
-    <div class="rectangle-divider-2"></div>
-    <div class="rectangle-divider"></div>
-    <div class="rectangle-highlight"></div>
-    <div class="profile-heading">Profile</div>
-    <img class="motiv-logo" src="./Images 1/AProfilemotiv-logo0.png" />
-    <img class="profile-picture" src="./Images 1/AProfileprofile-picture0.png" />
-    <div class="navigation-bar">
+  <div class="profile-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="./Images 1/AProfilemotiv-logo0.png" alt="Motiv logo" />
 
-  <a href="ADash.html" class="dashboard d-flex align-items-center">
-    <div class="dashboard2">Dashboard</div>
-    <img class="vector ms-2" src="./Images 1/AProfilevector0.svg" />
-  </a>
-
-  <a href="GroupA.html" class="groups d-flex align-items-center">
-    <div class="groups2">Groups</div>
-    <img class="vector2 ms-2" src="./Images 1/AProfilevector1.svg" />
-  </a>
-
-  <a href="ChallengeA.html" class="scheduling">
-    <div class="scheduling2">Scheduling</div>
-    <img class="vector3" src="./Images 1/ScheduleAvector2.svg" />
-  </a>
-
-  <a href="ScheduleA.html" class="challenges">
-    <div class="challenges2">Challenges</div>
-    <img class="vector4" src="./Images 1/ScheduleAvector3.svg" />
-  </a>
-
-  <a href="PostA.html" class="posts d-flex align-items-center">
-    <div class="posts2">Posts</div>
-    <img class="vector5 ms-2" src="./Images 1/AProfilevector4.svg" />
-  </a>
-
-  <a href="AProfile.html" class="profile d-flex align-items-center">
-    <div class="profile2">Profile</div>
-    <img class="vector-profile-icon ms-2" src="./Images 1/AProfilevector-profile-icon0.svg" />
-  </a>
-
-</div>
-
-    </div>
-    <div class="rectangle-198"></div>
-    <div class="edit-profile-text">
-      <div class="edit-profile">Edit Profile</div>
-      <div class="rectangle-199"></div>
-      <div class="rectangle-201"></div>
-    </div>
-    <div class="text-inputs">
-      <div class="first-name-input">
-        <div class="first-name">First Name</div>
-        <div class="first-name-box">
-          <div class="rectangle-151"></div>
-          <div class="john">John</div>
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link">
+              <img class="nav-icon" src="./Images 1/AProfilevector0.svg" alt="" />
+              <span>Dashboard</span>
+            </a>
+            <a href="GroupA.html" class="nav-item-link">
+              <img class="nav-icon" src="./Images 1/AProfilevector1.svg" alt="" />
+              <span>Groups</span>
+            </a>
+            <a href="ChallengeA.html" class="nav-item-link">
+              <img class="nav-icon" src="./Images 1/ScheduleAvector2.svg" alt="" />
+              <span>Scheduling</span>
+            </a>
+            <a href="ScheduleA.html" class="nav-item-link">
+              <img class="nav-icon" src="./Images 1/ScheduleAvector3.svg" alt="" />
+              <span>Challenges</span>
+            </a>
+            <a href="PostA.html" class="nav-item-link">
+              <img class="nav-icon" src="./Images 1/AProfilevector4.svg" alt="" />
+              <span>Posts</span>
+            </a>
+            <a href="AProfile.html" class="nav-item-link active">
+              <img class="nav-icon" src="./Images 1/AProfilevector-profile-icon0.svg" alt="" />
+              <span>Profile</span>
+            </a>
+          </nav>
         </div>
-      </div>
-      <div class="email-input">
-        <div class="email">Email</div>
-        <div class="email-box">
-          <div class="rectangle-1512"></div>
-          <div class="johndoe-gmail-com">johndoe@gmail.com</div>
+      </aside>
+
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="profile-heading">Profile</h1>
+          <img class="profile-picture" src="./Images 1/AProfileprofile-picture0.png" alt="Profile picture" />
+        </header>
+
+        <div class="main-canvas">
+          <section class="profile-card">
+            <div class="card-header-line">
+              <h2 class="edit-profile">Edit Profile</h2>
+            </div>
+
+            <div class="profile-form-content row g-4">
+              <div class="col-12 col-lg-3">
+                <div class="profile-image-wrap">
+                  <img class="profile-image-1" src="./Images 1/AProfileprofile-image-10.png" alt="Profile image" />
+                  <button class="profile-photo-edit-button" type="button" aria-label="Edit profile photo">
+                    <span class="ellipse-29"></span>
+                    <img class="pencil-alt-1" src="./Images 1/AProfilepencil-alt-10.svg" alt="" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-9">
+                <div class="row g-3">
+                  <div class="col-12 col-md-6">
+                    <label class="form-label-custom" for="firstName">First Name</label>
+                    <input id="firstName" class="form-control custom-input" type="text" value="John" />
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label-custom" for="lastName">Last Name</label>
+                    <input id="lastName" class="form-control custom-input" type="text" value="Doe" />
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label-custom" for="email">Email</label>
+                    <input id="email" class="form-control custom-input" type="email" value="johndoe@gmail.com" />
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label-custom" for="password">Password</label>
+                    <input id="password" class="form-control custom-input" type="password" value="**********" />
+                  </div>
+                </div>
+
+                <div class="save-button-wrap">
+                  <button type="button" class="save-button">Save</button>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
-      <div class="last-name-input">
-        <div class="last-name">Last Name</div>
-        <div class="last-name-box">
-          <div class="rectangle-1513"></div>
-          <div class="doe">Doe</div>
-        </div>
-      </div>
-      <div class="password-input">
-        <div class="password">Password</div>
-        <div class="password-box">
-          <div class="rectangle-1514"></div>
-          <div class="div">**********</div>
-        </div>
-      </div>
-    </div>
-    <img class="profile-image-1" src="./Images 1/AProfileprofile-image-10.png" />
-    <div class="save-button">
-      <div class="save-rectangle"></div>
-      <div class="save">Save</div>
-    </div>
-    <div class="profile-photo-edit-button">
-      <div class="group-194">
-        <div class="ellipse-29"></div>
-        <img class="pencil-alt-1" src="./Images 1/AProfilepencil-alt-10.svg" />
-      </div>
+      </main>
     </div>
   </div>
-  
 </body>
 </html>

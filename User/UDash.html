@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./CSS/DUstyle.css">
+  <title>Dashboard</title>
+</head>
+<body>
+  <div class="du-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 du-sidebar">
+        <div class="du-sidebar-inner">
+          <img class="du-logo" src="./Images/DUmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="du-nav" aria-label="Main navigation">
+            <a href="UDash.html" class="du-nav-link active"><img class="du-nav-icon" src="./Images/DUvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GJU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="SU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="CHU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="WLU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="ProU.html" class="du-nav-link"><img class="du-nav-icon" src="./Images/DUvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 du-main d-flex flex-column">
+        <header class="du-topbar">
+          <h1 class="du-page-title">Dashboard</h1>
+          <div class="du-topbar-actions">
+            <a href="NU.html" class="du-notify-btn" aria-label="Notifications">
+              <span class="du-notify-bg"></span>
+              <img class="du-notify-icon" src="./Images/DU_002-notification-10.svg" alt="" />
+            </a>
+            <img class="du-avatar" src="./Images/DUprofile-picture0.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="du-main-canvas flex-grow-1">
+          <section class="du-workouts-overview">
+            <h2 class="du-section-title">This Week's Workouts</h2>
+            <div class="row g-4">
+              <div class="col-12 col-lg-4">
+                <article class="du-stat-card">
+                  <div class="du-stat-icon-wrap"><img src="./Images/DUgroup-11712749010.svg" alt="" /></div>
+                  <div>
+                    <p class="du-stat-label">Workouts</p>
+                    <p class="du-stat-value">4 <span>This Week</span></p>
+                  </div>
+                </article>
+              </div>
+              <div class="col-12 col-lg-4">
+                <article class="du-stat-card">
+                  <div class="du-stat-icon-wrap"><img src="./Images/DUgroup-logcircle0.svg" alt="" /></div>
+                  <div>
+                    <p class="du-stat-label">Current Streak</p>
+                    <p class="du-stat-value">3 Days <span>Keep it up!</span></p>
+                  </div>
+                </article>
+              </div>
+              <div class="col-12 col-lg-4">
+                <article class="du-stat-card">
+                  <div class="du-stat-icon-wrap"><img class="du-stat-icon--minutes" src="./Images/DUminutes-icon0.svg" alt="" /></div>
+                  <div>
+                    <p class="du-stat-label">Total Minutes</p>
+                    <p class="du-stat-value">85 <span>This Week</span></p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="du-leaderboard-card mt-4">
+            <div class="du-leaderboard-top">
+              <div>
+                <h2 class="du-section-title">Leaderboard</h2>
+                <p class="du-section-subtitle">See how you rank based on different metrics. Rankings update weekly.</p>
+              </div>
+              <div class="du-rank-filter">
+                <label for="du-rank-by">Rank By</label>
+                <select id="du-rank-by">
+                  <option>Workouts</option>
+                  <option>Sets</option>
+                  <option>Reps</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="du-table-wrap">
+              <table class="table du-table mb-0">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Workouts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><span class="du-rank-badge">1</span></td><td>John Doe</td><td>12</td></tr>
+                  <tr><td><span class="du-rank-badge">2</span></td><td>John Doe</td><td>11</td></tr>
+                  <tr><td><span class="du-rank-badge">3</span></td><td>John Doe</td><td>10</td></tr>
+                  <tr><td><span class="du-rank-badge">4</span></td><td>John Doe</td><td>10</td></tr>
+                  <tr><td><span class="du-rank-badge">5</span></td><td>John Doe</td><td>9</td></tr>
+                  <tr><td><span class="du-rank-badge">6</span></td><td>John Doe</td><td>5</td></tr>
+                  <tr><td><span class="du-rank-badge">7</span></td><td>John Doe</td><td>4</td></tr>
+                  <tr><td><span class="du-rank-badge">8</span></td><td>John Doe</td><td>2</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="du-challenge-banner mt-4">
+            <img class="du-challenge-icon" src="./Images/DUchallenges-icon0.svg" alt="" />
+            <div class="du-challenge-text">
+              <p class="du-challenge-kicker">Challenges</p>
+              <h3>April Strength Challenge</h3>
+              <p>Apr 1 - Apr 30 • Complete This Weeks Challenge!</p>
+            </div>
+            <div class="du-challenge-filter">
+              <select>
+                <option>Challenges</option>
+              </select>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,282 @@
+body {
+  background: #f5f7fa;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+}
+
+.ecga-layout,
+.ecga-layout * {
+  box-sizing: border-box;
+}
+
+.ecga-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e6eff5;
+}
+
+.ecga-sidebar-inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 24px 24px 40px;
+}
+
+.ecga-logo {
+  width: 101px;
+  height: 101px;
+  object-fit: contain;
+}
+
+.ecga-nav {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ecga-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 12px;
+  color: #b1b1b1;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ecga-nav-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
+}
+
+.ecga-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 52px;
+  border-radius: 999px;
+  background: #1814f3;
+}
+
+.ecga-nav-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.ecga-main {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.ecga-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eff5;
+}
+
+.ecga-page-title {
+  margin: 0;
+  color: #343c6a;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ecga-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ecga-notify-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecga-notify-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #f5f7fa;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+}
+
+.ecga-notify-icon {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  display: block;
+  object-fit: contain;
+}
+
+.ecga-avatar {
+  width: 63px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ecga-main-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 0;
+  padding: 28px 28px 36px;
+}
+
+.ecga-card {
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.8);
+  padding: 24px 28px 32px;
+  max-width: 913px;
+  width: 100%;
+}
+
+.ecga-card-head {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f4f5f7;
+  position: relative;
+}
+
+.ecga-card-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 136px;
+  height: 3px;
+  background: #1814f3;
+  border-radius: 10px 10px 0 0;
+}
+
+.ecga-card-title {
+  margin: 0;
+  color: #1814f3;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ecga-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #232323;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.ecga-input,
+.ecga-select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid #dfeaf2;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #718ebf;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.ecga-input:focus,
+.ecga-select:focus {
+  outline: none;
+  border-color: #1814f3;
+  color: #232323;
+}
+
+.ecga-select-wrap {
+  position: relative;
+}
+
+.ecga-select {
+  appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.ecga-select-chevron {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 7px;
+  pointer-events: none;
+}
+
+.ecga-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.ecga-btn {
+  min-width: 190px;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ecga-btn--primary {
+  background: #1814f3;
+  color: #ffffff;
+}
+
+.ecga-btn--secondary {
+  background: #edf1f7;
+  color: #718ebf;
+}
+
+@media (max-width: 991px) {
+  .ecga-sidebar-inner {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .ecga-topbar,
+  .ecga-main-canvas {
+    padding: 16px;
+  }
+
+  .ecga-card {
+    padding: 18px 16px 28px;
+  }
+
+  .ecga-card-head::after {
+    width: 120px;
+  }
+
+  .ecga-btn {
+    width: 100%;
+    min-width: unset;
+  }
+}
