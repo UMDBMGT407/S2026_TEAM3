@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/scheduling-GA.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Scheduling</title>
+</head>
+<body>
+  <div class="sga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sga-sidebar">
+        <div class="sga-sidebar-inner">
+          <img class="sga-logo" src="../../Static/images/SGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="sga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="sga-nav-link active"><img class="sga-nav-icon" src="../../Static/images/SGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="sga-nav-link"><img class="sga-nav-icon" src="../../Static/images/SGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 sga-main d-flex flex-column">
+        <header class="sga-topbar">
+          <h1 class="sga-page-title">Scheduling</h1>
+          <div class="sga-topbar-actions">
+            <a href="notifications-GA.html" class="sga-notify-btn" aria-label="Notifications">
+              <span class="sga-notify-bg"></span>
+              <img class="sga-notify-icon" src="../../Static/images/CGGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="sga-avatar" src="../../Static/images/SGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="sga-main-canvas flex-grow-1">
+          <div class="sga-tabs-row mb-3">
+            <div class="sga-tabs">
+              <span class="sga-tab sga-tab--active">Created Workouts</span>
+              <a href="schedule-joined-workouts-GA.html" class="sga-tab">Joined Workouts</a>
+            </div>
+          </div>
+
+          <section class="sga-card mb-4">
+            <div class="sga-card-head">
+              <h2>Scheduled Workouts Management</h2>
+              <div class="sga-head-actions">
+                <div class="sga-search-pill"><img src="../../Static/images/SGAgroup1.svg" alt="" /><span>Search Session</span></div>
+                <a href="create-schedule-GA.html" class="sga-create-btn">Schedule New Workout</a>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table sga-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Group Name</th>
+                    <th>Session Name</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Group Name 1</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button0.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 1</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button1.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button1.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 3</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button2.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button2.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 4</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button3.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button3.svg" alt="Delete" /></td></tr>
+                  <tr><td>Group Name 5</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button4.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button4.svg" alt="Delete" /></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="row g-4 align-items-start">
+            <div class="col-12 col-xl-4">
+              <section class="sga-card">
+                <h2 class="sga-section-title">Full Details</h2>
+                <div class="sga-details-grid">
+                  <div><span>Date</span><strong>#/##/##</strong></div>
+                  <div><span>Time</span><strong>00:00</strong></div>
+                  <div><span>Location</span><strong>Location 1</strong></div>
+                </div>
+              </section>
+            </div>
+
+            <div class="col-12 col-xl-8">
+              <section class="sga-card">
+                <div class="sga-card-head sga-attendance-head">
+                  <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <h2 class="mb-0">Selected Session -</h2>
+                    <div class="sga-session-pill">Session Name</div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <h3>Attendance</h3>
+                    <div class="sga-search-pill"><img src="../../Static/images/SGAgroup0.svg" alt="" /><span>Search Member</span></div>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table sga-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Member Name</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>John Doe</td><td>Going</td></tr>
+                      <tr><td>John Doe</td><td>Not Going</td></tr>
+                      <tr><td>John Doe</td><td>Pending</td></tr>
+                      <tr><td>John Doe</td><td>Going</td></tr>
+                      <tr><td>John Doe</td><td>Going</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

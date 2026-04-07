@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../Static/CSS/workout-details-GA.css">
+  <title>Workout Log Details</title>
+</head>
+<body>
+  <div class="wdga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 wdga-sidebar">
+        <div class="wdga-sidebar-inner">
+          <img class="wdga-logo" src="../../Static/images/WDGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="wdga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="wdga-nav-link"><img class="wdga-nav-icon" src="../../Static/images/WDGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="wdga-nav-link"><img class="wdga-nav-icon" src="../../Static/images/WDGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="wdga-nav-link"><img class="wdga-nav-icon" src="../../Static/images/WDGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="wdga-nav-link"><img class="wdga-nav-icon" src="../../Static/images/WDGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="wdga-nav-link"><img class="wdga-nav-icon" src="../../Static/images/WDGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="wdga-nav-link active"><img class="wdga-nav-icon wdga-nav-icon--log" src="../../Static/images/WDGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="wdga-nav-link"><img class="wdga-nav-icon wdga-nav-icon--profile" src="../../Static/images/WDGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 wdga-main d-flex flex-column">
+        <header class="wdga-topbar">
+          <h1 class="wdga-page-title">Workout Log</h1>
+          <div class="wdga-topbar-actions">
+            <a href="notifications-GA.html" class="wdga-notify-btn" aria-label="Notifications">
+              <span class="wdga-notify-bg"></span>
+              <img class="wdga-notify-icon" src="../../Static/images/WDGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="wdga-avatar" src="../../Static/images/WDGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <div class="wdga-main-canvas flex-grow-1">
+          <div class="wdga-head-row">
+            <h2 class="wdga-title">Workout Details</h2>
+            <div class="wdga-actions-top">
+              <a href="workout-logging-GA.html" class="wdga-btn">Add New Exercise</a>
+              <a href="workout-history-GA.html" class="wdga-btn">Save Workout</a>
+            </div>
+          </div>
+
+          <section class="wdga-card">
+            <div class="table-responsive">
+              <table class="wdga-table">
+                <thead>
+                  <tr>
+                    <th>Workout No</th>
+                    <th>Date</th>
+                    <th>Exercise Name</th>
+                    <th>Duration</th>
+                    <th>S/R/W</th>
+                    <th>Difficulty Level</th>
+                    <th>Muscle Group</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>01.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button0.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button0.svg" alt="" /></button></div></td></tr>
+                  <tr><td>02.</td><td>03/27/2026</td><td>Lateral Raises</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button1.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button1.svg" alt="" /></button></div></td></tr>
+                  <tr><td>03.</td><td>03/27/2026</td><td>Pull-Ups</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button2.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button2.svg" alt="" /></button></div></td></tr>
+                  <tr><td>04.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button3.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button3.svg" alt="" /></button></div></td></tr>
+                  <tr><td>05.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button4.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button4.svg" alt="" /></button></div></td></tr>
+                  <tr><td>06.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button5.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button5.svg" alt="" /></button></div></td></tr>
+                  <tr><td>07.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button6.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button6.svg" alt="" /></button></div></td></tr>
+                  <tr><td>08.</td><td>03/27/2026</td><td>Squats</td><td>40 Minutes</td><td>2/10/55</td><td>Medium</td><td>Lower Body</td><td><div class="wdga-row-actions"><a class="wdga-edit-btn" href="edit-workout-logging-GA.html" aria-label="Edit"><img src="../../Static/images/WDGAedit-button7.svg" alt="" /></a><button class="wdga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WDGAtrash-can-button7.svg" alt="" /></button></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/GroupAstyle.css">
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+   </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="group-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="../../Static/Images%201/GroupAmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/GroupAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GroupA.html" class="nav-item-link active"><img class="nav-icon" src="../../Static/Images%201/GroupAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="ChallengeA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="ScheduleA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PostA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/GroupAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="AProfile.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/GroupAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="page-title">Groups</h1>
+          <img class="profile-picture" src="../../Static/Images%201/GroupAprofile-picture0.png" alt="Profile picture" />
+        </header>
+
+        <section class="content-section">
+          <div class="section-header-wrap">
+            <h2 class="section-title">Group Management</h2>
+            <div class="search-pill">
+              <img src="../../Static/Images%201/GroupAgroup0.svg" alt="" />
+              <span>Search Group</span>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="table align-middle custom-table">
+                <thead>
+                  <tr>
+                    <th>Group ID</th>
+                    <th>Group Name</th>
+                    <th>Group Admin</th>
+                    <th>Members</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#G001</td>
+                    <td>Group Name 1</td>
+                    <td>#U001 - John Doe</td>
+                    <td><button class="view-btn">View</button></td>
+                    <td class="text-end action-icons"><a href="GroupAed.html"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td>
+                  </tr>
+                  <tr>
+                    <td>#G002</td>
+                    <td>Group Name 2</td>
+                    <td>#U002 - Name</td>
+                    <td><button class="view-btn">View</button></td>
+                    <td class="text-end action-icons"><a href="GroupAed.html"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td>
+                  </tr>
+                  <tr>
+                    <td>#G003</td>
+                    <td>Group Name 3</td>
+                    <td>#U002 - Name</td>
+                    <td><button class="view-btn">View</button></td>
+                    <td class="text-end action-icons"><a href="GroupAed.html"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td>
+                  </tr>
+                  <tr>
+                    <td>#G004</td>
+                    <td>Group Name 4</td>
+                    <td>#U003 - Name</td>
+                    <td><button class="view-btn">View</button></td>
+                    <td class="text-end action-icons"><a href="GroupAed.html"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td>
+                  </tr>
+                  <tr>
+                    <td>#G005</td>
+                    <td>Group Name 5</td>
+                    <td>#U004 - Name</td>
+                    <td><button class="view-btn">View</button></td>
+                    <td class="text-end action-icons"><a href="GroupAed.html"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-header-wrap">
+            <div class="member-title-wrap">
+              <h2 class="section-title">Group Members -</h2>
+              <span class="group-pill">#G001</span>
+            </div>
+            <div class="search-pill">
+              <img src="../../Static/Images%201/GroupAgroup0.svg" alt="" />
+              <span>Search Member</span>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="table align-middle custom-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Member Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>#U001</td><td>John Doe</td><td>Group Admin</td><td>user@gmail.com</td><td class="text-end action-icons"><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>#U002</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end action-icons"><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>#U003</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end action-icons"><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>#U004</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end action-icons"><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                  <tr><td>#U005</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end action-icons"><img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="Delete" /></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
