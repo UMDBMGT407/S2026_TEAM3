@@ -1,0 +1,5 @@
+/* Shared CSS variables for Admin HTML pages (GitHub Pages / static hosting). */
+:root {
+  --h1: 120px;
+  --h2: 80px;
+}

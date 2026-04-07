@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motiv</title>
+  <script>
+    (function () {
+      var path = location.pathname.replace(/\/index\.html$/i, "");
+      if (!path.endsWith("/")) path += "/";
+      location.replace(path + "Admin/index.html");
+    })();
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=Admin/index.html" />
+  </noscript>
+</head>
+<body>
+  <p>
+    <a href="Admin/index.html">Open Motiv (login)</a> if you are not redirected automatically.
+  </p>
+</body>
+</html>
