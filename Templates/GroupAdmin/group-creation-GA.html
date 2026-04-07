@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/group-creation-GA.css">
+  <title>Group Creation</title>
+</head>
+<body>
+  <div class="gcga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 gcga-sidebar">
+        <div class="gcga-sidebar-inner">
+          <img class="gcga-logo" src="../../Static/images/GCGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="gcga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="gcga-nav-link active"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="gcga-nav-link"><img class="gcga-nav-icon" src="../../Static/images/GCGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 gcga-main d-flex flex-column">
+        <header class="gcga-topbar">
+          <h1 class="gcga-page-title">Group Creation</h1>
+          <div class="gcga-topbar-actions">
+            <a href="notifications-GA.html" class="gcga-notify-btn" aria-label="Notifications">
+              <span class="gcga-notify-bg"></span>
+              <img class="gcga-notify-icon" src="../../Static/images/GCGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="gcga-avatar" src="../../Static/images/GCGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="gcga-main-canvas flex-grow-1">
+          <section class="gcga-card">
+            <div class="gcga-tabs">
+              <span class="gcga-tab gcga-tab--active">Create Group</span>
+            </div>
+
+            <form class="gcga-form" action="#" method="post">
+              <div class="row g-4 align-items-start">
+                <div class="col-12 col-xl-auto">
+                  <div class="gcga-photo-wrap">
+                    <img class="gcga-photo" src="../../Static/images/GCGAprofile-picture2.png" alt="Group" />
+                    <button type="button" class="gcga-photo-edit" aria-label="Edit group image">
+                      <img src="../../Static/images/GCGApencil-alt-10.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl">
+                  <div class="row g-4">
+                    <div class="col-12 col-lg-6">
+                      <label class="gcga-label" for="gcga-group-name">Group Name</label>
+                      <input id="gcga-group-name" class="gcga-input" type="text" value="Group Name" />
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                      <label class="gcga-label" for="gcga-invite-users">Invite Users</label>
+                      <input id="gcga-invite-users" class="gcga-input" type="text" value="Users" />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="gcga-label" for="gcga-description">Description</label>
+                      <textarea id="gcga-description" class="gcga-input gcga-input--textarea" rows="4">Group Description</textarea>
+                    </div>
+                  </div>
+
+                  <div class="gcga-actions">
+                    <a href="created-groups-GA.html" class="gcga-btn gcga-btn--primary">Create</a>
+                    <a href="created-groups-GA.html" class="gcga-btn gcga-btn--primary">Cancel</a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/ScheduleAedstyle.css">
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+   </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="schedule-aed-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="../../Static/Images%201/ScheduleAEDmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAEDvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GroupA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAEDvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="ChallengeA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="ScheduleA.html" class="nav-item-link active"><img class="nav-icon" src="../../Static/Images%201/ScheduleAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="PostA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAEDvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="AProfile.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ScheduleAEDvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="page-title">Challenge</h1>
+          <img class="profile-picture" src="../../Static/Images%201/ScheduleAEDprofile-picture0.png" alt="Profile picture" />
+        </header>
+
+        <section class="edit-card">
+          <div class="card-header-line">
+            <h2 class="edit-group">Edit Challenge</h2>
+          </div>
+
+          <form class="edit-form">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="groupField">Group</label>
+                <input id="groupField" class="form-control custom-input" type="text" value="Group" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="challengeName">Challenge Name</label>
+                <input id="challengeName" class="form-control custom-input" type="text" value="Challenge Name" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="startDate">Start Date</label>
+                <input id="startDate" class="form-control custom-input" type="text" value="Start Date" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="endDate">End Date</label>
+                <input id="endDate" class="form-control custom-input" type="text" value="End Date" />
+              </div>
+              <div class="col-12">
+                <label class="form-label-custom" for="challengeGoal">Challenge Goal</label>
+                <input id="challengeGoal" class="form-control custom-input" type="text" value="# Of Workouts" />
+              </div>
+            </div>
+
+            <div class="button-row">
+              <a href="ScheduleA.html" class="action-btn secondary-btn">Cancel</a>
+              <a href="ScheduleA.html" class="action-btn primary-btn">Save</a>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

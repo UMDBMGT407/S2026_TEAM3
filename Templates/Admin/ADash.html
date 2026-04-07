@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/ADashstyle.css">
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+   </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="dash-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 sidebar-wrap">
+        <div class="sidebar-content">
+          <img class="motiv-logo" src="../../Static/Images%201/ADashmotiv-logo0.png" alt="Motiv logo" />
+          <nav class="navigation-bar">
+            <a href="ADash.html" class="nav-item-link active"><img class="nav-icon" src="../../Static/Images%201/ADashvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="GroupA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ADashvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="ChallengeA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ADashvector3.svg" alt="" /><span>Scheduling</span></a>
+            <a href="ScheduleA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ADashvector4.svg" alt="" /><span>Challenges</span></a>
+            <a href="PostA.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ADashvector5.svg" alt="" /><span>Posts</span></a>
+            <a href="AProfile.html" class="nav-item-link"><img class="nav-icon" src="../../Static/Images%201/ADashvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="col-12 col-md-9 col-xl-10 main-wrap">
+        <header class="topbar">
+          <h1 class="dashboard-title">Dashboard</h1>
+          <img class="profile-picture" src="../../Static/Images%201/ADashprofile-picture0.png" alt="Profile picture" />
+        </header>
+
+        <section class="dash-section">
+          <div class="section-heading"><h2>User Analytics</h2><img class="section-icon" src="../../Static/Images%201/ADashvector6.svg" alt="" /></div>
+          <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Users</p><p class="metric-value">6,029</p></div></div>
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Groups</p><p class="metric-value">2,043</p></div></div>
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Posts</p><p class="metric-value">10,349</p></div></div>
+          </div>
+        </section>
+
+        <section class="dash-section">
+          <div class="section-heading"><h2>Workout Analytics</h2><img class="section-icon" src="../../Static/Images%201/ADashvector-log0.svg" alt="" /></div>
+          <div class="row g-3">
+            <div class="col-12 col-xl-4">
+              <div class="metric-card tall">
+                <p class="metric-label">Busiest Workout Day</p>
+                <p class="metric-value">Monday</p>
+                <p class="metric-label mt-3">Avg Duration Of A Workout</p>
+                <p class="metric-value">1H 36M</p>
+              </div>
+            </div>
+            <div class="col-12 col-xl-8">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Workouts Logged</p><p class="metric-value">5,038</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Sets Done</p><p class="metric-value">7,920</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Exercises Done</p><p class="metric-value">10,304</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Reps Done</p><p class="metric-value">16,382</p></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="dash-section">
+          <div class="section-heading"><h2>Challenge Analytics</h2><img class="section-icon" src="../../Static/Images%201/ADashvector7.svg" alt="" /></div>
+          <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl-3"><div class="metric-card"><p class="metric-label"># Of Challenges</p><p class="metric-value">6,029</p></div></div>
+            <div class="col-12 col-md-6 col-xl-3"><div class="metric-card"><p class="metric-label">Avg Challenge Time</p><p class="metric-value">2,043</p></div></div>
+            <div class="col-12 col-md-6 col-xl-3"><div class="metric-card"><p class="metric-label"># Of Active Challenges</p><p class="metric-value">10,349</p></div></div>
+            <div class="col-12 col-md-6 col-xl-3"><div class="metric-card"><p class="metric-label">Avg Users Per Challenge</p><p class="metric-value">10,349</p></div></div>
+          </div>
+        </section>
+
+        <section class="dash-section">
+          <div class="row g-3">
+            <div class="col-12 col-lg-6 col-xl-4">
+              <div class="panel-card">
+                <h3>Data File Download</h3>
+                <ul class="data-list">
+                  <li>Admin Data</li><li>Group Admin Data</li><li>User Data</li><li>Post Data</li><li>Group Data</li>
+                  <li>Workout Data</li><li>Exercise Data</li><li>Workout Log Data</li><li>Challenge Data</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-4">
+              <div class="panel-card">
+                <h3>Select Data Type For Graph</h3>
+                <ul class="data-list">
+                  <li>Admin Data</li><li>Group Admin Data</li><li>User Data</li><li>Post Data</li><li>Group Data</li>
+                  <li>Workout Data</li><li>Exercise Data</li><li>Workout Log Data</li><li>Challenge Data</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-12 col-xl-4">
+              <div class="panel-card">
+                <h3>Selected Data Graph</h3>
+                <div class="graph-wrap">
+                  <div class="graph-bars">
+                    <span style="--h1:178px;--h2:91px;"></span>
+                    <span style="--h1:130px;--h2:49px;"></span>
+                    <span style="--h1:122px;--h2:98px;"></span>
+                    <span style="--h1:178px;--h2:138px;"></span>
+                    <span style="--h1:57px;--h2:91px;"></span>
+                    <span style="--h1:145px;--h2:91px;"></span>
+                    <span style="--h1:147px;--h2:126px;"></span>
+                  </div>
+                  <div class="graph-days"><span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

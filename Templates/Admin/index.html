@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../Static/CSS/vars.css" />
+    <link rel="stylesheet" href="../../Static/CSS/indexstyle.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      a,
+      button,
+      input,
+      select,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        border: none;
+        text-decoration: none;
+        background: none;
+
+        -webkit-font-smoothing: antialiased;
+      }
+
+      menu,
+      ol,
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row min-vh-100">
+        <!-- LEFT SIDE -->
+        <div class="col-md-6 position-relative overflow-visible">
+          <img
+            src="../../Static/Images%201/Loginleft-side-colors0.svg"
+            class="position-absolute top-50 translate-middle-y"
+            style="width: 150%; max-width: none; left: -50%"
+          />
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div
+          class="col-md-6 d-flex flex-column justify-content-center align-items-center"
+        >
+          <!-- Logo + Welcome -->
+          <div class="text-center mb-4">
+            <img
+              class="img-fluid mb-3"
+              src="../../Static/Images%201/Loginmotiv-logo0.png"
+              style="max-width: 150px"
+            />
+            <h2>Welcome to Motiv</h2>
+          </div>
+
+          <!-- Inputs -->
+          <div class="w-75">
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Enter your Email here"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Enter your Password here"
+              />
+            </div>
+
+            <!-- Login Button -->
+            <a href="ADash.html" class="btn auth-login-btn d-block mx-auto mb-3"><span class="login-btn-label">Login</span></a>
+            <!-- Create Account -->
+            <div class="text-center">
+              <span>Don’t have an account? </span>
+              <a href="CreateAccount.html" class="fw-bold"
+                >Create Account Now</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

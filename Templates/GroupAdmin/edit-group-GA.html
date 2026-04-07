@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/edit-group-GA.css">
+  <title>Edit Group</title>
+</head>
+<body>
+  <div class="egga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 egga-sidebar">
+        <div class="egga-sidebar-inner">
+          <img class="egga-logo" src="../../Static/images/EGGAmotiv-logo1.png" alt="Motiv logo" />
+          <nav class="egga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector0.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="egga-nav-link active"><img class="egga-nav-icon" src="../../Static/images/EGGAvector1.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector2.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector3.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector4.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector-log0.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="egga-nav-link"><img class="egga-nav-icon" src="../../Static/images/EGGAvector-profile-icon0.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 egga-main d-flex flex-column">
+        <header class="egga-topbar">
+          <h1 class="egga-page-title">Edit Group</h1>
+          <div class="egga-topbar-actions">
+            <a href="notifications-GA.html" class="egga-notify-btn" aria-label="Notifications">
+              <span class="egga-notify-bg"></span>
+              <img class="egga-notify-icon" src="../../Static/images/EGGA_002-notification-10.svg" alt="" />
+            </a>
+            <img class="egga-avatar" src="../../Static/images/EGGAprofile-picture1.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="egga-main-canvas flex-grow-1">
+          <section class="egga-card">
+            <div class="egga-tabs">
+              <span class="egga-tab egga-tab--active">Edit Group</span>
+            </div>
+
+            <form class="egga-form" action="#" method="post">
+              <div class="row g-4 justify-content-center">
+                <div class="col-12 col-xl-7">
+                  <label class="egga-label" for="egga-group-name">Group Name</label>
+                  <input id="egga-group-name" class="egga-input" type="text" value="Group Name" />
+                </div>
+
+                <div class="col-12 col-xl-7">
+                  <label class="egga-label" for="egga-description">Description</label>
+                  <textarea id="egga-description" class="egga-input egga-input--textarea" rows="5">Group Description</textarea>
+                </div>
+              </div>
+
+              <div class="egga-actions">
+                <a href="created-groups-GA.html" class="egga-btn egga-btn--primary">Save</a>
+                <a href="created-groups-GA.html" class="egga-btn egga-btn--primary">Cancel</a>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

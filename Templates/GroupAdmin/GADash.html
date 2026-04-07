@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/dashboard.css">
+  <title>Dashboard</title>
+</head>
+<body>
+  <div class="ga-layout container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      <aside class="col-12 col-md-3 col-xl-2 ga-sidebar">
+        <div class="ga-sidebar-inner">
+          <img class="ga-logo" src="../../Static/images/motiv-logo-db.png" alt="Motiv logo" />
+          <nav class="ga-nav" aria-label="Main navigation">
+            <a href="GADash.html" class="ga-nav-link active"><img class="ga-nav-icon" src="../../Static/images/vector0-db.svg" alt="" /><span>Dashboard</span></a>
+            <a href="created-groups-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector1-db.svg" alt="" /><span>Groups</span></a>
+            <a href="scheduling-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector2-db.svg" alt="" /><span>Scheduling</span></a>
+            <a href="created-challenges-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector3-db.svg" alt="" /><span>Challenges</span></a>
+            <a href="post-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector4-db.svg" alt="" /><span>Posts</span></a>
+            <a href="workout-history-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector-log-db.svg" alt="" /><span>Workout Log</span></a>
+            <a href="profile-GA.html" class="ga-nav-link"><img class="ga-nav-icon" src="../../Static/images/vector-profile-icondb.svg" alt="" /><span>Profile</span></a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="col-12 col-md-9 col-xl-10 ga-main d-flex flex-column">
+        <header class="ga-topbar">
+          <h1 class="ga-page-title">Dashboard</h1>
+          <div class="ga-topbar-actions">
+            <a href="notifications-GA.html" class="ga-notify-btn" aria-label="Notifications">
+              <span class="ga-notify-bg"></span>
+              <img class="ga-notify-icon" src="../../Static/images/notification-db.svg" alt="" />
+            </a>
+            <img class="ga-avatar" src="../../Static/images/profile-pic-db.png" alt="Profile picture" />
+          </div>
+        </header>
+
+        <main class="ga-main-canvas flex-grow-1">
+          <section class="ga-workouts-overview">
+            <h2 class="ga-section-title">This Week's Workouts</h2>
+            <div class="row g-4">
+              <div class="col-12 col-lg-4">
+                <article class="ga-stat-card">
+                  <div class="ga-stat-icon-wrap"><img src="../../Static/images/group-db.svg" alt="" /></div>
+                  <div>
+                    <p class="ga-stat-label">Workouts</p>
+                    <p class="ga-stat-value">4 <span>This Week</span></p>
+                  </div>
+                </article>
+              </div>
+              <div class="col-12 col-lg-4">
+                <article class="ga-stat-card">
+                  <div class="ga-stat-icon-wrap"><img src="../../Static/images/vector-log1-db.svg" alt="" /></div>
+                  <div>
+                    <p class="ga-stat-label">Current Streak</p>
+                    <p class="ga-stat-value">3 Days <span>Keep it up!</span></p>
+                  </div>
+                </article>
+              </div>
+              <div class="col-12 col-lg-4">
+                <article class="ga-stat-card">
+                  <div class="ga-stat-icon-wrap"><img src="../../Static/images/user-icon-db.svg" alt="" /></div>
+                  <div>
+                    <p class="ga-stat-label">Total Minutes</p>
+                    <p class="ga-stat-value">85 <span>This Week</span></p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="ga-leaderboard-card mt-4">
+            <div class="ga-leaderboard-top">
+              <div>
+                <h2 class="ga-section-title">Leaderboard</h2>
+                <p class="ga-section-subtitle">See how you rank based on different metrics. Rankings update weekly.</p>
+              </div>
+              <div class="ga-rank-filter">
+                <label for="ga-rank-by">Rank By</label>
+                <select id="ga-rank-by">
+                  <option>Workouts</option>
+                  <option>Sets</option>
+                  <option>Reps</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ga-table-wrap">
+              <table class="table ga-table mb-0">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Workouts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><span class="ga-rank-badge">1</span></td><td>John Doe</td><td>12</td></tr>
+                  <tr><td><span class="ga-rank-badge">2</span></td><td>John Doe</td><td>11</td></tr>
+                  <tr><td><span class="ga-rank-badge">3</span></td><td>John Doe</td><td>10</td></tr>
+                  <tr><td><span class="ga-rank-badge">4</span></td><td>John Doe</td><td>10</td></tr>
+                  <tr><td><span class="ga-rank-badge">5</span></td><td>John Doe</td><td>9</td></tr>
+                  <tr><td><span class="ga-rank-badge">6</span></td><td>John Doe</td><td>5</td></tr>
+                  <tr><td><span class="ga-rank-badge">7</span></td><td>John Doe</td><td>4</td></tr>
+                  <tr><td><span class="ga-rank-badge">8</span></td><td>John Doe</td><td>2</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="ga-challenge-banner mt-4">
+            <img class="ga-challenge-icon" src="../../Static/images/challenge-icon-db.svg" alt="" />
+            <div class="ga-challenge-text">
+              <p class="ga-challenge-kicker">Challenges</p>
+              <h3>April Strength Challenge</h3>
+              <p>Apr 1 - Apr 30 • Complete This Weeks Challenge!</p>
+            </div>
+            <div class="ga-challenge-filter">
+              <select>
+                <option>Challenges</option>
+              </select>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
