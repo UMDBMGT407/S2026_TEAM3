@@ -68,6 +68,16 @@
             <h2>Welcome to Motiv</h2>
           </div>
 
+          {% if login_denied %}
+          <div
+            class="alert alert-danger w-75 mb-3"
+            role="alert"
+          >
+            Access denied. This account cannot open that page. Sign in with a platform admin,
+            group admin, or user account that matches the area you are trying to reach.
+          </div>
+          {% endif %}
+
           {% if login_error %}
           <div
             class="alert alert-danger w-75 mb-3"

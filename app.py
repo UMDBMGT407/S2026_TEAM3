@@ -68,8 +68,28 @@ def safe_next_url(nxt: str | None) -> str | None:
     return nxt
 
 
-def redirect_to_login_with_next() -> Any:
-    return redirect(f"/Admin/index.html?next={quote(request.path, safe='/')}")
+def next_url_allowed_for_role(nxt: str | None, role: str | None) -> bool:
+    """Whether a logged-in user with role may be redirected to nxt (open redirect guard + role match)."""
+    if not nxt:
+        return True
+    path = nxt.split("?", 1)[0]
+    if path.startswith("/Admin/"):
+        fn = path.removeprefix("/Admin/").split("/")[-1]
+        if fn in ADMIN_PUBLIC_PAGES:
+            return True
+        return role == "admin"
+    if path.startswith("/User/"):
+        return role == "user"
+    if path.startswith("/GroupAdmin/"):
+        return role == "group_admin"
+    return True
+
+
+def redirect_to_login_with_next(access_denied: bool = False) -> Any:
+    q = f"?next={quote(request.path, safe='/')}"
+    if access_denied:
+        q += "&error=denied"
+    return redirect(f"/Admin/index.html{q}")
 
 
 def default_dashboard_for_role(role: str) -> str:
@@ -89,7 +109,8 @@ def require_roles(*roles: str):
         @wraps(view_func)
         def wrapped(*args, **kwargs):
             if session.get("role") not in allowed:
-                return redirect_to_login_with_next()
+                denied = session.get("role") is not None
+                return redirect_to_login_with_next(access_denied=denied)
             return view_func(*args, **kwargs)
 
         return wrapped
@@ -841,11 +862,13 @@ def admin_page(filename):
     if not allowed_page(filename):
         abort(404)
     if filename not in ADMIN_PUBLIC_PAGES and session.get("role") != "admin":
-        return redirect_to_login_with_next()
+        denied = session.get("role") is not None
+        return redirect_to_login_with_next(access_denied=denied)
     ctx = build_template_context("Admin", filename)
     if filename == "index.html":
         ctx["login_next"] = safe_next_url(request.args.get("next"))
         ctx["login_error"] = request.args.get("error") == "1"
+        ctx["login_denied"] = request.args.get("error") == "denied"
     return render_template(f"Admin/{filename}", **ctx)
 
 
@@ -884,6 +907,8 @@ def auth_login():
             session["role"] = "admin"
             session["id"] = row["admin_id"]
             session["email"] = email
+            if next_url and not next_url_allowed_for_role(next_url, "admin"):
+                return redirect("/Admin/index.html?error=denied")
             return redirect(next_url or default_dashboard_for_role("admin"))
         cur.execute(
             "SELECT * FROM group_admin WHERE group_admin_email = %s", (email,)
@@ -894,6 +919,8 @@ def auth_login():
             session["role"] = "group_admin"
             session["id"] = row["group_admin_id"]
             session["email"] = email
+            if next_url and not next_url_allowed_for_role(next_url, "group_admin"):
+                return redirect("/Admin/index.html?error=denied")
             return redirect(next_url or default_dashboard_for_role("group_admin"))
         row = fetch_app_user_for_login(cur, email)
         if row and check_password_hash(row["password_hash"], password):
@@ -901,6 +928,8 @@ def auth_login():
             session["role"] = "user"
             session["id"] = row["user_id"]
             session["email"] = email
+            if next_url and not next_url_allowed_for_role(next_url, "user"):
+                return redirect("/Admin/index.html?error=denied")
             return redirect(next_url or default_dashboard_for_role("user"))
     finally:
         cur.close()
