@@ -131,7 +131,19 @@
                       <td>{{ m.member_name }}</td>
                       <td>{{ m.member_role }}</td>
                       <td>{{ m.member_email }}</td>
-                      <td class="text-end"><img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" /></td>
+                      <td class="text-end">
+                        {% if m.member_kind == 'app_user' %}
+                        <form method="post" action="/actions/group-admin/remove-group-member" class="d-inline" onsubmit="return confirm('Remove this member from the group?');">
+                          <input type="hidden" name="group_id" value="{{ selected_group_id }}" />
+                          <input type="hidden" name="user_id" value="{{ m.user_id }}" />
+                          <button type="submit" class="border-0 bg-transparent p-0" aria-label="Remove member from group">
+                            <img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
+                          </button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted" aria-hidden="true">—</span>
+                        {% endif %}
+                      </td>
                     </tr>
                     {% else %}
                     <tr>

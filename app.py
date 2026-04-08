@@ -393,6 +393,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     ctx["selected_group_name"] = selected_group["group_name"]
                     selected_members = [
                         {
+                            "member_kind": "group_admin",
                             "member_id_label": f"#GA{selected_group['group_admin_id']}",
                             "member_name": f"{selected_group['group_admin_first_name']} {selected_group['group_admin_last_name']}",
                             "member_role": "Group Admin",
@@ -412,6 +413,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     for u in cur.fetchall():
                         selected_members.append(
                             {
+                                "member_kind": "app_user",
+                                "user_id": u["user_id"],
                                 "member_id_label": f"#U{u['user_id']}",
                                 "member_name": f"{u['user_first_name']} {u['user_last_name']}",
                                 "member_role": "Member",
@@ -720,6 +723,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_group_name"] = selected_group["group_name"]
                         selected_members = [
                             {
+                                "member_kind": "group_admin",
                                 "member_id_label": f"#GA{ga_id}",
                                 "member_name": f"{selected_group['group_admin_first_name']} {selected_group['group_admin_last_name']}",
                                 "member_role": "Group Admin",
@@ -739,6 +743,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         for u in cur.fetchall():
                             selected_members.append(
                                 {
+                                    "member_kind": "app_user",
+                                    "user_id": u["user_id"],
                                     "member_id_label": f"#U{u['user_id']}",
                                     "member_name": f"{u['user_first_name']} {u['user_last_name']}",
                                     "member_role": "Member",
@@ -1030,6 +1036,32 @@ def ga_edit_group(group_id):
     mysql.connection.commit()
     cur.close()
     return redirect("/GroupAdmin/created-groups-GA.html")
+
+
+@app.post("/actions/group-admin/remove-group-member")
+def ga_remove_group_member():
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/created-groups-GA.html")
+    gid = parse_int(request.form.get("group_id"))
+    uid = parse_int(request.form.get("user_id"))
+    if not gid or not uid:
+        return redirect("/GroupAdmin/created-groups-GA.html")
+    cur = mysql.connection.cursor()
+    cur.execute(
+        """SELECT 1 FROM motiv_group
+           WHERE group_id = %s AND group_admin_id = %s LIMIT 1""",
+        (gid, session["id"]),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/GroupAdmin/created-groups-GA.html?err=1")
+    cur.execute(
+        "DELETE FROM user_group WHERE user_id = %s AND group_id = %s",
+        (uid, gid),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect(f"/GroupAdmin/created-groups-GA.html?group_id={gid}")
 
 
 @app.post("/actions/group-admin/challenge")
@@ -1499,6 +1531,28 @@ def admin_group_edit(gid):
     mysql.connection.commit()
     cur.close()
     return redirect("/Admin/GroupA.html")
+
+
+@app.post("/actions/admin/remove-group-member")
+def admin_remove_group_member():
+    if session.get("role") != "admin":
+        return redirect("/Admin/GroupA.html")
+    gid = parse_int(request.form.get("group_id"))
+    uid = parse_int(request.form.get("user_id"))
+    if not gid or not uid:
+        return redirect("/Admin/GroupA.html")
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT 1 FROM motiv_group WHERE group_id = %s LIMIT 1", (gid,))
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/Admin/GroupA.html")
+    cur.execute(
+        "DELETE FROM user_group WHERE user_id = %s AND group_id = %s",
+        (uid, gid),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect(f"/Admin/GroupA.html?group_id={gid}")
 
 
 @app.post("/actions/admin/challenge/<int:cid>/edit")
