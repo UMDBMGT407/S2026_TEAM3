@@ -65,60 +65,33 @@
 
         <div class="posts-grid-wrap">
           <div class="row g-4">
+            {% for p in posts %}
             <div class="col-12 col-md-6">
               <article class="post-card">
                 <div class="post-card-media">
-                  <img class="post-card-placeholder" src="../../Static/Images%201/PostAplaceholder0.png" alt="" />
+                  <img class="post-card-placeholder" src="../../Static/Images%201/PostAplaceholder{{ (loop.index0 % 4) }}.png" alt="" />
                 </div>
-                <div class="post-card-footer d-flex justify-content-between align-items-center">
-                  <span class="post-card-email">email@gmail.com</span>
-                  <button type="button" class="post-card-delete" aria-label="Delete post">
+                <div class="post-card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                  <span class="post-card-email">{{ p.user_email }}</span>
+                  <button type="button" class="post-card-delete" aria-label="Delete post" onclick="adminDeletePost({{ p.post_id }})">
                     <img src="../../Static/Images%201/PostAtrash-can-button3.svg" alt="" />
                   </button>
                 </div>
+                <p class="small px-2 text-muted">{{ p.post_content }}</p>
               </article>
             </div>
-            <div class="col-12 col-md-6">
-              <article class="post-card">
-                <div class="post-card-media">
-                  <img class="post-card-placeholder" src="../../Static/Images%201/PostAplaceholder1.png" alt="" />
-                </div>
-                <div class="post-card-footer d-flex justify-content-between align-items-center">
-                  <span class="post-card-email">email@gmail.com</span>
-                  <button type="button" class="post-card-delete" aria-label="Delete post">
-                    <img src="../../Static/Images%201/PostAtrash-can-button3.svg" alt="" />
-                  </button>
-                </div>
-              </article>
-            </div>
-            <div class="col-12 col-md-6">
-              <article class="post-card">
-                <div class="post-card-media">
-                  <img class="post-card-placeholder" src="../../Static/Images%201/PostAplaceholder2.png" alt="" />
-                </div>
-                <div class="post-card-footer d-flex justify-content-between align-items-center">
-                  <span class="post-card-email">email@gmail.com</span>
-                  <button type="button" class="post-card-delete" aria-label="Delete post">
-                    <img src="../../Static/Images%201/PostAtrash-can-button2.svg" alt="" />
-                  </button>
-                </div>
-              </article>
-            </div>
-            <div class="col-12 col-md-6">
-              <article class="post-card">
-                <div class="post-card-media">
-                  <img class="post-card-placeholder" src="../../Static/Images%201/PostAplaceholder3.png" alt="" />
-                </div>
-                <div class="post-card-footer d-flex justify-content-between align-items-center">
-                  <span class="post-card-email">email@gmail.com</span>
-                  <button type="button" class="post-card-delete" aria-label="Delete post">
-                    <img src="../../Static/Images%201/PostAtrash-can-button3.svg" alt="" />
-                  </button>
-                </div>
-              </article>
-            </div>
+            {% else %}
+            <p class="text-muted">No posts in the database.</p>
+            {% endfor %}
           </div>
         </div>
+        <script>
+        async function adminDeletePost(id) {
+          if (!confirm('Delete this post?')) return;
+          var r = await fetch('/api/posts/' + id, { method: 'DELETE', credentials: 'same-origin' });
+          if (r.ok) location.reload(); else alert('Delete failed (log in as admin).');
+        }
+        </script>
       </main>
     </div>
   </div>

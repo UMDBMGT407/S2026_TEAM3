@@ -71,11 +71,30 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Group Name 1</td><td>Challenge Name 1</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>15</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="../../Static/images/CCGAedit-button0.svg" alt="Edit" /></a><img src="../../Static/images/CCGAtrash-can-button0.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 2</td><td>Challenge Name 2</td><td>#/##/##</td><td>#/##/##</td><td>Upcoming</td><td>5</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="../../Static/images/CCGAedit-button1.svg" alt="Edit" /></a><img src="../../Static/images/CCGAtrash-can-button1.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 3</td><td>Challenge Name 3</td><td>#/##/##</td><td>#/##/##</td><td>Completed</td><td>10</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="../../Static/images/CCGAedit-button2.svg" alt="Edit" /></a><img src="../../Static/images/CCGAtrash-can-button2.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 4</td><td>Challenge Name 4</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>20</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="../../Static/images/CCGAedit-button3.svg" alt="Edit" /></a><img src="../../Static/images/CCGAtrash-can-button3.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 5</td><td>Challenge Name 5</td><td>#/##/##</td><td>#/##/##</td><td>Active</td><td>3</td><td><button type="button" class="ccga-view-btn">View</button></td><td class="text-end ccga-actions"><a href="edit-challenge-GA.html"><img src="../../Static/images/CCGAedit-button4.svg" alt="Edit" /></a><img src="../../Static/images/CCGAtrash-can-button4.svg" alt="Delete" /></td></tr>
+                  {% for ch in ga_created_challenges %}
+                  <tr>
+                    <td>{{ ch.group_name }}</td>
+                    <td>{{ ch.challenge_title }}</td>
+                    <td>{% if ch.challenge_start_date %}{{ ch.challenge_start_date }}{% else %}—{% endif %}</td>
+                    <td>{% if ch.challenge_end_date %}{{ ch.challenge_end_date }}{% else %}—{% endif %}</td>
+                    <td>{{ ch.challenge_status or '—' }}</td>
+                    <td>{{ ch.challenge_goal or '—' }}</td>
+                    <td>
+                      <form method="get" action="created-challenges-GA.html" class="m-0 d-inline">
+                        <input type="hidden" name="challenge_id" value="{{ ch.challenge_id }}" />
+                        <button type="submit" class="ccga-view-btn">View</button>
+                      </form>
+                    </td>
+                    <td class="text-end ccga-actions">
+                      <a href="edit-challenge-GA.html?id={{ ch.challenge_id }}"><img src="../../Static/images/CCGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
+                      <img src="../../Static/images/CCGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="8" class="text-muted p-4">No challenges yet. <a href="challenge-creation-GA.html">Create a challenge</a>.</td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -85,7 +104,7 @@
             <div class="ccga-card-head ccga-members-head">
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <h2 class="mb-0">Participation -</h2>
-                <div class="ccga-challenge-pill">Challenge Name</div>
+                <div class="ccga-challenge-pill">{% if selected_challenge_name %}{{ selected_challenge_name }}{% else %}—{% endif %}</div>
               </div>
               <div class="ccga-search-pill"><img src="../../Static/images/CCGAgroup1.svg" alt="" /><span>Search Member</span></div>
             </div>
@@ -101,11 +120,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">1</span></td><td>7/15</td><td class="text-end"><img src="../../Static/images/CCGAtrash-can-button5.svg" alt="Delete" /></td></tr>
-                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">2</span></td><td>2/15</td><td class="text-end"><img src="../../Static/images/CCGAtrash-can-button6.svg" alt="Delete" /></td></tr>
-                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">10</span></td><td>2/15</td><td class="text-end"><img src="../../Static/images/CCGAtrash-can-button7.svg" alt="Delete" /></td></tr>
-                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">7</span></td><td>2/15</td><td class="text-end"><img src="../../Static/images/CCGAtrash-can-button8.svg" alt="Delete" /></td></tr>
-                  <tr><td>John Doe</td><td><span class="ccga-rank-badge">5</span></td><td>2/15</td><td class="text-end"><img src="../../Static/images/CCGAtrash-can-button9.svg" alt="Delete" /></td></tr>
+                  {% if selected_challenge_id %}
+                    {% for p in selected_challenge_participants %}
+                    <tr>
+                      <td>{{ p.member_name }}</td>
+                      <td><span class="ccga-rank-badge">{{ p.rank }}</span></td>
+                      <td>{{ p.goal_progress }}</td>
+                      <td class="text-end"><img src="../../Static/images/CCGAtrash-can-button{{ (loop.index0 % 5) + 5 }}.svg" alt="" aria-hidden="true" /></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <td colspan="4" class="text-muted p-4">No participants found for this challenge's group.</td>
+                    </tr>
+                    {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="4" class="text-muted p-4">Select a challenge using View.</td>
+                  </tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>

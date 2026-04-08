@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Static/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/WLEUstyle.css">
   <title>Edit Workout Exercise</title>
@@ -46,57 +46,55 @@
               <span class="wleu-tab">Performance Metrics</span>
             </div>
 
-            <form class="wleu-form" action="#" method="post">
+            {% if edit_w %}
+            <form class="wleu-form" method="post" action="/actions/user/workout/{{ edit_w.workout_id }}/edit">
               <div class="row g-4">
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-date">Date</label>
-                  <input id="wleu-date" class="wleu-input" type="text" value="25 January 1990" />
+                  <input id="wleu-date" name="workout_date" class="wleu-input" type="date" value="{{ edit_w.workout_date }}" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-sets">Sets</label>
-                  <input id="wleu-sets" class="wleu-input" type="text" value="3" />
+                  <input id="wleu-sets" name="num_sets" class="wleu-input" type="number" value="{{ edit_log.workout_num_sets if edit_log else 3 }}" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-exercise">Exercise Name</label>
-                  <input id="wleu-exercise" class="wleu-input" type="text" value="Sit-ups" />
+                  <input id="wleu-exercise" name="exercise_name" class="wleu-input" type="text" value="{{ edit_ex.exercise_name if edit_ex else 'Sit-ups' }}" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-reps">Reps</label>
-                  <input id="wleu-reps" class="wleu-input" type="text" value="10" />
+                  <input id="wleu-reps" name="num_reps" class="wleu-input" type="number" value="{{ edit_log.workout_num_reps if edit_log else 10 }}" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-duration">Duration (minutes)</label>
-                  <input id="wleu-duration" class="wleu-input" type="text" value="30" />
+                  <input id="wleu-duration" name="duration_minutes" class="wleu-input" type="number" value="{{ edit_w.workout_duration_minutes or 30 }}" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-weight">Weights</label>
-                  <input id="wleu-weight" class="wleu-input" type="text" value="5" />
+                  <input id="wleu-weight" name="weight" class="wleu-input" type="text" value="{{ edit_log.workout_num_weight if edit_log and edit_log.workout_num_weight is not none else 5 }}" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-difficulty">Difficulty Level</label>
-                  <input id="wleu-difficulty" class="wleu-input" type="text" value="Medium" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="wleu-label" for="wleu-challenge">Add to Challenge (optional)</label>
-                  <select id="wleu-challenge" class="wleu-input wleu-select">
-                    <option selected>Challenge Name</option>
-                  </select>
+                  <input id="wleu-difficulty" name="difficulty" class="wleu-input" type="text" value="{{ edit_ex.exercise_difficulty_level if edit_ex else 'Medium' }}" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-muscle">Muscle Group</label>
-                  <input id="wleu-muscle" class="wleu-input" type="text" value="Abs" />
+                  <input id="wleu-muscle" name="muscle_group" class="wleu-input" type="text" value="{{ edit_ex.exercise_muscle_group if edit_ex else 'Abs' }}" />
                 </div>
               </div>
 
               <div class="wleu-actions">
-                <a href="WLDU.html" class="wleu-btn wleu-btn--primary">Save</a>
-                <a href="WLDU.html" class="wleu-btn wleu-btn--secondary">Cancel</a>
+                <button type="submit" class="wleu-btn wleu-btn--primary border-0">Save</button>
+                <a href="WLU.html" class="wleu-btn wleu-btn--secondary">Cancel</a>
               </div>
             </form>
+            {% else %}
+            <p class="p-3">Open from <a href="WLU.html">Workout Log</a> with <code>?id=</code> (workout id).</p>
+            {% endif %}
           </section>
         </div>
       </div>

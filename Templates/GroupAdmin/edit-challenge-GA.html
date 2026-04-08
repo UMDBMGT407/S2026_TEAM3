@@ -45,40 +45,46 @@
               <h2 class="ecga-card-title">Edit Challenge</h2>
             </div>
 
-            <form class="ecga-form" action="#" method="post">
+            {% if edit_challenge %}
+            <form class="ecga-form" method="post" action="/actions/group-admin/challenge/{{ edit_challenge.challenge_id }}/edit">
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="ecga-label" for="ecga-challenge-name">Challenge Name</label>
-                  <input id="ecga-challenge-name" class="ecga-input" type="text" value="Challenge Name" />
+                  <input id="ecga-challenge-name" name="challenge_title" class="ecga-input" type="text" value="{{ edit_challenge.challenge_title }}" />
                 </div>
                 <div class="col-12 col-lg-6">
                   <label class="ecga-label" for="ecga-goal">Challenge Goal</label>
-                  <input id="ecga-goal" class="ecga-input" type="text" value="# Of Workouts" />
+                  <input id="ecga-goal" name="challenge_goal" class="ecga-input" type="text" value="{{ edit_challenge.challenge_goal or '' }}" />
                 </div>
                 <div class="col-12">
                   <label class="ecga-label" for="ecga-group">Group</label>
                   <div class="ecga-select-wrap">
-                    <select id="ecga-group" class="ecga-select" aria-label="Group">
-                      <option>Group</option>
+                    <select id="ecga-group" name="group_id" class="ecga-select" aria-label="Group">
+                      {% for g in groups %}
+                      <option value="{{ g.group_id }}" {% if g.group_id == edit_challenge.group_id %}selected{% endif %}>{{ g.group_name }}</option>
+                      {% endfor %}
                     </select>
                     <img class="ecga-select-chevron" src="../../Static/images/ECGAvector-40.svg" alt="" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="ecga-label" for="ecga-start-date">Start Date</label>
-                  <input id="ecga-start-date" class="ecga-input" type="text" value="Start Date" />
+                  <input id="ecga-start-date" name="start_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_start_date or '' }}" />
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="ecga-label" for="ecga-end-date">End Date</label>
-                  <input id="ecga-end-date" class="ecga-input" type="text" value="End Date" />
+                  <input id="ecga-end-date" name="end_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_end_date or '' }}" />
                 </div>
               </div>
 
               <div class="ecga-actions">
-                <a href="created-challenges-GA.html" class="ecga-btn ecga-btn--primary">Save</a>
+                <button type="submit" class="ecga-btn ecga-btn--primary border-0">Save</button>
                 <a href="created-challenges-GA.html" class="ecga-btn ecga-btn--secondary">Cancel</a>
               </div>
             </form>
+            {% else %}
+            <p class="p-3">Open with <code>?id=</code> (challenge id) from your challenges list.</p>
+            {% endif %}
           </section>
         </main>
       </div>

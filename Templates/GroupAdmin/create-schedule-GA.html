@@ -45,37 +45,35 @@
               <h2 class="csga-card-title">Create Group Schedule</h2>
             </div>
 
-            <form class="csga-form" action="#" method="post">
+            <form class="csga-form" action="/actions/group-admin/schedule" method="post">
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="csga-label" for="csga-session-name">Session Name</label>
-                  <input id="csga-session-name" class="csga-input" type="text" value="Workout Name" />
+                  <input id="csga-session-name" name="title" class="csga-input" type="text" placeholder="Workout title" required />
                 </div>
                 <div class="col-12 col-lg-6">
                   <label class="csga-label" for="csga-location">Location</label>
-                  <input id="csga-location" class="csga-input" type="text" value="Location" />
+                  <input id="csga-location" name="location" class="csga-input" type="text" placeholder="Location" />
                 </div>
                 <div class="col-12">
                   <label class="csga-label" for="csga-group">Group</label>
                   <div class="csga-select-wrap">
-                    <select id="csga-group" class="csga-select" aria-label="Group">
-                      <option>Group</option>
+                    <select id="csga-group" name="group_id" class="csga-select" aria-label="Group" required>
+                      {% for g in groups %}
+                      <option value="{{ g.group_id }}">{{ g.group_name }}</option>
+                      {% endfor %}
                     </select>
                     <img class="csga-select-chevron" src="../../Static/images/CSGAvector-40.svg" alt="" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="csga-label" for="csga-date">Date</label>
-                  <input id="csga-date" class="csga-input" type="text" value="Date" />
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                  <label class="csga-label" for="csga-time">Time</label>
-                  <input id="csga-time" class="csga-input" type="text" value="Time" />
+                  <input id="csga-date" name="scheduled_date" class="csga-input" type="date" />
                 </div>
               </div>
 
               <div class="csga-actions">
-                <a href="scheduling-GA.html" class="csga-btn csga-btn--primary">Create</a>
+                <button type="submit" class="csga-btn csga-btn--primary border-0">Create</button>
                 <a href="scheduling-GA.html" class="csga-btn csga-btn--secondary">Cancel</a>
               </div>
             </form>

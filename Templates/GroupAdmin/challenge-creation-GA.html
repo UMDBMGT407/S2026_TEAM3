@@ -45,37 +45,39 @@
               <h2 class="cc2ga-card-title">Challenge Creation</h2>
             </div>
 
-            <form class="cc2ga-form" action="#" method="post">
+            <form class="cc2ga-form" action="/actions/group-admin/challenge" method="post">
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="cc2ga-label" for="cc2ga-challenge-name">Challenge Name</label>
-                  <input id="cc2ga-challenge-name" class="cc2ga-input" type="text" value="Challenge Name" />
+                  <input id="cc2ga-challenge-name" name="challenge_title" class="cc2ga-input" type="text" placeholder="Challenge title" required />
                 </div>
                 <div class="col-12 col-lg-6">
                   <label class="cc2ga-label" for="cc2ga-goal">Challenge Goal</label>
-                  <input id="cc2ga-goal" class="cc2ga-input" type="text" value="# Of Workouts" />
+                  <input id="cc2ga-goal" name="challenge_goal" class="cc2ga-input" type="text" placeholder="# of workouts, miles, etc." />
                 </div>
                 <div class="col-12">
                   <label class="cc2ga-label" for="cc2ga-group">Group</label>
                   <div class="cc2ga-select-wrap">
-                    <select id="cc2ga-group" class="cc2ga-select" aria-label="Group">
-                      <option>Group</option>
+                    <select id="cc2ga-group" name="group_id" class="cc2ga-select" aria-label="Group" required>
+                      {% for g in groups %}
+                      <option value="{{ g.group_id }}">{{ g.group_name }}</option>
+                      {% endfor %}
                     </select>
                     <img class="cc2ga-select-chevron" src="../../Static/images/CC2GAvector-40.svg" alt="" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="cc2ga-label" for="cc2ga-start-date">Start Date</label>
-                  <input id="cc2ga-start-date" class="cc2ga-input" type="text" value="Start Date" />
+                  <input id="cc2ga-start-date" name="start_date" class="cc2ga-input" type="date" />
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="cc2ga-label" for="cc2ga-end-date">End Date</label>
-                  <input id="cc2ga-end-date" class="cc2ga-input" type="text" value="End Date" />
+                  <input id="cc2ga-end-date" name="end_date" class="cc2ga-input" type="date" />
                 </div>
               </div>
 
               <div class="cc2ga-actions">
-                <a href="created-challenges-GA.html" class="cc2ga-btn cc2ga-btn--primary">Create</a>
+                <button type="submit" class="cc2ga-btn cc2ga-btn--primary border-0">Create</button>
                 <a href="created-challenges-GA.html" class="cc2ga-btn cc2ga-btn--secondary">Cancel</a>
               </div>
             </form>

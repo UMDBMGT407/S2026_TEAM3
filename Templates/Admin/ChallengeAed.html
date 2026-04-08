@@ -68,35 +68,31 @@
             <h2 class="edit-group">Edit Scheduling</h2>
           </div>
 
-          <form class="edit-form">
+          {% if edit_session %}
+          <form class="edit-form" method="post" action="/actions/admin/schedule/{{ edit_session.group_workout_id }}/edit">
             <div class="row g-3">
               <div class="col-12 col-md-6">
-                <label class="form-label-custom" for="groupField">Group</label>
-                <input id="groupField" class="form-control custom-input" type="text" value="Group" />
-              </div>
-              <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="sessionName">Session Name</label>
-                <input id="sessionName" class="form-control custom-input" type="text" value="Session Name" />
+                <input id="sessionName" name="session_name" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_title }}" />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="dateField">Date</label>
-                <input id="dateField" class="form-control custom-input" type="text" value="Date" />
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label-custom" for="timeField">Time</label>
-                <input id="timeField" class="form-control custom-input" type="text" value="Time" />
+                <input id="dateField" name="date_field" class="form-control custom-input" type="date" value="{{ edit_session.group_workout_scheduled_date }}" />
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="locationField">Location</label>
-                <input id="locationField" class="form-control custom-input" type="text" value="Location" />
+                <input id="locationField" name="location_field" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_location or '' }}" />
               </div>
             </div>
 
             <div class="button-row">
               <a href="ChallengeA.html" class="action-btn secondary-btn">Cancel</a>
-              <a href="ChallengeA.html" class="action-btn primary-btn">Save</a>
+              <button type="submit" class="action-btn primary-btn border-0">Save</button>
             </div>
           </form>
+          {% else %}
+          <p class="p-3">Open from <a href="ChallengeA.html">Scheduling</a> with <code>?id=</code> (group workout id).</p>
+          {% endif %}
         </section>
       </main>
     </div>

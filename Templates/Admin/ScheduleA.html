@@ -90,66 +90,27 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for c in admin_challenges %}
                   <tr>
-                    <td>#G001</td>
-                    <td>Challenge Name 1</td>
-                    <td>#/##/##</td>
-                    <td>#/##/##</td>
-                    <td>#CH01</td>
-                    <td><span class="status-pill status-active">Active</span></td>
-                    <td>15</td>
+                    <td>#{{ c.group_id }}</td>
+                    <td>{{ c.challenge_title }}</td>
+                    <td>{{ c.challenge_start_date or '—' }}</td>
+                    <td>{{ c.challenge_end_date or '—' }}</td>
+                    <td>#{{ c.challenge_id }}</td>
+                    <td><span class="status-pill status-active">{{ c.challenge_status or '—' }}</span></td>
                     <td>—</td>
-                    <td><button type="button" class="view-btn">View</button></td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
+                    <td>{{ c.challenge_goal or '—' }}</td>
+                    <td>
+                      <form method="get" action="ScheduleA.html" class="m-0 d-inline">
+                        <input type="hidden" name="challenge_id" value="{{ c.challenge_id }}" />
+                        <button type="submit" class="view-btn">View</button>
+                      </form>
+                    </td>
+                    <td class="text-end action-icons"><a href="ScheduleAed.html?id={{ c.challenge_id }}"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a></td>
                   </tr>
-                  <tr>
-                    <td>#G002</td>
-                    <td>Challenge Name 1</td>
-                    <td>#/##/##</td>
-                    <td>#/##/##</td>
-                    <td>#CH02</td>
-                    <td><span class="status-pill status-upcoming">Upcoming</span></td>
-                    <td>5</td>
-                    <td>—</td>
-                    <td><button type="button" class="view-btn">View</button></td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G003</td>
-                    <td>Challenge Name 1</td>
-                    <td>#/##/##</td>
-                    <td>#/##/##</td>
-                    <td>#CH03</td>
-                    <td><span class="status-pill status-completed">Completed</span></td>
-                    <td>10</td>
-                    <td>—</td>
-                    <td><button type="button" class="view-btn">View</button></td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G004</td>
-                    <td>Challenge Name 1</td>
-                    <td>#/##/##</td>
-                    <td>#/##/##</td>
-                    <td>#CH04</td>
-                    <td><span class="status-pill status-active">Active</span></td>
-                    <td>20</td>
-                    <td>—</td>
-                    <td><button type="button" class="view-btn">View</button></td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G005</td>
-                    <td>Challenge Name 1</td>
-                    <td>#/##/##</td>
-                    <td>#/##/##</td>
-                    <td>#CH05</td>
-                    <td><span class="status-pill status-active">Active</span></td>
-                    <td>3</td>
-                    <td>—</td>
-                    <td><button type="button" class="view-btn">View</button></td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
+                  {% else %}
+                  <tr><td colspan="10">No challenges yet.</td></tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -160,7 +121,7 @@
           <div class="section-header-wrap">
             <div class="member-title-wrap">
               <h2 class="section-title">Participation -</h2>
-              <span class="group-pill">#CH01</span>
+              <span class="group-pill">{% if selected_challenge_id %}#CH{{ selected_challenge_id }}{% else %}—{% endif %}</span>
             </div>
             <div class="search-pill">
               <img src="../../Static/Images%201/ScheduleAgroup0.svg" alt="" />
@@ -181,41 +142,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>#U001</td>
-                    <td>John Doe</td>
-                    <td><span class="rank-badge">1</span></td>
-                    <td>7/15</td>
-                    <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#U001</td>
-                    <td>John Doe</td>
-                    <td><span class="rank-badge">2</span></td>
-                    <td>2/15</td>
-                    <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#U001</td>
-                    <td>John Doe</td>
-                    <td><span class="rank-badge">10</span></td>
-                    <td>2/15</td>
-                    <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#U001</td>
-                    <td>John Doe</td>
-                    <td><span class="rank-badge">7</span></td>
-                    <td>2/15</td>
-                    <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#U001</td>
-                    <td>John Doe</td>
-                    <td><span class="rank-badge">5</span></td>
-                    <td>2/15</td>
-                    <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" /></td>
-                  </tr>
+                  {% if selected_challenge_id %}
+                    {% for p in selected_challenge_participants %}
+                    <tr>
+                      <td>{{ p.member_id_label }}</td>
+                      <td>{{ p.member_name }}</td>
+                      <td><span class="rank-badge">{{ p.rank }}</span></td>
+                      <td>{{ p.goal_progress }}</td>
+                      <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="" aria-hidden="true" /></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-muted">No participants found for this challenge yet.</td></tr>
+                    {% endfor %}
+                  {% else %}
+                  <tr><td colspan="5" class="text-muted">Select a challenge using View to load participation details.</td></tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>

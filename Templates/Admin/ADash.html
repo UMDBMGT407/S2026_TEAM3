@@ -66,9 +66,9 @@
         <section class="dash-section">
           <div class="section-heading"><h2>User Analytics</h2><img class="section-icon" src="../../Static/Images%201/ADashvector6.svg" alt="" /></div>
           <div class="row g-3">
-            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Users</p><p class="metric-value">6,029</p></div></div>
-            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Groups</p><p class="metric-value">2,043</p></div></div>
-            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Posts</p><p class="metric-value">10,349</p></div></div>
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Users</p><p class="metric-value">{{ "{:,}".format(admin_user_count or 0) }}</p></div></div>
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Groups</p><p class="metric-value">{{ "{:,}".format(admin_group_count or 0) }}</p></div></div>
+            <div class="col-12 col-md-6 col-xl-4"><div class="metric-card"><p class="metric-label"># Of Posts</p><p class="metric-value">{{ "{:,}".format(admin_post_count or 0) }}</p></div></div>
           </div>
         </section>
 
@@ -85,10 +85,10 @@
             </div>
             <div class="col-12 col-xl-8">
               <div class="row g-3">
-                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Workouts Logged</p><p class="metric-value">5,038</p></div></div>
-                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Sets Done</p><p class="metric-value">7,920</p></div></div>
-                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Exercises Done</p><p class="metric-value">10,304</p></div></div>
-                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Reps Done</p><p class="metric-value">16,382</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Workouts Logged</p><p class="metric-value">{{ "{:,}".format(admin_workouts_logged_count or 0) }}</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Sets Done</p><p class="metric-value">{{ "{:,}".format(admin_sets_done_count or 0) }}</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Exercises Done</p><p class="metric-value">{{ "{:,}".format(admin_exercises_done_count or 0) }}</p></div></div>
+                <div class="col-12 col-md-6"><div class="metric-card compact"><p class="metric-label"># Of Reps Done</p><p class="metric-value">{{ "{:,}".format(admin_reps_done_count or 0) }}</p></div></div>
               </div>
             </div>
           </div>

@@ -66,11 +66,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Group Name 1</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button0.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button0.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 1</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button1.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button1.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 3</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button2.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button2.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 4</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button3.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button3.svg" alt="Delete" /></td></tr>
-                  <tr><td>Group Name 5</td><td>Session Name 1</td><td class="text-end sga-actions"><button class="sga-view-btn" type="button">View Details</button><a href="edit-schedule-GA.html"><img src="../../Static/images/SGAedit-button4.svg" alt="Edit" /></a><img src="../../Static/images/SGAtrash-can-button4.svg" alt="Delete" /></td></tr>
+                  {% for s in ga_schedule_sessions %}
+                  <tr>
+                    <td>{{ s.group_name }}</td>
+                    <td>{{ s.group_workout_title }}</td>
+                    <td class="text-end sga-actions">
+                      <form method="get" action="scheduling-GA.html" class="d-inline m-0">
+                        <input type="hidden" name="workout_id" value="{{ s.group_workout_id }}" />
+                        <button class="sga-view-btn" type="submit">View Details</button>
+                      </form>
+                      <a href="edit-schedule-GA.html?id={{ s.group_workout_id }}"><img src="../../Static/images/SGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
+                      <img src="../../Static/images/SGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted p-4">No scheduled workouts yet. <a href="create-schedule-GA.html">Schedule one</a>.</td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -81,9 +94,9 @@
               <section class="sga-card">
                 <h2 class="sga-section-title">Full Details</h2>
                 <div class="sga-details-grid">
-                  <div><span>Date</span><strong>#/##/##</strong></div>
-                  <div><span>Time</span><strong>00:00</strong></div>
-                  <div><span>Location</span><strong>Location 1</strong></div>
+                  <div><span>Date</span><strong>{% if selected_workout and selected_workout.group_workout_scheduled_date %}{{ selected_workout.group_workout_scheduled_date }}{% else %}—{% endif %}</strong></div>
+                  <div><span>Time</span><strong>—</strong></div>
+                  <div><span>Location</span><strong>{% if selected_workout and selected_workout.group_workout_location %}{{ selected_workout.group_workout_location }}{% else %}—{% endif %}</strong></div>
                 </div>
               </section>
             </div>
@@ -93,7 +106,7 @@
                 <div class="sga-card-head sga-attendance-head">
                   <div class="d-flex align-items-center gap-3 flex-wrap">
                     <h2 class="mb-0">Selected Session -</h2>
-                    <div class="sga-session-pill">Session Name</div>
+                    <div class="sga-session-pill">{% if selected_workout %}{{ selected_workout.group_workout_title }}{% else %}—{% endif %}</div>
                   </div>
                   <div class="d-flex align-items-center gap-3 flex-wrap">
                     <h3>Attendance</h3>
@@ -106,15 +119,28 @@
                     <thead>
                       <tr>
                         <th>Member Name</th>
+                        <th>Email</th>
                         <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td>John Doe</td><td>Going</td></tr>
-                      <tr><td>John Doe</td><td>Not Going</td></tr>
-                      <tr><td>John Doe</td><td>Pending</td></tr>
-                      <tr><td>John Doe</td><td>Going</td></tr>
-                      <tr><td>John Doe</td><td>Going</td></tr>
+                      {% if selected_workout %}
+                        {% for m in selected_workout_attendance %}
+                        <tr>
+                          <td>{{ m.user_first_name }} {{ m.user_last_name }}</td>
+                          <td>{{ m.user_email }}</td>
+                          <td>{{ m.attendance_status }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                          <td colspan="3" class="text-muted p-4">No members found for this workout's group.</td>
+                        </tr>
+                        {% endfor %}
+                      {% else %}
+                      <tr>
+                        <td colspan="3" class="text-muted p-4">Select a workout using View Details.</td>
+                      </tr>
+                      {% endif %}
                     </tbody>
                   </table>
                 </div>

@@ -45,40 +45,42 @@
               <h2 class="esga-card-title">Edit Scheduling</h2>
             </div>
 
-            <form class="esga-form" action="#" method="post">
+            {% if edit_workout %}
+            <form class="esga-form" method="post" action="/actions/group-admin/schedule/{{ edit_workout.group_workout_id }}/edit">
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="esga-label" for="esga-session-name">Session Name</label>
-                  <input id="esga-session-name" class="esga-input" type="text" value="Workout Name" />
+                  <input id="esga-session-name" name="title" class="esga-input" type="text" value="{{ edit_workout.group_workout_title }}" />
                 </div>
                 <div class="col-12 col-lg-6">
                   <label class="esga-label" for="esga-location">Location</label>
-                  <input id="esga-location" class="esga-input" type="text" value="Location" />
+                  <input id="esga-location" name="location" class="esga-input" type="text" value="{{ edit_workout.group_workout_location or '' }}" />
                 </div>
                 <div class="col-12">
                   <label class="esga-label" for="esga-group">Group</label>
                   <div class="esga-select-wrap">
-                    <select id="esga-group" class="esga-select" aria-label="Group">
-                      <option>Group</option>
+                    <select id="esga-group" name="group_id" class="esga-select" aria-label="Group">
+                      {% for g in groups %}
+                      <option value="{{ g.group_id }}" {% if g.group_id == edit_workout.group_id %}selected{% endif %}>{{ g.group_name }}</option>
+                      {% endfor %}
                     </select>
                     <img class="esga-select-chevron" src="../../Static/images/ESGAvector-40.svg" alt="" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="esga-label" for="esga-date">Date</label>
-                  <input id="esga-date" class="esga-input" type="text" value="Date" />
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                  <label class="esga-label" for="esga-time">Time</label>
-                  <input id="esga-time" class="esga-input" type="text" value="Time" />
+                  <input id="esga-date" name="scheduled_date" class="esga-input" type="date" value="{{ edit_workout.group_workout_scheduled_date or '' }}" />
                 </div>
               </div>
 
               <div class="esga-actions">
-                <a href="scheduling-GA.html" class="esga-btn esga-btn--primary">Save</a>
+                <button type="submit" class="esga-btn esga-btn--primary border-0">Save</button>
                 <a href="scheduling-GA.html" class="esga-btn esga-btn--secondary">Cancel</a>
               </div>
             </form>
+            {% else %}
+            <p class="p-3">Open with <code>?id=</code> (group workout id) from scheduling.</p>
+            {% endif %}
           </section>
         </main>
       </div>

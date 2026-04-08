@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Static/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/ProUstyle.css">
   <title>Profile</title>
@@ -46,7 +46,7 @@
               <span class="prou-tab active">Edit Profile</span>
             </div>
 
-            <form class="prou-form" action="#" method="post">
+            <form id="prou-profile-form" class="prou-form" action="/actions/user/profile" method="post">
               <div class="row g-4 align-items-start">
                 <div class="col-12 col-xl-auto">
                   <div class="prou-photo-wrap">
@@ -61,28 +61,31 @@
                   <div class="row g-4">
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-first-name">First Name</label>
-                      <input id="prou-first-name" class="prou-input" type="text" value="John" />
+                      <input id="prou-first-name" name="first_name" class="prou-input" type="text" value="{{ user_me.user_first_name if user_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-last-name">Last Name</label>
-                      <input id="prou-last-name" class="prou-input" type="text" value="Doe" />
+                      <input id="prou-last-name" name="last_name" class="prou-input" type="text" value="{{ user_me.user_last_name if user_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-email">Email</label>
-                      <input id="prou-email" class="prou-input" type="email" value="johndoe@gmail.com" />
+                      <input id="prou-email" name="email" class="prou-input" type="email" value="{{ user_me.user_email if user_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
-                      <label class="prou-label" for="prou-password">Password</label>
-                      <input id="prou-password" class="prou-input" type="password" value="**********" />
+                      <label class="prou-label" for="prou-password">New password (optional)</label>
+                      <input id="prou-password" name="password" class="prou-input" type="password" placeholder="Leave blank to keep" autocomplete="new-password" />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="prou-actions">
-                <button class="prou-btn prou-btn--primary" type="submit">Save</button>
-              </div>
             </form>
+
+            <div class="prou-actions">
+              <button class="prou-btn prou-btn--primary" type="submit" form="prou-profile-form">Save</button>
+              <form action="/auth/logout" method="post" class="prou-logout-form">
+                <button class="prou-btn prou-btn--secondary" type="submit">Log out</button>
+              </form>
+            </div>
           </section>
         </main>
       </div>

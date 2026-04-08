@@ -192,9 +192,9 @@
   position: relative;
 }
 
-a.auth-login-btn {
-  width: 220px;
-  max-width: 100%;
+.auth-login-btn {
+  width: auto;
+  min-width: 0;
   height: 44px;
   border-radius: 10px;
   background-color: #2e419e !important;
@@ -206,19 +206,21 @@ a.auth-login-btn {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 0;
+  padding: 0 28px;
   text-decoration: none;
+  border: 0;
 }
 
-a.auth-login-btn .login-btn-label {
+.auth-login-btn .login-btn-label {
   display: block;
   height: 36px;
   line-height: 36px;
+  transform: translateY(-2px);
 }
 
-a.auth-login-btn:hover,
-a.auth-login-btn:focus,
-a.auth-login-btn:active {
+.auth-login-btn:hover,
+.auth-login-btn:focus,
+.auth-login-btn:active {
   background-color: #2e419e !important;
   color: #ffffff !important;
   text-decoration: none;

@@ -85,41 +85,22 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for s in admin_sessions %}
                   <tr>
-                    <td>#G001</td>
-                    <td>Session Name 1</td>
-                    <td>#S001</td>
-                    <td><button type="button" class="view-btn">View Details</button></td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html"><img src="../../Static/Images%201/ChallengeAedit-button0.svg" alt="Edit" /></a><img src="../../Static/Images%201/ChallengeAtrash-can-button0.svg" alt="Delete" /></td>
+                    <td>#{{ s.group_id }}</td>
+                    <td>{{ s.group_workout_title }}</td>
+                    <td>#{{ s.group_workout_id }}</td>
+                    <td>
+                      <form method="get" action="ChallengeA.html" class="m-0 d-inline">
+                        <input type="hidden" name="workout_id" value="{{ s.group_workout_id }}" />
+                        <button type="submit" class="view-btn">View Details</button>
+                      </form>
+                    </td>
+                    <td class="text-end action-icons"><a href="ChallengeAed.html?id={{ s.group_workout_id }}"><img src="../../Static/Images%201/ChallengeAedit-button0.svg" alt="Edit" /></a></td>
                   </tr>
-                  <tr>
-                    <td>#G002</td>
-                    <td>Session Name 1</td>
-                    <td>#S002</td>
-                    <td><button type="button" class="view-btn">View Details</button></td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html"><img src="../../Static/Images%201/ChallengeAedit-button1.svg" alt="Edit" /></a><img src="../../Static/Images%201/ChallengeAtrash-can-button1.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G003</td>
-                    <td>Session Name 1</td>
-                    <td>#S003</td>
-                    <td><button type="button" class="view-btn">View Details</button></td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html"><img src="../../Static/Images%201/ChallengeAedit-button2.svg" alt="Edit" /></a><img src="../../Static/Images%201/ChallengeAtrash-can-button2.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G004</td>
-                    <td>Session Name 1</td>
-                    <td>#S004</td>
-                    <td><button type="button" class="view-btn">View Details</button></td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html"><img src="../../Static/Images%201/ChallengeAedit-button3.svg" alt="Edit" /></a><img src="../../Static/Images%201/ChallengeAtrash-can-button3.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G005</td>
-                    <td>Session Name 1</td>
-                    <td>#S005</td>
-                    <td><button type="button" class="view-btn">View Details</button></td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html"><img src="../../Static/Images%201/ChallengeAedit-button4.svg" alt="Edit" /></a><img src="../../Static/Images%201/ChallengeAtrash-can-button4.svg" alt="Delete" /></td>
-                  </tr>
+                  {% else %}
+                  <tr><td colspan="5">No scheduled sessions.</td></tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -133,7 +114,7 @@
                 <div class="member-title-wrap">
                   <h2 class="section-title">Attendance</h2>
                   <span class="session-pill">Selected Session -</span>
-                  <span class="group-pill">#S001</span>
+                  <span class="group-pill">{% if selected_workout_id %}#S{{ selected_workout_id }}{% else %}—{% endif %}</span>
                 </div>
                 <div class="search-pill">
                   <img src="../../Static/Images%201/ChallengeAgroup0.svg" alt="" />
@@ -152,11 +133,19 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td>#U001</td><td>John Doe</td><td class="text-end"><span class="status-text">Going</span></td></tr>
-                      <tr><td>#U001</td><td>John Doe</td><td class="text-end"><span class="status-text">Not Going</span></td></tr>
-                      <tr><td>#U001</td><td>John Doe</td><td class="text-end"><span class="status-text">Pending</span></td></tr>
-                      <tr><td>#U001</td><td>John Doe</td><td class="text-end"><span class="status-text">Going</span></td></tr>
-                      <tr><td>#U001</td><td>John Doe</td><td class="text-end"><span class="status-text">Going</span></td></tr>
+                      {% if selected_workout_id %}
+                        {% for m in selected_workout_attendance %}
+                        <tr>
+                          <td>#U{{ m.user_id }}</td>
+                          <td>{{ m.user_first_name }} {{ m.user_last_name }}</td>
+                          <td class="text-end"><span class="status-text">{{ m.attendance_status }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-muted">No members found for this session's group yet.</td></tr>
+                        {% endfor %}
+                      {% else %}
+                      <tr><td colspan="3" class="text-muted">Select a session using View Details to load attendance.</td></tr>
+                      {% endif %}
                     </tbody>
                   </table>
                 </div>
@@ -176,11 +165,15 @@
                       </tr>
                     </thead>
                     <tbody>
+                      {% if selected_workout %}
                       <tr>
-                        <td>#/##/##</td>
-                        <td>00:00</td>
-                        <td>Location 1</td>
+                        <td>{{ selected_workout.group_workout_scheduled_date or '—' }}</td>
+                        <td>{{ selected_workout.group_workout_start_date or selected_workout.group_workout_end_date or '—' }}</td>
+                        <td>{{ selected_workout.group_workout_location or '—' }}</td>
                       </tr>
+                      {% else %}
+                      <tr><td colspan="3" class="text-muted">Select a session to view details.</td></tr>
+                      {% endif %}
                     </tbody>
                   </table>
                 </div>

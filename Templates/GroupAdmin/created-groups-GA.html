@@ -68,26 +68,26 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for g in ga_created_groups %}
                   <tr>
-                    <td>#G001</td><td>Group Name 1</td><td><button class="cgga-view-btn" type="button">View</button></td>
-                    <td class="text-end cgga-actions"><a href="edit-group-GA.html"><img src="../../Static/images/CGGAedit-button0.svg" alt="Edit" /></a><img src="../../Static/images/CGGAtrash-can-button5.svg" alt="Delete" /></td>
+                    <td>#{{ g.group_id }}</td>
+                    <td>{{ g.group_name }}</td>
+                    <td>
+                      <form method="get" action="created-groups-GA.html" class="m-0 d-inline">
+                        <input type="hidden" name="group_id" value="{{ g.group_id }}" />
+                        <button class="cgga-view-btn" type="submit">View</button>
+                      </form>
+                    </td>
+                    <td class="text-end cgga-actions">
+                      <a href="edit-group-GA.html?id={{ g.group_id }}"><img src="../../Static/images/CGGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
+                      <img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 + 5 }}.svg" alt="" aria-hidden="true" />
+                    </td>
                   </tr>
+                  {% else %}
                   <tr>
-                    <td>#G002</td><td>Group Name 2</td><td><button class="cgga-view-btn" type="button">View</button></td>
-                    <td class="text-end cgga-actions"><a href="edit-group-GA.html"><img src="../../Static/images/CGGAedit-button1.svg" alt="Edit" /></a><img src="../../Static/images/CGGAtrash-can-button6.svg" alt="Delete" /></td>
+                    <td colspan="4" class="text-muted p-4">No groups yet. <a href="group-creation-GA.html">Create a group</a>.</td>
                   </tr>
-                  <tr>
-                    <td>#G003</td><td>Group Name 3</td><td><button class="cgga-view-btn" type="button">View</button></td>
-                    <td class="text-end cgga-actions"><a href="edit-group-GA.html"><img src="../../Static/images/CGGAedit-button2.svg" alt="Edit" /></a><img src="../../Static/images/CGGAtrash-can-button7.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G004</td><td>Group Name 4</td><td><button class="cgga-view-btn" type="button">View</button></td>
-                    <td class="text-end cgga-actions"><a href="edit-group-GA.html"><img src="../../Static/images/CGGAedit-button3.svg" alt="Edit" /></a><img src="../../Static/images/CGGAtrash-can-button8.svg" alt="Delete" /></td>
-                  </tr>
-                  <tr>
-                    <td>#G005</td><td>Group Name 5</td><td><button class="cgga-view-btn" type="button">View</button></td>
-                    <td class="text-end cgga-actions"><a href="edit-group-GA.html"><img src="../../Static/images/CGGAedit-button4.svg" alt="Edit" /></a><img src="../../Static/images/CGGAtrash-can-button9.svg" alt="Delete" /></td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -97,7 +97,7 @@
             <div class="cgga-card-toolbar cgga-members-toolbar">
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <h2 class="mb-0">Group Members -</h2>
-                <div class="cgga-id-pill">#G001</div>
+                <div class="cgga-id-pill">{% if selected_group_id %}#G{{ selected_group_id }}{% else %}—{% endif %}</div>
               </div>
               <div class="cgga-members-filters">
                 <div class="cgga-search-pill">
@@ -124,11 +124,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>#U001</td><td>John Doe</td><td>Group Admin</td><td>user@gmail.com</td><td class="text-end"><img src="../../Static/images/CGGAtrash-can-button0.svg" alt="Delete" /></td></tr>
-                  <tr><td>#U002</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end"><img src="../../Static/images/CGGAtrash-can-button1.svg" alt="Delete" /></td></tr>
-                  <tr><td>#U003</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end"><img src="../../Static/images/CGGAtrash-can-button2.svg" alt="Delete" /></td></tr>
-                  <tr><td>#U004</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end"><img src="../../Static/images/CGGAtrash-can-button3.svg" alt="Delete" /></td></tr>
-                  <tr><td>#U005</td><td>Member Name</td><td>Member</td><td>user@gmail.com</td><td class="text-end"><img src="../../Static/images/CGGAtrash-can-button4.svg" alt="Delete" /></td></tr>
+                  {% if selected_group_id %}
+                    {% for m in selected_group_members %}
+                    <tr>
+                      <td>{{ m.member_id_label }}</td>
+                      <td>{{ m.member_name }}</td>
+                      <td>{{ m.member_role }}</td>
+                      <td>{{ m.member_email }}</td>
+                      <td class="text-end"><img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" /></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <td colspan="5" class="text-muted p-4">No members found for this group yet.</td>
+                    </tr>
+                    {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="5" class="text-muted p-4">Select a group using View to load member details.</td>
+                  </tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>

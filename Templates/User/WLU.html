@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Static/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/WLUstyle.css">
   <title>Workout Log</title>
@@ -57,14 +57,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>01.</td><td>03/27/2026</td><td>40 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button0.svg" alt="" /></button></div></td></tr>
-                  <tr><td>02.</td><td>03/27/2026</td><td>36 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button1.svg" alt="" /></button></div></td></tr>
-                  <tr><td>03.</td><td>03/27/2026</td><td>25 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button2.svg" alt="" /></button></div></td></tr>
-                  <tr><td>04.</td><td>03/27/2026</td><td>15 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button3.svg" alt="" /></button></div></td></tr>
-                  <tr><td>05.</td><td>03/27/2026</td><td>80 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button4.svg" alt="" /></button></div></td></tr>
-                  <tr><td>06.</td><td>03/27/2026</td><td>30 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button5.svg" alt="" /></button></div></td></tr>
-                  <tr><td>07.</td><td>03/27/2026</td><td>20 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button6.svg" alt="" /></button></div></td></tr>
-                  <tr><td>08.</td><td>03/27/2026</td><td>40 Minutes</td><td><div class="wlu-actions"><a href="WLDU.html" class="wlu-view-btn">View Details</a><button class="wlu-trash-btn" type="button" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button7.svg" alt="" /></button></div></td></tr>
+                  {% for w in workouts %}
+                  <tr>
+                    <td>{{ '%02d'|format(loop.index) }}.</td>
+                    <td>{{ w.workout_date }}</td>
+                    <td>{% if w.workout_duration_minutes %}{{ w.workout_duration_minutes }} Minutes{% else %}—{% endif %}</td>
+                    <td>
+                      <div class="wlu-actions">
+                        <a href="WLEU.html?id={{ w.workout_id }}" class="wlu-view-btn">View Details</a>
+                        <form method="post" action="/actions/user/workout/{{ w.workout_id }}/delete" style="display:inline;" onsubmit="return confirm('Delete this workout?');">
+                          <button class="wlu-trash-btn" type="submit" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button{{ (loop.index0 % 8) }}.svg" alt="" /></button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr><td colspan="4">No workouts logged yet. <a href="WLAU.html">Create one</a>.</td></tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Static/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/GCUstyle.css">
 
@@ -108,26 +108,23 @@
                   </div>
 
                   <div class="col-12 col-md-8 col-lg-9">
-                    <form class="gcu-form" action="#" method="post">
-                      <div class="mb-4">
-                        <label class="gcu-label" for="gcu-group-name">Group Name</label>
-                        <input id="gcu-group-name" class="gcu-input" type="text" placeholder="Group Name" />
+                    <form class="gcu-form" id="gcu-create-form" action="/actions/user/create-group-become-ga" method="post">
+                      <h3 class="h6 mb-3">Create a new group</h3>
+                      <p class="small text-muted mb-3">You will become this group&rsquo;s admin and sign in as group admin with the same email and password.</p>
+                      <div class="mb-3">
+                        <label class="gcu-label" for="gcu-create-name">Group name</label>
+                        <input id="gcu-create-name" name="group_name" class="gcu-input" type="text" placeholder="Group name" required />
                       </div>
                       <div class="mb-4">
-                        <label class="gcu-label" for="gcu-description">Description</label>
-                        <textarea id="gcu-description" class="gcu-textarea" rows="4" placeholder="Group Description"></textarea>
+                        <label class="gcu-label" for="gcu-create-desc">Description</label>
+                        <textarea id="gcu-create-desc" name="group_description" class="gcu-input" rows="4" placeholder="Group description"></textarea>
                       </div>
-                      <div class="mb-0">
-                        <label class="gcu-label" for="gcu-invite">Invite Users</label>
-                        <input id="gcu-invite" class="gcu-input" type="text" placeholder="Users" />
+                      <div class="gcu-actions">
+                        <button type="submit" class="gcu-btn gcu-btn--primary border-0">Create group</button>
+                        <a href="GJU.html" class="gcu-btn gcu-btn--cancel">Cancel</a>
                       </div>
                     </form>
                   </div>
-                </div>
-
-                <div class="gcu-actions">
-                  <a href="GJU.html" class="gcu-btn gcu-btn--primary">Create</a>
-                  <a href="GJU.html" class="gcu-btn gcu-btn--cancel">Cancel</a>
                 </div>
               </div>
             </div>

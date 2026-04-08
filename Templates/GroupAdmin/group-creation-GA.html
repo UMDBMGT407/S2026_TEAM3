@@ -45,7 +45,7 @@
               <span class="gcga-tab gcga-tab--active">Create Group</span>
             </div>
 
-            <form class="gcga-form" action="#" method="post">
+            <form class="gcga-form" action="/actions/group-admin/group" method="post">
               <div class="row g-4 align-items-start">
                 <div class="col-12 col-xl-auto">
                   <div class="gcga-photo-wrap">
@@ -60,23 +60,18 @@
                   <div class="row g-4">
                     <div class="col-12 col-lg-6">
                       <label class="gcga-label" for="gcga-group-name">Group Name</label>
-                      <input id="gcga-group-name" class="gcga-input" type="text" value="Group Name" />
-                    </div>
-
-                    <div class="col-12 col-lg-6">
-                      <label class="gcga-label" for="gcga-invite-users">Invite Users</label>
-                      <input id="gcga-invite-users" class="gcga-input" type="text" value="Users" />
+                      <input id="gcga-group-name" name="group_name" class="gcga-input" type="text" placeholder="Group name" required />
                     </div>
 
                     <div class="col-12">
                       <label class="gcga-label" for="gcga-description">Description</label>
-                      <textarea id="gcga-description" class="gcga-input gcga-input--textarea" rows="4">Group Description</textarea>
+                      <textarea id="gcga-description" name="group_description" class="gcga-input gcga-input--textarea" rows="4" placeholder="Group description"></textarea>
                     </div>
                   </div>
 
                   <div class="gcga-actions">
-                    <a href="created-groups-GA.html" class="gcga-btn gcga-btn--primary">Create</a>
-                    <a href="created-groups-GA.html" class="gcga-btn gcga-btn--primary">Cancel</a>
+                    <button type="submit" class="gcga-btn gcga-btn--primary border-0">Create</button>
+                    <a href="created-groups-GA.html" class="gcga-btn gcga-btn--secondary">Cancel</a>
                   </div>
                 </div>
               </div>

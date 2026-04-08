@@ -71,38 +71,35 @@
 
          
 
-<div class="w-75">
-  <!-- Email -->
+<form class="w-75" method="post" action="/auth/register">
   <div class="mb-3">
-    <label class="form-label">Email</label>
-    <input type="email" class="form-control" placeholder="Enter your Email here">
+    <label class="form-label" for="reg-email">Email</label>
+    <input id="reg-email" name="email" type="email" class="form-control" placeholder="Enter your Email here" required>
   </div>
 
-  <!-- Password -->
   <div class="mb-3">
-    <label class="form-label">Password</label>
-    <input type="password" class="form-control" placeholder="Enter your Password here">
+    <label class="form-label" for="reg-password">Password</label>
+    <input id="reg-password" name="password" type="password" class="form-control" placeholder="Enter your Password here" required>
   </div>
 
-  <!-- First and Last Name -->
   <div class="row mb-3">
     <div class="col-md-6 mb-2">
-      <label class="form-label">First Name</label>
-      <input type="text" class="form-control" placeholder="Enter your first name here">
+      <label class="form-label" for="reg-first">First Name</label>
+      <input id="reg-first" name="first_name" type="text" class="form-control" placeholder="Enter your first name here" required>
     </div>
     <div class="col-md-6">
-      <label class="form-label">Last Name</label>
-      <input type="text" class="form-control" placeholder="Enter your last name here">
+      <label class="form-label" for="reg-last">Last Name</label>
+      <input id="reg-last" name="last_name" type="text" class="form-control" placeholder="Enter your last name here" required>
     </div>
   </div>
 
-  <a href="ADash.html" class="btn auth-create-account-btn d-block mx-auto mb-3"><span class="create-account-btn-label">Create Account</span></a>
+  <button type="submit" class="btn auth-create-account-btn d-block mx-auto mb-3"><span class="create-account-btn-label">Create Account</span></button>
 
   <div class="text-center auth-login-footer">
     <span class="auth-login-footer-muted">Already have an account? </span>
     <a href="index.html" class="auth-login-footer-link">Log in</a>
   </div>
-</div>
+</form>
           </div>
         </div>
       </div>

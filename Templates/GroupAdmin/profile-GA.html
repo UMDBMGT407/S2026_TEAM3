@@ -46,7 +46,7 @@
               <span class="pga-profile-tab active">Edit Profile</span>
             </div>
 
-            <form class="pga-profile-form" action="#" method="post">
+            <form id="ga-profile-form" class="pga-profile-form" action="/actions/group-admin/profile" method="post">
               <div class="row g-4 align-items-start">
                 <div class="col-12 col-xl-auto">
                   <div class="pga-profile-photo-wrap">
@@ -61,28 +61,31 @@
                   <div class="row g-4">
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-first-name">First Name</label>
-                      <input id="pga-profile-first-name" class="pga-profile-input" type="text" value="John" />
+                      <input id="pga-profile-first-name" name="first_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_first_name if ga_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-last-name">Last Name</label>
-                      <input id="pga-profile-last-name" class="pga-profile-input" type="text" value="Doe" />
+                      <input id="pga-profile-last-name" name="last_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_last_name if ga_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-email">Email</label>
-                      <input id="pga-profile-email" class="pga-profile-input" type="email" value="johndoe@gmail.com" />
+                      <input id="pga-profile-email" name="email" class="pga-profile-input" type="email" value="{{ ga_me.group_admin_email if ga_me else '' }}" />
                     </div>
                     <div class="col-12 col-lg-6">
-                      <label class="pga-profile-label" for="pga-profile-password">Password</label>
-                      <input id="pga-profile-password" class="pga-profile-input" type="password" value="**********" />
+                      <label class="pga-profile-label" for="pga-profile-password">New password (optional)</label>
+                      <input id="pga-profile-password" name="password" class="pga-profile-input" type="password" placeholder="Leave blank to keep" autocomplete="new-password" />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="pga-profile-actions">
-                <button class="pga-profile-btn pga-profile-btn--primary" type="submit">Save</button>
-              </div>
             </form>
+
+            <div class="pga-profile-actions">
+              <button class="pga-profile-btn pga-profile-btn--primary" type="submit" form="ga-profile-form">Save</button>
+              <form action="/auth/logout" method="post" class="pga-profile-logout-form">
+                <button class="pga-profile-btn pga-profile-btn--secondary" type="submit">Log out</button>
+              </form>
+            </div>
           </section>
         </main>
       </div>

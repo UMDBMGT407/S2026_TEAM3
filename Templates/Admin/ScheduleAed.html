@@ -68,35 +68,35 @@
             <h2 class="edit-group">Edit Challenge</h2>
           </div>
 
-          <form class="edit-form">
+          {% if edit_challenge_admin %}
+          <form class="edit-form" method="post" action="/actions/admin/challenge/{{ edit_challenge_admin.challenge_id }}/edit">
             <div class="row g-3">
               <div class="col-12 col-md-6">
-                <label class="form-label-custom" for="groupField">Group</label>
-                <input id="groupField" class="form-control custom-input" type="text" value="Group" />
-              </div>
-              <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="challengeName">Challenge Name</label>
-                <input id="challengeName" class="form-control custom-input" type="text" value="Challenge Name" />
+                <input id="challengeName" name="challenge_name" class="form-control custom-input" type="text" value="{{ edit_challenge_admin.challenge_title }}" />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="startDate">Start Date</label>
-                <input id="startDate" class="form-control custom-input" type="text" value="Start Date" />
+                <input id="startDate" name="start_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_start_date or '' }}" />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="endDate">End Date</label>
-                <input id="endDate" class="form-control custom-input" type="text" value="End Date" />
+                <input id="endDate" name="end_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_end_date or '' }}" />
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="challengeGoal">Challenge Goal</label>
-                <input id="challengeGoal" class="form-control custom-input" type="text" value="# Of Workouts" />
+                <input id="challengeGoal" name="challenge_goal" class="form-control custom-input" type="text" value="{{ edit_challenge_admin.challenge_goal or '' }}" />
               </div>
             </div>
 
             <div class="button-row">
               <a href="ScheduleA.html" class="action-btn secondary-btn">Cancel</a>
-              <a href="ScheduleA.html" class="action-btn primary-btn">Save</a>
+              <button type="submit" class="action-btn primary-btn border-0">Save</button>
             </div>
           </form>
+          {% else %}
+          <p class="p-3">Open from <a href="ScheduleA.html">Challenges</a> with <code>?id=</code>.</p>
+          {% endif %}
         </section>
       </main>
     </div>

@@ -45,24 +45,28 @@
               <span class="egga-tab egga-tab--active">Edit Group</span>
             </div>
 
-            <form class="egga-form" action="#" method="post">
+            {% if edit_ga_group %}
+            <form class="egga-form" method="post" action="/actions/group-admin/group/{{ edit_ga_group.group_id }}/edit">
               <div class="row g-4 justify-content-center">
                 <div class="col-12 col-xl-7">
                   <label class="egga-label" for="egga-group-name">Group Name</label>
-                  <input id="egga-group-name" class="egga-input" type="text" value="Group Name" />
+                  <input id="egga-group-name" name="group_name" class="egga-input" type="text" value="{{ edit_ga_group.group_name }}" />
                 </div>
 
                 <div class="col-12 col-xl-7">
                   <label class="egga-label" for="egga-description">Description</label>
-                  <textarea id="egga-description" class="egga-input egga-input--textarea" rows="5">Group Description</textarea>
+                  <textarea id="egga-description" name="group_description" class="egga-input egga-input--textarea" rows="5">{{ edit_ga_group.group_description or '' }}</textarea>
                 </div>
               </div>
 
               <div class="egga-actions">
-                <a href="created-groups-GA.html" class="egga-btn egga-btn--primary">Save</a>
-                <a href="created-groups-GA.html" class="egga-btn egga-btn--primary">Cancel</a>
+                <button type="submit" class="egga-btn egga-btn--primary border-0">Save</button>
+                <a href="created-groups-GA.html" class="egga-btn egga-btn--secondary">Cancel</a>
               </div>
             </form>
+            {% else %}
+            <p class="p-3">Open with <code>?id=</code> from <a href="created-groups-GA.html">your groups</a>.</p>
+            {% endif %}
           </section>
         </main>
       </div>

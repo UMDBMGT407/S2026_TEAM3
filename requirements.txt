@@ -1,0 +1,7 @@
+# Motiv — Flask + MySQL (see app.py docstring for MySQL/schema setup).
+# If mysqlclient fails to build: macOS often needs `brew install mysql pkg-config`.
+
+Flask>=3.0.0,<4
+flask-mysqldb>=2.0.0
+mysqlclient>=2.2.0
+python-dotenv>=1.0.0

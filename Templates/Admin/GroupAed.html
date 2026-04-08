@@ -68,22 +68,26 @@
             <h2 class="edit-group">Edit Group</h2>
           </div>
 
-          <form class="edit-form">
+          {% if edit_group %}
+          <form class="edit-form" method="post" action="/actions/admin/group/{{ edit_group.group_id }}/edit">
             <div>
               <label class="form-label-custom" for="groupName">Group Name</label>
-              <input id="groupName" class="form-control custom-input" type="text" value="Group Name" />
+              <input id="groupName" name="group_name" class="form-control custom-input" type="text" value="{{ edit_group.group_name }}" />
             </div>
 
             <div>
               <label class="form-label-custom" for="groupDescription">Description</label>
-              <textarea id="groupDescription" class="form-control custom-textarea" rows="5">Group Description</textarea>
+              <textarea id="groupDescription" name="group_description" class="form-control custom-textarea" rows="5">{{ edit_group.group_description or '' }}</textarea>
             </div>
 
             <div class="button-row">
               <a href="GroupA.html" class="action-btn secondary-btn">Cancel</a>
-              <a href="GroupA.html" class="action-btn primary-btn">Save</a>
+              <button type="submit" class="action-btn primary-btn border-0">Save</button>
             </div>
           </form>
+          {% else %}
+          <p class="p-3">Open this page from <a href="GroupA.html">Groups</a> with a valid <code>?id=</code> query.</p>
+          {% endif %}
         </section>
       </main>
     </div>

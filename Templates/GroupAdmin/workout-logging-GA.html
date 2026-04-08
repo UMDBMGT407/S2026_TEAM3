@@ -46,55 +46,57 @@
               <span class="wlga-tab">Performance Metrics</span>
             </div>
 
-            <form class="wlga-form" action="#" method="post">
+            <form class="wlga-form" action="/actions/group-admin/workout-log" method="post">
               <div class="row g-4">
                 <div class="col-12 col-xl-6">
+                  <label class="wlga-label" for="wlga-user">Member</label>
+                  <select id="wlga-user" name="target_user_id" class="wlga-input wlga-select" required>
+                    {% for u in app_users %}
+                    <option value="{{ u.user_id }}">{{ u.user_first_name }} {{ u.user_last_name }} ({{ u.user_email }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-date">Date</label>
-                  <input id="wlga-date" class="wlga-input" type="text" value="25 January 1990" />
+                  <input id="wlga-date" name="workout_date" class="wlga-input" type="date" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-sets">Sets</label>
-                  <input id="wlga-sets" class="wlga-input" type="text" value="3" />
+                  <input id="wlga-sets" name="num_sets" class="wlga-input" type="number" value="3" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-exercise">Exercise Name</label>
-                  <input id="wlga-exercise" class="wlga-input" type="text" value="Sit-ups" />
+                  <input id="wlga-exercise" name="exercise_name" class="wlga-input" type="text" value="Sit-ups" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-reps">Reps</label>
-                  <input id="wlga-reps" class="wlga-input" type="text" value="10" />
+                  <input id="wlga-reps" name="num_reps" class="wlga-input" type="number" value="10" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-duration">Duration (minutes)</label>
-                  <input id="wlga-duration" class="wlga-input" type="text" value="30" />
+                  <input id="wlga-duration" name="duration_minutes" class="wlga-input" type="number" value="30" />
                 </div>
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-weight">Weights</label>
-                  <input id="wlga-weight" class="wlga-input" type="text" value="5" />
+                  <input id="wlga-weight" name="weight" class="wlga-input" type="text" value="5" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-difficulty">Difficulty Level</label>
-                  <input id="wlga-difficulty" class="wlga-input" type="text" value="Medium" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="wlga-label" for="wlga-challenge">Add to Challenge (optional)</label>
-                  <select id="wlga-challenge" class="wlga-input wlga-select">
-                    <option selected>Challenge Name</option>
-                  </select>
+                  <input id="wlga-difficulty" name="difficulty" class="wlga-input" type="text" value="Medium" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wlga-label" for="wlga-muscle">Muscle Group</label>
-                  <input id="wlga-muscle" class="wlga-input" type="text" value="Abs" />
+                  <input id="wlga-muscle" name="muscle_group" class="wlga-input" type="text" value="Abs" />
                 </div>
               </div>
 
               <div class="wlga-actions">
-                <a href="workout-details-GA.html" class="wlga-btn wlga-btn--primary">Log</a>
-                <a href="workout-details-GA.html" class="wlga-btn wlga-btn--secondary">Cancel</a>
+                <button type="submit" class="wlga-btn wlga-btn--primary border-0">Log</button>
+                <a href="workout-history-GA.html" class="wlga-btn wlga-btn--secondary">Cancel</a>
               </div>
             </form>
           </section>

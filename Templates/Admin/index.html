@@ -68,36 +68,49 @@
             <h2>Welcome to Motiv</h2>
           </div>
 
-          <!-- Inputs -->
-          <div class="w-75">
+          {% if login_error %}
+          <div
+            class="alert alert-danger w-75 mb-3"
+            role="alert"
+          >
+            Incorrect login. Please check your email and password and try again.
+          </div>
+          {% endif %}
+
+          <form class="w-75" method="post" action="/auth/login">
+            {% if login_next %}
+            <input type="hidden" name="next" value="{{ login_next }}" />
+            {% endif %}
             <div class="mb-3">
-              <label class="form-label">Email</label>
+              <label class="form-label" for="login-email">Email</label>
               <input
+                id="login-email"
+                name="email"
                 type="email"
                 class="form-control"
                 placeholder="Enter your Email here"
+                required
               />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Password</label>
+              <label class="form-label" for="login-password">Password</label>
               <input
+                id="login-password"
+                name="password"
                 type="password"
                 class="form-control"
                 placeholder="Enter your Password here"
+                required
               />
             </div>
 
-            <!-- Login Button -->
-            <a href="ADash.html" class="btn auth-login-btn d-block mx-auto mb-3"><span class="login-btn-label">Login</span></a>
-            <!-- Create Account -->
+            <button type="submit" class="btn auth-login-btn d-block mx-auto mb-3"><span class="login-btn-label">Login</span></button>
             <div class="text-center">
               <span>Don’t have an account? </span>
-              <a href="CreateAccount.html" class="fw-bold"
-                >Create Account Now</a
-              >
+              <a href="CreateAccount.html" class="fw-bold">Create Account Now</a>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

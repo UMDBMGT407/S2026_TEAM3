@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Static/vars.css">
+  <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/PUstyle.css">
   <title>Posts</title>
@@ -41,43 +41,50 @@
 
         <div class="pu-main-canvas flex-grow-1">
           <div class="d-flex justify-content-end mb-3 pu-grid-head">
-            <button class="pu-add-btn" type="button" aria-label="Add post">
+            <button id="pu-add-btn" class="pu-add-btn" type="button" aria-label="Add post">
               <img src="../../Static/Images%202/PUadd-button0.svg" alt="" />
             </button>
           </div>
 
           <div class="pu-posts-grid-wrap">
           <div class="row g-4 pu-post-grid">
+            {% for p in posts %}
             <div class="col-12 col-lg-6">
               <article class="pu-post-card">
-                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder0.png" alt="Post image" /></div>
-                <div class="pu-post-meta"><span>email@gmail.com</span></div>
-              </article>
-            </div>
-            <div class="col-12 col-lg-6">
-              <article class="pu-post-card">
-                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder1.png" alt="Post image" /></div>
-                <div class="pu-post-meta"><span>email@gmail.com</span></div>
-              </article>
-            </div>
-            <div class="col-12 col-lg-6">
-              <article class="pu-post-card">
-                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder2.png" alt="Post image" /></div>
-                <div class="pu-post-meta"><span>email@gmail.com</span></div>
-              </article>
-            </div>
-            <div class="col-12 col-lg-6">
-              <article class="pu-post-card">
-                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder3.png" alt="Post image" /></div>
-                <div class="pu-post-meta">
-                  <span>Your Post</span>
-                  <button class="pu-delete-btn" type="button" aria-label="Delete post"><img src="../../Static/Images%202/PUtrash-can-button0.svg" alt="" /></button>
+                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder{{ (loop.index0 % 4) }}.png" alt="Post image" /></div>
+                <div class="pu-post-meta d-flex justify-content-between align-items-center">
+                  <span>{{ p.user_email }}</span>
+                  {% if session_role == 'user' and session_id == p.user_id %}
+                  <button class="pu-delete-btn" type="button" aria-label="Delete post" onclick="deletePost({{ p.post_id }})"><img src="../../Static/Images%202/PUtrash-can-button0.svg" alt="" /></button>
+                  {% endif %}
                 </div>
+                <p class="px-2 small text-muted">{{ p.post_content }}</p>
               </article>
             </div>
+            {% else %}
+            <p class="text-muted">No posts yet. Add one with the + button (log in as a user).</p>
+            {% endfor %}
           </div>
           </div>
         </div>
+        <script>
+        document.getElementById('pu-add-btn').addEventListener('click', async function () {
+          var content = window.prompt('Write your post:');
+          if (!content || !content.trim()) return;
+          var r = await fetch('/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ post_content: content.trim() })
+          });
+          if (r.status === 401) { alert('Log in as a user (e.g. john@motiv.test) to post.'); return; }
+          if (r.ok) location.reload(); else alert('Could not save post.');
+        });
+        async function deletePost(id) {
+          var r = await fetch('/api/posts/' + id, { method: 'DELETE', credentials: 'same-origin' });
+          if (r.ok) location.reload(); else alert('Could not delete.');
+        }
+        </script>
       </div>
     </div>
   </div>

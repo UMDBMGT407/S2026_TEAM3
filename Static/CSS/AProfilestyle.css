@@ -207,7 +207,15 @@ body {
 .save-button-wrap {
   margin-top: 24px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.a-profile-logout-form {
+  margin: 0;
+  display: inline;
 }
 
 .save-button {
@@ -218,6 +226,12 @@ body {
   color: #ffffff;
   font-size: 18px;
   font-weight: 500;
+}
+
+.save-button--secondary {
+  background: #ffffff;
+  color: #1814f3;
+  border: 2px solid #1814f3;
 }
 
 @media (max-width: 991px) {
@@ -247,9 +261,20 @@ body {
 
   .save-button-wrap {
     justify-content: stretch;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .save-button {
+    width: 100%;
+  }
+
+  .a-profile-logout-form {
+    display: block;
+    width: 100%;
+  }
+
+  .a-profile-logout-form .save-button {
     width: 100%;
   }
 }

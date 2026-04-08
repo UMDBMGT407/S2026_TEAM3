@@ -41,43 +41,50 @@
 
         <div class="pga-main-canvas flex-grow-1">
           <div class="d-flex justify-content-end mb-3 pga-grid-head">
-            <button class="pga-add-btn" type="button" aria-label="Add post">
+            <button id="pga-add-btn" class="pga-add-btn" type="button" aria-label="Add post">
               <img src="../../Static/images/P2GAadd-button0.svg" alt="" />
             </button>
           </div>
 
           <div class="pga-posts-grid-wrap">
             <div class="row g-4 pga-post-grid">
+              {% for p in posts %}
               <div class="col-12 col-lg-6">
                 <article class="pga-post-card">
-                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder0.png" alt="Post image" /></div>
-                  <div class="pga-post-meta"><span>email@gmail.com</span></div>
-                </article>
-              </div>
-              <div class="col-12 col-lg-6">
-                <article class="pga-post-card">
-                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder1.png" alt="Post image" /></div>
-                  <div class="pga-post-meta"><span>email@gmail.com</span></div>
-                </article>
-              </div>
-              <div class="col-12 col-lg-6">
-                <article class="pga-post-card">
-                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder2.png" alt="Post image" /></div>
-                  <div class="pga-post-meta"><span>email@gmail.com</span></div>
-                </article>
-              </div>
-              <div class="col-12 col-lg-6">
-                <article class="pga-post-card">
-                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder3.png" alt="Post image" /></div>
-                  <div class="pga-post-meta">
-                    <span>Your Post</span>
-                    <button class="pga-delete-btn" type="button" aria-label="Delete post"><img src="../../Static/images/SGAtrash-can-button0.svg" alt="" /></button>
+                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder{{ (loop.index0 % 4) }}.png" alt="Post image" /></div>
+                  <div class="pga-post-meta d-flex justify-content-between align-items-center">
+                    <span>{{ p.user_email }}</span>
+                    {% if p.user_email == session_email %}
+                    <button class="pga-delete-btn" type="button" aria-label="Delete post" onclick="gaDeletePost({{ p.post_id }})"><img src="../../Static/images/SGAtrash-can-button0.svg" alt="" /></button>
+                    {% endif %}
                   </div>
+                  <p class="px-2 small text-muted">{{ p.post_content }}</p>
                 </article>
               </div>
+              {% else %}
+              <p class="text-muted">No posts in the database.</p>
+              {% endfor %}
             </div>
           </div>
         </div>
+        <script>
+        document.getElementById('pga-add-btn').addEventListener('click', async function () {
+          var content = window.prompt('Write your post:');
+          if (!content || !content.trim()) return;
+          var r = await fetch('/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ post_content: content.trim() })
+          });
+          if (r.ok) location.reload(); else alert('Could not save post.');
+        });
+        async function gaDeletePost(id) {
+          if (!confirm('Delete this post?')) return;
+          var r = await fetch('/api/posts/' + id, { method: 'DELETE', credentials: 'same-origin' });
+          if (r.ok) location.reload(); else alert('Delete failed (not authorized for this role).');
+        }
+        </script>
       </div>
     </div>
   </div>
