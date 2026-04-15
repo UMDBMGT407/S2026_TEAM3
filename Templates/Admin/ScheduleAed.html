@@ -84,8 +84,8 @@
                 <input id="endDate" name="end_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_end_date or '' }}" />
               </div>
               <div class="col-12">
-                <label class="form-label-custom" for="challengeGoal">Challenge Goal</label>
-                <input id="challengeGoal" name="challenge_goal" class="form-control custom-input" type="text" value="{{ edit_challenge_admin.challenge_goal or '' }}" />
+                <label class="form-label-custom" for="challengeGoal">Challenge Goal (Workouts)</label>
+                <input id="challengeGoal" name="challenge_goal" class="form-control custom-input" type="number" min="1" step="1" value="{{ edit_challenge_goal_count }}" />
               </div>
             </div>
 

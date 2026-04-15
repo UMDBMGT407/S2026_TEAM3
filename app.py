@@ -15,6 +15,7 @@ Setup (see BMGT407 Server-Side Guide):
 from __future__ import annotations
 
 import os
+import re
 from datetime import date, datetime, time, timedelta
 from functools import wraps
 from pathlib import Path
@@ -223,6 +224,32 @@ def parse_int(s: Any, default: int | None = None):
         return default
 
 
+def parse_workout_goal_count(s: Any, default: int | None = None) -> int | None:
+    if s is None:
+        return default
+    raw = str(s).strip()
+    if not raw:
+        return default
+    if raw.isdigit():
+        n = int(raw)
+    else:
+        m = re.search(r"\d+", raw)
+        if not m:
+            return default
+        n = int(m.group(0))
+    if n <= 0:
+        return default
+    return n
+
+
+def format_workout_goal_display(s: Any) -> str:
+    n = parse_workout_goal_count(s)
+    if n is None:
+        return "—"
+    suffix = "workout" if n == 1 else "workouts"
+    return f"{n} {suffix}"
+
+
 def ensure_group_invite_table(cur) -> None:
     """Create group_invite when missing (avoids 1146); same DDL as sql/migration_group_invite.sql."""
     cur.execute(
@@ -279,6 +306,28 @@ def ensure_group_workout_attendance_table(cur) -> None:
           CONSTRAINT fk_gwa_user FOREIGN KEY (user_id)
             REFERENCES app_user (user_id) ON DELETE CASCADE,
           UNIQUE KEY uq_gwa_workout_user (group_workout_id, user_id)
+        )
+        """
+    )
+
+
+def ensure_challenge_participant_exclusion_table(cur) -> None:
+    """Create challenge_participant_exclusion when missing; challenge-scoped member removal."""
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS challenge_participant_exclusion (
+          exclusion_id INT AUTO_INCREMENT PRIMARY KEY,
+          challenge_id INT NOT NULL,
+          user_id INT NOT NULL,
+          removed_by_admin_id INT NOT NULL,
+          removed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT fk_cpe_challenge FOREIGN KEY (challenge_id)
+            REFERENCES challenge (challenge_id) ON DELETE CASCADE,
+          CONSTRAINT fk_cpe_user FOREIGN KEY (user_id)
+            REFERENCES app_user (user_id) ON DELETE CASCADE,
+          CONSTRAINT fk_cpe_admin FOREIGN KEY (removed_by_admin_id)
+            REFERENCES admin (admin_id),
+          UNIQUE KEY uq_cpe_challenge_user (challenge_id, user_id)
         )
         """
     )
@@ -742,6 +791,11 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["selected_challenge_id"] = None
             ctx["selected_challenge_name"] = None
             ctx["selected_challenge_participants"] = []
+            try:
+                ensure_challenge_participant_exclusion_table(cur)
+                mysql.connection.commit()
+            except (OperationalError, ProgrammingError):
+                mysql.connection.rollback()
             cur.execute(
                 """
                 SELECT c.challenge_id, c.challenge_title, c.challenge_status,
@@ -753,6 +807,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 """
             )
             admin_challenges = cur.fetchall()
+            for c in admin_challenges:
+                c["challenge_goal_display"] = format_workout_goal_display(
+                    c.get("challenge_goal")
+                )
             ctx["admin_challenges"] = admin_challenges
             if admin_challenges:
                 selected_challenge_id = request.args.get("challenge_id", type=int)
@@ -772,15 +830,19 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email
                         FROM user_group ug
                         JOIN app_user u ON u.user_id = ug.user_id
+                        LEFT JOIN challenge_participant_exclusion cpe
+                          ON cpe.challenge_id = %s AND cpe.user_id = u.user_id
                         WHERE ug.group_id = %s
+                          AND cpe.exclusion_id IS NULL
                         ORDER BY u.user_first_name, u.user_last_name, u.user_id
                         """,
-                        (selected_challenge["group_id"],),
+                        (selected_challenge_id, selected_challenge["group_id"]),
                     )
                     participants = []
                     for idx, u in enumerate(cur.fetchall(), start=1):
                         participants.append(
                             {
+                                "user_id": u["user_id"],
                                 "member_id_label": f"#U{u['user_id']}",
                                 "member_name": f"{u['user_first_name']} {u['user_last_name']}",
                                 "rank": idx,
@@ -1161,9 +1223,17 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
         elif path == "Admin/ScheduleAed.html":
             cid = request.args.get("id", type=int)
             ctx["edit_challenge_admin"] = None
+            ctx["edit_challenge_goal_count"] = ""
             if cid:
                 cur.execute("SELECT * FROM challenge WHERE challenge_id = %s", (cid,))
                 ctx["edit_challenge_admin"] = cur.fetchone()
+                if ctx["edit_challenge_admin"]:
+                    goal_count = parse_workout_goal_count(
+                        ctx["edit_challenge_admin"].get("challenge_goal")
+                    )
+                    ctx["edit_challenge_goal_count"] = (
+                        str(goal_count) if goal_count is not None else ""
+                    )
         elif path == "Admin/AProfile.html":
             ctx["admin_me"] = None
             if session.get("role") == "admin":
@@ -2339,16 +2409,72 @@ def admin_challenge_edit(cid):
     )
     start = parse_date(request.form.get("start_date"))
     end = parse_date(request.form.get("end_date"))
-    goal = request.form.get("challenge_goal", "").strip()
+    goal = parse_workout_goal_count(request.form.get("challenge_goal"))
     cur = mysql.connection.cursor()
+    cur.execute("SELECT challenge_goal FROM challenge WHERE challenge_id = %s", (cid,))
+    existing_row = cur.fetchone()
+    if not existing_row:
+        cur.close()
+        return redirect("/Admin/ScheduleA.html")
+    existing_goal = (
+        existing_row[0]
+        if isinstance(existing_row, tuple)
+        else existing_row.get("challenge_goal")
+    )
+    if goal is None:
+        goal = parse_workout_goal_count(existing_goal)
+    goal_to_store = str(goal) if goal is not None else None
     cur.execute(
         """UPDATE challenge SET challenge_title = %s, challenge_start_date = %s,
            challenge_end_date = %s, challenge_goal = %s WHERE challenge_id = %s""",
-        (title, start, end, goal, cid),
+        (title, start, end, goal_to_store, cid),
     )
     mysql.connection.commit()
     cur.close()
     return redirect("/Admin/ScheduleA.html")
+
+
+@app.post("/actions/admin/challenge/remove-participant")
+def admin_remove_challenge_participant():
+    if session.get("role") != "admin":
+        return redirect("/Admin/ScheduleA.html")
+    cid = parse_int(request.form.get("challenge_id"))
+    uid = parse_int(request.form.get("user_id"))
+    if not cid or not uid:
+        return redirect("/Admin/ScheduleA.html")
+    cur = dict_cursor()
+    try:
+        ensure_challenge_participant_exclusion_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+    cur.execute("SELECT group_id FROM challenge WHERE challenge_id = %s LIMIT 1", (cid,))
+    challenge = cur.fetchone()
+    if not challenge:
+        cur.close()
+        return redirect("/Admin/ScheduleA.html")
+    gid = challenge["group_id"]
+    cur.execute(
+        "SELECT 1 FROM user_group WHERE group_id = %s AND user_id = %s LIMIT 1",
+        (gid, uid),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect(f"/Admin/ScheduleA.html?challenge_id={cid}")
+    cur.execute(
+        """
+        INSERT INTO challenge_participant_exclusion
+            (challenge_id, user_id, removed_by_admin_id, removed_at)
+        VALUES (%s, %s, %s, NOW())
+        ON DUPLICATE KEY UPDATE
+            removed_by_admin_id = VALUES(removed_by_admin_id),
+            removed_at = NOW()
+        """,
+        (cid, uid, session["id"]),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect(f"/Admin/ScheduleA.html?challenge_id={cid}")
 
 
 @app.post("/actions/admin/schedule/<int:wid>/edit")

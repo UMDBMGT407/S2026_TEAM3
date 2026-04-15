@@ -99,14 +99,18 @@
                     <td>#{{ c.challenge_id }}</td>
                     <td><span class="status-pill status-active">{{ c.challenge_status or '—' }}</span></td>
                     <td>—</td>
-                    <td>{{ c.challenge_goal or '—' }}</td>
+                    <td>{{ c.challenge_goal_display }}</td>
                     <td>
                       <form method="get" action="ScheduleA.html" class="m-0 d-inline">
                         <input type="hidden" name="challenge_id" value="{{ c.challenge_id }}" />
                         <button type="submit" class="view-btn">View</button>
                       </form>
                     </td>
-                    <td class="text-end action-icons"><a href="ScheduleAed.html?id={{ c.challenge_id }}"><img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" /></a></td>
+                    <td class="action-icons">
+                      <a class="icon-action-btn" href="ScheduleAed.html?id={{ c.challenge_id }}">
+                        <img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" />
+                      </a>
+                    </td>
                   </tr>
                   {% else %}
                   <tr><td colspan="10">No challenges yet.</td></tr>
@@ -149,7 +153,15 @@
                       <td>{{ p.member_name }}</td>
                       <td><span class="rank-badge">{{ p.rank }}</span></td>
                       <td>{{ p.goal_progress }}</td>
-                      <td class="text-end action-icons"><img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="" aria-hidden="true" /></td>
+                      <td class="action-icons">
+                        <form method="post" action="/actions/admin/challenge/remove-participant" class="m-0 d-inline">
+                          <input type="hidden" name="challenge_id" value="{{ selected_challenge_id }}" />
+                          <input type="hidden" name="user_id" value="{{ p.user_id }}" />
+                          <button type="submit" class="icon-action-btn" aria-label="Remove participant">
+                            <img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="" aria-hidden="true" />
+                          </button>
+                        </form>
+                      </td>
                     </tr>
                     {% else %}
                     <tr><td colspan="5" class="text-muted">No participants found for this challenge yet.</td></tr>

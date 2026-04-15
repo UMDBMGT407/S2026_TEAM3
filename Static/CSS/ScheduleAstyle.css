@@ -208,13 +208,26 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+  min-height: 35px;
 }
 
 .action-icons img {
   width: 18px;
   height: 18px;
   object-fit: contain;
+}
+
+.icon-action-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .status-pill {
