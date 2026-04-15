@@ -41,9 +41,17 @@ body {
   gap: 14px;
   min-height: 26px;
   padding: 0 8px;
+  margin-left: -8px;
+  border-radius: 12px;
   color: #b1b1b1;
   font-size: 18px;
   font-weight: 500;
+  text-decoration: none;
+}
+
+.nav-item-link:hover {
+  color: #343c6a;
+  background: #f4f6fb;
 }
 
 .nav-item-link.active::before {
@@ -101,55 +109,81 @@ body {
 
 .post-card {
   background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.85);
-  padding: 20px 20px 16px;
+  border-radius: 18px;
+  border: 1px solid #e9eef6;
+  box-shadow: 0 10px 24px -18px rgba(43, 73, 130, 0.42);
+  padding: 16px 16px 14px;
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: transform 0.18s ease, box-shadow 0.22s ease;
 }
 
-.post-card-media {
-  background: #faf8f8;
-  border-radius: 20px;
+.post-image-shell {
+  background: linear-gradient(180deg, #f8faff 0%, #f1f5fc 100%);
+  border-radius: 14px;
+  border: 1px solid #e3ebf8;
   aspect-ratio: 1 / 1.05;
   max-height: 380px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  position: relative;
 }
 
-.post-card-placeholder {
-  width: 72%;
-  max-width: 280px;
-  height: auto;
-  object-fit: contain;
+.post-image-shell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.26s ease;
 }
 
-.post-card-footer {
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -20px rgba(39, 69, 124, 0.5);
+}
+
+.post-card:hover .post-image-shell img {
+  transform: scale(1.01);
+}
+
+.post-meta {
   margin-top: 18px;
   padding-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-}
-
-.post-card-email {
   color: #343c6a;
   font-size: 16px;
   font-weight: 600;
-  font-family: "Inter-SemiBold", sans-serif;
 }
 
-.post-card-delete {
+.post-email {
+  color: inherit;
+}
+
+.post-delete-btn {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   padding: 4px;
-  border: none;
-  background: transparent;
+  background: transparent !important;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
-  line-height: 0;
 }
 
-.post-card-delete img {
+.post-delete-btn img {
   width: 19px;
   height: auto;
   display: block;
@@ -178,8 +212,8 @@ body {
     border-radius: 16px;
   }
 
-  .post-card-media {
-    border-radius: 16px;
+  .post-image-shell {
+    border-radius: 12px;
     max-height: 320px;
   }
 }
