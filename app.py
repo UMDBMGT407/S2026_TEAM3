@@ -629,6 +629,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["admin_sets_done_count"] = 0
             ctx["admin_exercises_done_count"] = 0
             ctx["admin_reps_done_count"] = 0
+            ctx["admin_challenge_count"] = 0
+            ctx["admin_avg_challenge_days"] = 0
+            ctx["admin_active_challenge_count"] = 0
+            ctx["admin_avg_users_per_challenge"] = 0
             try:
                 cur.execute("SELECT COUNT(*) AS c FROM app_user WHERE is_active = 1")
                 row = cur.fetchone()
@@ -672,6 +676,66 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 cur.execute("SELECT COALESCE(SUM(workout_num_reps), 0) AS c FROM workout_log")
                 row = cur.fetchone()
                 ctx["admin_reps_done_count"] = (row or {}).get("c", 0)
+            except Exception:
+                pass
+            try:
+                cur.execute("SELECT COUNT(*) AS c FROM challenge")
+                row = cur.fetchone()
+                ctx["admin_challenge_count"] = (row or {}).get("c", 0)
+            except Exception:
+                pass
+            try:
+                cur.execute(
+                    """
+                    SELECT COUNT(*) AS c
+                    FROM challenge c
+                    WHERE c.challenge_start_date IS NOT NULL
+                      AND c.challenge_start_date <= CURDATE()
+                      AND (c.challenge_end_date IS NULL OR c.challenge_end_date >= CURDATE())
+                    """
+                )
+                row = cur.fetchone()
+                ctx["admin_active_challenge_count"] = (row or {}).get("c", 0)
+            except Exception:
+                pass
+            try:
+                cur.execute(
+                    """
+                    SELECT COALESCE(ROUND(AVG(per_challenge.user_count), 2), 0) AS c
+                    FROM (
+                      SELECT c.challenge_id, COUNT(DISTINCT ug.user_id) AS user_count
+                      FROM challenge c
+                      LEFT JOIN user_group ug ON ug.group_id = c.group_id
+                      GROUP BY c.challenge_id
+                    ) AS per_challenge
+                    """
+                )
+                row = cur.fetchone()
+                ctx["admin_avg_users_per_challenge"] = (row or {}).get("c", 0)
+            except Exception:
+                pass
+            try:
+                cur.execute(
+                    """
+                    SELECT COALESCE(
+                      ROUND(
+                        AVG(
+                          CASE
+                            WHEN c.challenge_start_date IS NOT NULL
+                             AND c.challenge_end_date IS NOT NULL
+                             AND c.challenge_end_date >= c.challenge_start_date
+                            THEN DATEDIFF(c.challenge_end_date, c.challenge_start_date) + 1
+                          END
+                        ),
+                        2
+                      ),
+                      0
+                    ) AS c
+                    FROM challenge c
+                    """
+                )
+                row = cur.fetchone()
+                ctx["admin_avg_challenge_days"] = (row or {}).get("c", 0)
             except Exception:
                 pass
         elif path == "Admin/GroupA.html":
