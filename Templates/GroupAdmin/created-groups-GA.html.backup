@@ -80,12 +80,7 @@
                     </td>
                     <td class="text-end cgga-actions">
                       <a href="edit-group-GA.html?id={{ g.group_id }}"><img src="../../Static/images/CGGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
-                      <form method="post" action="/actions/group-admin/delete-group" class="d-inline" onsubmit="return confirm('Delete this group? This removes members, challenges, and group workouts for this group. User workout history will be kept but unlinked from group sessions.');">
-                        <input type="hidden" name="group_id" value="{{ g.group_id }}" />
-                        <button type="submit" class="border-0 bg-transparent p-0" aria-label="Delete group">
-                          <img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 + 5 }}.svg" alt="" aria-hidden="true" />
-                        </button>
-                      </form>
+                      <img src="../../Static/images/CGGAtrash-can-button{{ loop.index0 % 5 + 5 }}.svg" alt="" aria-hidden="true" />
                     </td>
                   </tr>
                   {% else %}
