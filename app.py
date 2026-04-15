@@ -1580,6 +1580,31 @@ def ga_edit_schedule(wid):
     return redirect("/GroupAdmin/scheduling-GA.html")
 
 
+@app.post("/actions/group-admin/schedule/<int:wid>/delete")
+def ga_delete_schedule(wid):
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/scheduling-GA.html")
+    ga_id = session["id"]
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute(
+            "UPDATE workout SET group_workout_id = NULL WHERE group_workout_id = %s",
+            (wid,),
+        )
+        cur.execute(
+            """DELETE FROM group_workout
+               WHERE group_workout_id = %s AND group_admin_id = %s""",
+            (wid, ga_id),
+        )
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
+    cur.close()
+    return redirect("/GroupAdmin/scheduling-GA.html")
+
+
 @app.post("/actions/group-admin/profile")
 def ga_profile():
     if session.get("role") != "group_admin":

@@ -76,11 +76,7 @@
                         <button class="sga-view-btn" type="submit">View Details</button>
                       </form>
                       <a href="edit-schedule-GA.html?id={{ s.group_workout_id }}"><img src="../../Static/images/SGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
-                      <form method="post" action="/actions/group-admin/schedule/{{ s.group_workout_id }}/delete" class="d-inline" onsubmit="return confirm('Delete this scheduled workout? User logs for this session will stay but will no longer be linked to it.');">
-                        <button type="submit" class="border-0 bg-transparent p-0" aria-label="Delete scheduled workout">
-                          <img src="../../Static/images/SGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
-                        </button>
-                      </form>
+                      <img src="../../Static/images/SGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
                     </td>
                   </tr>
                   {% else %}
