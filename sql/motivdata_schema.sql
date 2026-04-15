@@ -88,6 +88,7 @@ CREATE TABLE group_workout (
   group_workout_title VARCHAR(255) NOT NULL,
   group_workout_description TEXT NULL,
   group_workout_scheduled_date DATE NULL,
+  group_workout_scheduled_time TIME NULL,
   group_workout_start_date DATE NULL,
   group_workout_end_date DATE NULL,
   group_workout_location VARCHAR(255) NULL,

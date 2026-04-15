@@ -99,7 +99,7 @@
                 <h2 class="sga-section-title">Full Details</h2>
                 <div class="sga-details-grid">
                   <div><span>Date</span><strong>{% if selected_workout and selected_workout.group_workout_scheduled_date %}{{ selected_workout.group_workout_scheduled_date }}{% else %}—{% endif %}</strong></div>
-                  <div><span>Time</span><strong>—</strong></div>
+                  <div><span>Time</span><strong>{% if selected_workout_time_display %}{{ selected_workout_time_display }}{% else %}—{% endif %}</strong></div>
                   <div><span>Location</span><strong>{% if selected_workout and selected_workout.group_workout_location %}{{ selected_workout.group_workout_location }}{% else %}—{% endif %}</strong></div>
                 </div>
               </section>

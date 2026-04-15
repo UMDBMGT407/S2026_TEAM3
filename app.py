@@ -15,7 +15,7 @@ Setup (see BMGT407 Server-Side Guide):
 from __future__ import annotations
 
 import os
-from datetime import date, datetime
+from datetime import date, datetime, time, timedelta
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -171,6 +171,37 @@ def parse_date(s: str | None):
         return None
 
 
+def parse_time(s: Any):
+    if s is None:
+        return None
+    s = str(s).strip()
+    if not s:
+        return None
+    for fmt in ("%H:%M", "%H:%M:%S"):
+        try:
+            return datetime.strptime(s, fmt).time()
+        except ValueError:
+            continue
+    return None
+
+
+def format_time_for_html_input(val: Any) -> str:
+    if val is None:
+        return ""
+    if isinstance(val, datetime):
+        return val.strftime("%H:%M")
+    if isinstance(val, time):
+        return val.strftime("%H:%M")
+    if isinstance(val, timedelta):
+        secs = int(val.total_seconds()) % 86400
+        h, m = secs // 3600, (secs % 3600) // 60
+        return f"{h:02d}:{m:02d}"
+    s = str(val).strip()
+    if len(s) >= 5 and s[2] == ":":
+        return s[:5]
+    return ""
+
+
 def parse_int(s: Any, default: int | None = None):
     try:
         return int(s)
@@ -199,6 +230,24 @@ def ensure_group_invite_table(cur) -> None:
         )
         """
     )
+
+
+def ensure_group_workout_scheduled_time_column(cur) -> None:
+    """Add group_workout_scheduled_time when missing; matches sql/migration_group_workout_scheduled_time.sql."""
+    try:
+        cur.execute(
+            """
+            ALTER TABLE group_workout
+            ADD COLUMN group_workout_scheduled_time TIME NULL
+            AFTER group_workout_scheduled_date
+            """
+        )
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError) as e:
+        mysql.connection.rollback()
+        if e.args[0] == 1060:
+            return
+        raise
 
 
 def get_or_create_exercise(cur, name: str, muscle: str | None, difficulty: str | None) -> int:
@@ -237,6 +286,7 @@ def _offline_page_context(base: dict) -> dict:
             "edit_challenge_admin": None,
             "edit_challenge": None,
             "edit_workout": None,
+            "edit_workout_time": "",
             "edit_ga_group": None,
             "edit_w": None,
             "edit_log": None,
@@ -252,6 +302,7 @@ def _offline_page_context(base: dict) -> dict:
             "selected_challenge_participants": [],
             "selected_workout_id": None,
             "selected_workout": None,
+            "selected_workout_time_display": "",
             "selected_workout_attendance": [],
             "selected_group_id": None,
             "selected_group_name": None,
@@ -612,6 +663,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 ctx["groups"] = []
             wid = request.args.get("id", type=int)
             ctx["edit_workout"] = None
+            ctx["edit_workout_time"] = ""
             if wid and path == "GroupAdmin/edit-schedule-GA.html":
                 cur.execute(
                     """SELECT * FROM group_workout
@@ -619,11 +671,16 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     (wid, ga_id),
                 )
                 ctx["edit_workout"] = cur.fetchone()
+                if ctx["edit_workout"]:
+                    ctx["edit_workout_time"] = format_time_for_html_input(
+                        ctx["edit_workout"].get("group_workout_scheduled_time")
+                    )
         elif path == "GroupAdmin/scheduling-GA.html":
             ga_id = session.get("id") if session.get("role") == "group_admin" else None
             ctx["selected_workout_id"] = None
             ctx["selected_workout"] = None
             ctx["selected_workout_attendance"] = []
+            ctx["selected_workout_time_display"] = ""
             if ga_id:
                 cur.execute(
                     """
@@ -649,9 +706,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
 
                     cur.execute(
                         """
-                        SELECT gw.group_workout_id, gw.group_workout_title, gw.group_workout_scheduled_date,
-                          gw.group_workout_start_date, gw.group_workout_end_date, gw.group_workout_location,
-                          gw.group_id, g.group_name
+                        SELECT gw.*, g.group_name
                         FROM group_workout gw
                         JOIN motiv_group g ON g.group_id = gw.group_id
                         WHERE gw.group_workout_id = %s AND gw.group_admin_id = %s
@@ -661,6 +716,11 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     selected_workout = cur.fetchone()
                     if selected_workout:
                         ctx["selected_workout"] = selected_workout
+                        ctx["selected_workout_time_display"] = (
+                            format_time_for_html_input(
+                                selected_workout.get("group_workout_scheduled_time")
+                            )
+                        )
                         cur.execute(
                             """
                             SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email,
@@ -1524,19 +1584,23 @@ def ga_create_schedule():
     loc = request.form.get("location", "").strip()
     group_id = parse_int(request.form.get("group_id"))
     sched_date = parse_date(request.form.get("scheduled_date"))
+    sched_time = parse_time(request.form.get("scheduled_time"))
     if not title or not group_id:
         return redirect("/GroupAdmin/create-schedule-GA.html?err=1")
     cur = mysql.connection.cursor()
+    ensure_group_workout_scheduled_time_column(cur)
     cur.execute(
         """INSERT INTO group_workout
            (group_workout_title, group_workout_description, group_workout_scheduled_date,
+            group_workout_scheduled_time,
             group_workout_start_date, group_workout_end_date, group_workout_location,
             group_id, group_admin_id)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
             title,
             None,
             sched_date,
+            sched_time,
             sched_date,
             sched_date,
             loc,
@@ -1557,17 +1621,20 @@ def ga_edit_schedule(wid):
     loc = request.form.get("location", "").strip()
     group_id = parse_int(request.form.get("group_id"))
     sched_date = parse_date(request.form.get("scheduled_date"))
+    sched_time = parse_time(request.form.get("scheduled_time"))
     cur = mysql.connection.cursor()
+    ensure_group_workout_scheduled_time_column(cur)
     cur.execute(
         """UPDATE group_workout SET
            group_workout_title = %s, group_workout_location = %s,
-           group_workout_scheduled_date = %s, group_workout_start_date = %s,
-           group_workout_end_date = %s, group_id = %s
+           group_workout_scheduled_date = %s, group_workout_scheduled_time = %s,
+           group_workout_start_date = %s, group_workout_end_date = %s, group_id = %s
            WHERE group_workout_id = %s AND group_admin_id = %s""",
         (
             title,
             loc,
             sched_date,
+            sched_time,
             sched_date,
             sched_date,
             group_id,
