@@ -202,9 +202,32 @@ body {
   font-size: 15px;
 }
 
+.sga-search-pill--interactive {
+  min-width: 235px;
+  padding-right: 14px;
+}
+
 .sga-search-pill img {
   width: 20px;
   height: 20px;
+}
+
+.sga-search-input {
+  width: 190px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #546a99;
+  font-size: 15px;
+  outline: none;
+}
+
+.sga-search-input::placeholder {
+  color: #8ba3cb;
+}
+
+.sga-row-highlight td {
+  background: #f4f7ff;
 }
 
 .sga-session-pill {
@@ -308,6 +331,14 @@ body {
   .sga-create-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .sga-search-pill--interactive {
+    width: 100%;
+  }
+
+  .sga-search-input {
+    width: 100%;
   }
 
   .sga-view-btn {

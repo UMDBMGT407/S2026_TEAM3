@@ -51,13 +51,25 @@
             <div class="sga-card-head">
               <h2>Scheduled Workouts Management</h2>
               <div class="sga-head-actions">
-                <div class="sga-search-pill"><img src="../../Static/images/SGAgroup1.svg" alt="" /><span>Search Session</span></div>
+                <div class="sga-search-pill sga-search-pill--interactive">
+                  <img src="../../Static/images/SGAgroup1.svg" alt="" />
+                  <input
+                    id="sga-session-search"
+                    class="sga-search-input"
+                    type="text"
+                    list="sga-session-search-list"
+                    placeholder="Search Session"
+                    aria-label="Search Session"
+                    autocomplete="off"
+                  />
+                  <datalist id="sga-session-search-list"></datalist>
+                </div>
                 <a href="create-schedule-GA.html" class="sga-create-btn">Schedule New Workout</a>
               </div>
             </div>
 
             <div class="table-responsive">
-              <table class="table sga-table mb-0">
+              <table id="sga-session-table" class="table sga-table mb-0">
                 <thead>
                   <tr>
                     <th>Group Name</th>
@@ -67,7 +79,12 @@
                 </thead>
                 <tbody>
                   {% for s in ga_schedule_sessions %}
-                  <tr>
+                  <tr
+                    data-session-row
+                    data-session-id="{{ s.group_workout_id }}"
+                    data-session-name="{{ s.group_workout_title }}"
+                    data-group-name="{{ s.group_name }}"
+                  >
                     <td>{{ s.group_name }}</td>
                     <td>{{ s.group_workout_title }}</td>
                     <td class="text-end sga-actions">
@@ -114,12 +131,24 @@
                   </div>
                   <div class="d-flex align-items-center gap-3 flex-wrap">
                     <h3>Attendance</h3>
-                    <div class="sga-search-pill"><img src="../../Static/images/SGAgroup0.svg" alt="" /><span>Search Member</span></div>
+                    <div class="sga-search-pill sga-search-pill--interactive">
+                      <img src="../../Static/images/SGAgroup0.svg" alt="" />
+                      <input
+                        id="sga-member-search"
+                        class="sga-search-input"
+                        type="text"
+                        list="sga-member-search-list"
+                        placeholder="Search Member"
+                        aria-label="Search Member"
+                        autocomplete="off"
+                      />
+                      <datalist id="sga-member-search-list"></datalist>
+                    </div>
                   </div>
                 </div>
 
                 <div class="table-responsive">
-                  <table class="table sga-table mb-0">
+                  <table id="sga-attendance-table" class="table sga-table mb-0">
                     <thead>
                       <tr>
                         <th>Member Name</th>
@@ -130,7 +159,11 @@
                     <tbody>
                       {% if selected_workout %}
                         {% for m in selected_workout_attendance %}
-                        <tr>
+                        <tr
+                          data-member-row
+                          data-member-name="{{ m.user_first_name }} {{ m.user_last_name }}"
+                          data-member-email="{{ m.user_email }}"
+                        >
                           <td>{{ m.user_first_name }} {{ m.user_last_name }}</td>
                           <td>{{ m.user_email }}</td>
                           <td>{{ m.attendance_status }}</td>
@@ -155,5 +188,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/scheduling-GA-search.js"></script>
 </body>
 </html>
