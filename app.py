@@ -267,6 +267,8 @@ def _offline_page_context(base: dict) -> dict:
             "ga_workout_history": [],
             "user_invites": [],
             "nu_invite_err": None,
+            "ga_group_invites": [],
+            "ga_invite_err": None,
         }
     )
     return base
@@ -814,15 +816,51 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 try:
                     cur.execute(
                         """
-                        SELECT i.invite_id, i.group_id, g.group_name
+                        SELECT i.invite_id, i.group_id, g.group_name,
+                          CONCAT(ga.group_admin_first_name, ' ',
+                            ga.group_admin_last_name) AS inviter_name,
+                          ga.group_admin_email AS inviter_email
                         FROM group_invite i
                         JOIN motiv_group g ON g.group_id = i.group_id
+                        JOIN group_admin ga
+                          ON ga.group_admin_id = i.invited_by_group_admin_id
                         WHERE i.invited_user_id = %s AND i.invite_status = 'pending'
                         ORDER BY i.invite_created DESC, i.invite_id DESC
                         """,
                         (uid,),
                     )
                     ctx["user_invites"] = cur.fetchall()
+                except (OperationalError, ProgrammingError) as e:
+                    if e.args[0] != 1146:
+                        raise
+        elif path == "GroupAdmin/notifications-GA.html":
+            ctx["ga_group_invites"] = []
+            ctx["ga_invite_err"] = request.args.get("invite_err")
+            if session.get("role") == "group_admin" and session.get("email"):
+                try:
+                    cur.execute(
+                        "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                        (session["email"],),
+                    )
+                    urow = cur.fetchone()
+                    if urow:
+                        uid = urow["user_id"]
+                        cur.execute(
+                            """
+                            SELECT i.invite_id, i.group_id, g.group_name,
+                              CONCAT(ga.group_admin_first_name, ' ',
+                                ga.group_admin_last_name) AS inviter_name,
+                              ga.group_admin_email AS inviter_email
+                            FROM group_invite i
+                            JOIN motiv_group g ON g.group_id = i.group_id
+                            JOIN group_admin ga
+                              ON ga.group_admin_id = i.invited_by_group_admin_id
+                            WHERE i.invited_user_id = %s AND i.invite_status = 'pending'
+                            ORDER BY i.invite_created DESC, i.invite_id DESC
+                            """,
+                            (uid,),
+                        )
+                        ctx["ga_group_invites"] = cur.fetchall()
                 except (OperationalError, ProgrammingError) as e:
                     if e.args[0] != 1146:
                         raise
@@ -1347,21 +1385,50 @@ def ga_invite_group_member():
     )
 
 
+def group_invite_notifications_url() -> str:
+    if session.get("role") == "group_admin":
+        return "/GroupAdmin/notifications-GA.html"
+    return "/User/NU.html"
+
+
+def invite_recipient_app_user_id(cur) -> int | None:
+    role = session.get("role")
+    if role == "user":
+        uid = session.get("id")
+        return uid if isinstance(uid, int) else None
+    if role == "group_admin":
+        email = (session.get("email") or "").strip()
+        if not email:
+            return None
+        cur.execute(
+            "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+            (email,),
+        )
+        row = cur.fetchone()
+        return int(row["user_id"]) if row else None
+    return None
+
+
 @app.post("/actions/user/group-invite/respond")
-@require_roles("user")
+@require_roles("user", "group_admin")
 def user_group_invite_respond():
+    notif_url = group_invite_notifications_url()
     invite_id = parse_int(request.form.get("invite_id"))
     action = (request.form.get("action") or "").strip().lower()
     if not invite_id or action not in ("accept", "reject"):
-        return redirect("/User/NU.html?invite_err=invalid")
+        return redirect(f"{notif_url}?invite_err=invalid")
     cur = dict_cursor()
+    recipient_uid = invite_recipient_app_user_id(cur)
+    if recipient_uid is None:
+        cur.close()
+        return redirect(f"{notif_url}?invite_err=invalid")
     try:
         ensure_group_invite_table(cur)
         mysql.connection.commit()
     except (OperationalError, ProgrammingError):
         mysql.connection.rollback()
         cur.close()
-        return redirect("/User/NU.html?invite_err=schema")
+        return redirect(f"{notif_url}?invite_err=schema")
     try:
         cur.execute(
             """
@@ -1373,15 +1440,15 @@ def user_group_invite_respond():
     except (OperationalError, ProgrammingError) as e:
         cur.close()
         if e.args[0] == 1146:
-            return redirect("/User/NU.html?invite_err=schema")
+            return redirect(f"{notif_url}?invite_err=schema")
         raise
     row = cur.fetchone()
-    if not row or row["invited_user_id"] != session["id"]:
+    if not row or row["invited_user_id"] != recipient_uid:
         cur.close()
-        return redirect("/User/NU.html?invite_err=invalid")
+        return redirect(f"{notif_url}?invite_err=invalid")
     if (row.get("invite_status") or "").lower() != "pending":
         cur.close()
-        return redirect("/User/NU.html?invite_err=invalid")
+        return redirect(f"{notif_url}?invite_err=invalid")
     gid = row["group_id"]
     if action == "reject":
         cur.execute(
@@ -1390,10 +1457,10 @@ def user_group_invite_respond():
         )
         mysql.connection.commit()
         cur.close()
-        return redirect("/User/NU.html")
+        return redirect(notif_url)
     cur.execute(
         "INSERT IGNORE INTO user_group (user_id, group_id) VALUES (%s, %s)",
-        (session["id"], gid),
+        (recipient_uid, gid),
     )
     cur.execute(
         "UPDATE group_invite SET invite_status = 'accepted' WHERE invite_id = %s",
@@ -1401,7 +1468,7 @@ def user_group_invite_respond():
     )
     mysql.connection.commit()
     cur.close()
-    return redirect("/User/NU.html")
+    return redirect(notif_url)
 
 
 @app.post("/actions/group-admin/challenge")

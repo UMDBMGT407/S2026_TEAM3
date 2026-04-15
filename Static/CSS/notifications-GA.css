@@ -160,6 +160,11 @@ body {
   border-bottom: 0;
 }
 
+.nga-invite-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .nga-invite-label {
   margin: 0;
   color: #232323;

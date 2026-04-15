@@ -41,24 +41,20 @@
 
         <main class="nu-main-canvas flex-grow-1">
           <section class="nu-card">
-            {% if nu_invite_err == 'invalid' %}
-            <p class="text-danger small px-3 pt-3 mb-0">That action could not be completed.</p>
-            {% elif nu_invite_err == 'schema' %}
-            <p class="text-danger small px-3 pt-3 mb-0">Database not migrated: run sql/migration_group_invite.sql.</p>
-            {% endif %}
-
-            {% if user_invites %}
             <div class="nu-head-row">
               <span>Invites</span>
               <span>Actions</span>
             </div>
+
+            {% if nu_invite_err == 'invalid' %}
+            <p class="text-danger small px-3 pt-2 mb-0">That action could not be completed.</p>
+            {% elif nu_invite_err == 'schema' %}
+            <p class="text-danger small px-3 pt-2 mb-0">Database not migrated: run sql/migration_group_invite.sql.</p>
+            {% endif %}
             <div class="nu-invites">
               {% for inv in user_invites %}
               <article class="nu-invite-row">
-                <div class="nu-invite-text">
-                  <p class="nu-invite-label mb-1">{{ inv.group_name }}</p>
-                  <p class="nu-invite-meta mb-0 small text-muted">Invited by {{ inv.inviter_name or 'Group admin' }}{% if inv.inviter_email %} · {{ inv.inviter_email }}{% endif %}</p>
-                </div>
+                <p class="nu-invite-label">Group invite: {{ inv.group_name }}</p>
                 <div class="nu-actions">
                   <form method="post" action="/actions/user/group-invite/respond" class="d-inline">
                     <input type="hidden" name="invite_id" value="{{ inv.invite_id }}" />
@@ -72,11 +68,10 @@
                   </form>
                 </div>
               </article>
+              {% else %}
+              <p class="text-muted px-3 py-4 mb-0">No pending invites.</p>
               {% endfor %}
             </div>
-            {% else %}
-            <p class="text-muted px-3 py-4 mb-0">No notifications.</p>
-            {% endif %}
           </section>
         </main>
       </div>

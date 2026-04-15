@@ -41,42 +41,52 @@
 
         <main class="nga-main-canvas flex-grow-1">
           <section class="nga-card">
-            {% if ga_invite_err == 'invalid' %}
-            <p class="text-danger small px-3 pt-3 mb-0">That action could not be completed.</p>
-            {% elif ga_invite_err == 'schema' %}
-            <p class="text-danger small px-3 pt-3 mb-0">Database not migrated: run sql/migration_group_invite.sql.</p>
-            {% endif %}
-
-            {% if ga_group_invites %}
             <div class="nga-head-row">
               <span>Invites</span>
               <span>Actions</span>
             </div>
+
             <div class="nga-invites">
-              {% for inv in ga_group_invites %}
               <article class="nga-invite-row">
-                <div class="nga-invite-text">
-                  <p class="nga-invite-label mb-1">{{ inv.group_name }}</p>
-                  <p class="nga-invite-meta mb-0 small text-muted">Invited by {{ inv.inviter_name or 'Group admin' }}{% if inv.inviter_email %} · {{ inv.inviter_email }}{% endif %}</p>
-                </div>
+                <p class="nga-invite-label">Group Name 1</p>
                 <div class="nga-actions">
-                  <form method="post" action="/actions/user/group-invite/respond" class="d-inline">
-                    <input type="hidden" name="invite_id" value="{{ inv.invite_id }}" />
-                    <input type="hidden" name="action" value="accept" />
-                    <button class="nga-action-btn" type="submit">Accept</button>
-                  </form>
-                  <form method="post" action="/actions/user/group-invite/respond" class="d-inline">
-                    <input type="hidden" name="invite_id" value="{{ inv.invite_id }}" />
-                    <input type="hidden" name="action" value="reject" />
-                    <button class="nga-action-btn" type="submit">Reject</button>
-                  </form>
+                  <button class="nga-action-btn" type="button">Accept</button>
+                  <button class="nga-action-btn" type="button">Reject</button>
                 </div>
               </article>
-              {% endfor %}
+
+              <article class="nga-invite-row">
+                <p class="nga-invite-label">Group 1 : Challenge Name</p>
+                <div class="nga-actions">
+                  <button class="nga-action-btn" type="button">Accept</button>
+                  <button class="nga-action-btn" type="button">Reject</button>
+                </div>
+              </article>
+
+              <article class="nga-invite-row">
+                <p class="nga-invite-label">Group Name 2</p>
+                <div class="nga-actions">
+                  <button class="nga-action-btn" type="button">Accept</button>
+                  <button class="nga-action-btn" type="button">Reject</button>
+                </div>
+              </article>
+
+              <article class="nga-invite-row">
+                <p class="nga-invite-label">Group Name : Challenge Name</p>
+                <div class="nga-actions">
+                  <button class="nga-action-btn" type="button">Accept</button>
+                  <button class="nga-action-btn" type="button">Reject</button>
+                </div>
+              </article>
+
+              <article class="nga-invite-row">
+                <p class="nga-invite-label">Group Name 5</p>
+                <div class="nga-actions">
+                  <button class="nga-action-btn" type="button">Accept</button>
+                  <button class="nga-action-btn" type="button">Reject</button>
+                </div>
+              </article>
             </div>
-            {% else %}
-            <p class="text-muted px-3 py-4 mb-0">No notifications.</p>
-            {% endif %}
           </section>
         </main>
       </div>
