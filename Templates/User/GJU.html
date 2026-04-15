@@ -95,7 +95,16 @@
             <div class="col-12 col-md-6 col-lg">
               <div class="gju-search" role="search">
                 <img class="gju-search-icon" src="../../Static/Images%202/GJUgroup0.svg" alt="" />
-                <span class="gju-search-placeholder">Search Groups</span>
+                <input
+                  id="gju-group-search"
+                  class="gju-search-input"
+                  type="text"
+                  list="gju-group-search-list"
+                  placeholder="Search Groups"
+                  autocomplete="off"
+                  aria-label="Search groups"
+                />
+                <datalist id="gju-group-search-list"></datalist>
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-auto ms-lg-auto text-lg-end">
@@ -107,56 +116,54 @@
             <img class="gju-arrows img-fluid" src="../../Static/Images%202/GJUarrows0.svg" alt="" />
           </div>
 
-          <div class="row g-4 gju-cards-row mb-5">
-            <div class="col-12 col-md-6 col-xl-4">
+          <div class="row g-4 gju-cards-row mb-5" id="gju-group-cards">
+            {% for g in user_joined_groups %}
+            <div class="col-12 col-md-6 col-xl-4" data-group-card data-group-name="{{ g.group_name or '' }}">
               <article class="gju-group-card">
                 <div class="gju-card-titles">
-                  <p class="gju-card-kicker"># of Members</p>
-                  <p class="gju-card-name">Group Name</p>
+                  <p class="gju-card-kicker">{{ g.member_count or 0 }} Members</p>
+                  <p class="gju-card-name">{{ g.group_name }}</p>
                 </div>
                 <div class="gju-card-buttons">
-                  <button type="button" class="gju-btn gju-btn--primary">View Members</button>
+                  <form action="GJU.html" method="get" class="gju-inline-form">
+                    <input type="hidden" name="group_id" value="{{ g.group_id }}">
+                    <button type="submit" class="gju-btn gju-btn--primary">View Members</button>
+                  </form>
                   <button type="button" class="gju-btn gju-btn--muted">Leave Group</button>
                 </div>
               </article>
             </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <article class="gju-group-card">
+            {% else %}
+            <div class="col-12">
+              <article class="gju-group-card gju-group-card--empty">
                 <div class="gju-card-titles">
-                  <p class="gju-card-kicker"># of Members</p>
-                  <p class="gju-card-name">Group Name</p>
-                </div>
-                <div class="gju-card-buttons">
-                  <button type="button" class="gju-btn gju-btn--primary">View Members</button>
-                  <button type="button" class="gju-btn gju-btn--muted">Leave Group</button>
+                  <p class="gju-card-name">You have not joined any groups yet.</p>
                 </div>
               </article>
             </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <article class="gju-group-card">
-                <div class="gju-card-titles">
-                  <p class="gju-card-kicker"># of Members</p>
-                  <p class="gju-card-name">Group Name</p>
-                </div>
-                <div class="gju-card-buttons">
-                  <button type="button" class="gju-btn gju-btn--primary">View Members</button>
-                  <button type="button" class="gju-btn gju-btn--muted">Leave Group</button>
-                </div>
-              </article>
-            </div>
+            {% endfor %}
           </div>
 
           <div class="row g-3 align-items-center mb-3 gju-members-toolbar flex-wrap">
             <div class="col-12 col-sm-auto d-flex align-items-center flex-wrap gap-2 gap-sm-3">
               <span class="gju-members-heading">Group Members -</span>
               <div class="gju-pill-select">
-                <span class="gju-pill-select-text">Group Name</span>
+                <span class="gju-pill-select-text">{{ selected_group_name or 'No Group Selected' }}</span>
               </div>
             </div>
             <div class="col-12 col-md">
               <div class="gju-search" role="search">
                 <img class="gju-search-icon" src="../../Static/Images%202/GJUgroup1.svg" alt="" />
-                <span class="gju-search-placeholder">Search Member</span>
+                <input
+                  id="gju-member-search"
+                  class="gju-search-input"
+                  type="text"
+                  list="gju-member-search-list"
+                  placeholder="Search Member"
+                  autocomplete="off"
+                  aria-label="Search members"
+                />
+                <datalist id="gju-member-search-list"></datalist>
               </div>
             </div>
           </div>
@@ -168,54 +175,33 @@
               <div class="gju-member-head">Email</div>
             </div>
             <div class="gju-member-divider gju-member-divider--strong"></div>
-            <div class="gju-member-grid gju-member-row">
+            {% for m in selected_group_members %}
+            <div class="gju-member-grid gju-member-row" data-member-row data-member-name="{{ m.member_name }}" data-member-email="{{ m.member_email }}">
               <div class="gju-member-cell gju-member-cell--name">
                 <span class="gju-member-avatar" aria-hidden="true"></span>
-                <span>John Doe</span>
+                <span>{{ m.member_name }}</span>
               </div>
-              <div class="gju-member-cell">Group Admin</div>
-              <div class="gju-member-cell">user@gmail.com</div>
+              <div class="gju-member-cell">{{ m.member_role }}</div>
+              <div class="gju-member-cell">{{ m.member_email }}</div>
             </div>
+            {% if not loop.last %}
             <div class="gju-member-divider"></div>
+            {% endif %}
+            {% else %}
             <div class="gju-member-grid gju-member-row">
               <div class="gju-member-cell gju-member-cell--name">
                 <span class="gju-member-avatar" aria-hidden="true"></span>
-                <span>Member Name</span>
+                <span>No members found.</span>
               </div>
-              <div class="gju-member-cell">Member</div>
-              <div class="gju-member-cell">user@gmail.com</div>
+              <div class="gju-member-cell">-</div>
+              <div class="gju-member-cell">-</div>
             </div>
-            <div class="gju-member-divider"></div>
-            <div class="gju-member-grid gju-member-row">
-              <div class="gju-member-cell gju-member-cell--name">
-                <span class="gju-member-avatar" aria-hidden="true"></span>
-                <span>Member Name</span>
-              </div>
-              <div class="gju-member-cell">Member</div>
-              <div class="gju-member-cell">user@gmail.com</div>
-            </div>
-            <div class="gju-member-divider"></div>
-            <div class="gju-member-grid gju-member-row">
-              <div class="gju-member-cell gju-member-cell--name">
-                <span class="gju-member-avatar" aria-hidden="true"></span>
-                <span>Member Name</span>
-              </div>
-              <div class="gju-member-cell">Member</div>
-              <div class="gju-member-cell">user@gmail.com</div>
-            </div>
-            <div class="gju-member-divider"></div>
-            <div class="gju-member-grid gju-member-row">
-              <div class="gju-member-cell gju-member-cell--name">
-                <span class="gju-member-avatar" aria-hidden="true"></span>
-                <span>Member Name</span>
-              </div>
-              <div class="gju-member-cell">Member</div>
-              <div class="gju-member-cell">user@gmail.com</div>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/gju-search.js"></script>
 </body>
 </html>

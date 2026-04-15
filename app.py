@@ -1272,6 +1272,85 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_group_members"] = selected_members
             else:
                 ctx["ga_created_groups"] = []
+        elif path == "User/GJU.html":
+            uid = session.get("id") if session.get("role") == "user" else None
+            ctx["user_joined_groups"] = []
+            ctx["selected_group_id"] = None
+            ctx["selected_group_name"] = None
+            ctx["selected_group_members"] = []
+            if uid:
+                cur.execute(
+                    """
+                    SELECT g.group_id, g.group_name,
+                      (SELECT COUNT(*) FROM user_group ug2 WHERE ug2.group_id = g.group_id) AS member_count
+                    FROM user_group ug
+                    JOIN motiv_group g ON g.group_id = ug.group_id
+                    WHERE ug.user_id = %s
+                    ORDER BY g.group_name, g.group_id
+                    """,
+                    (uid,),
+                )
+                user_groups = cur.fetchall()
+                ctx["user_joined_groups"] = user_groups
+                if user_groups:
+                    selected_group_id = request.args.get("group_id", type=int)
+                    valid_group_ids = {g["group_id"] for g in user_groups}
+                    if selected_group_id not in valid_group_ids:
+                        selected_group_id = user_groups[0]["group_id"]
+                    ctx["selected_group_id"] = selected_group_id
+                    cur.execute(
+                        """
+                        SELECT g.group_name, ga.group_admin_id,
+                          ga.group_admin_first_name, ga.group_admin_last_name, ga.group_admin_email
+                        FROM motiv_group g
+                        JOIN group_admin ga ON ga.group_admin_id = g.group_admin_id
+                        JOIN user_group ug ON ug.group_id = g.group_id
+                        WHERE g.group_id = %s AND ug.user_id = %s
+                        LIMIT 1
+                        """,
+                        (selected_group_id, uid),
+                    )
+                    selected_group = cur.fetchone()
+                    if selected_group:
+                        ctx["selected_group_name"] = selected_group["group_name"]
+                        selected_members = [
+                            {
+                                "member_kind": "group_admin",
+                                "member_id_label": (
+                                    f"#GA{selected_group['group_admin_id']}"
+                                ),
+                                "member_name": (
+                                    f"{selected_group['group_admin_first_name']} "
+                                    f"{selected_group['group_admin_last_name']}"
+                                ),
+                                "member_role": "Group Admin",
+                                "member_email": selected_group["group_admin_email"],
+                            }
+                        ]
+                        cur.execute(
+                            """
+                            SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email
+                            FROM user_group ug
+                            JOIN app_user u ON u.user_id = ug.user_id
+                            WHERE ug.group_id = %s
+                            ORDER BY u.user_first_name, u.user_last_name, u.user_id
+                            """,
+                            (selected_group_id,),
+                        )
+                        for u in cur.fetchall():
+                            selected_members.append(
+                                {
+                                    "member_kind": "app_user",
+                                    "user_id": u["user_id"],
+                                    "member_id_label": f"#U{u['user_id']}",
+                                    "member_name": (
+                                        f"{u['user_first_name']} {u['user_last_name']}"
+                                    ),
+                                    "member_role": "Member",
+                                    "member_email": u["user_email"],
+                                }
+                            )
+                        ctx["selected_group_members"] = selected_members
         elif path == "User/UDash.html":
             uid = session.get("id") if session.get("role") == "user" else None
             ctx["user_workouts_this_week"] = 0

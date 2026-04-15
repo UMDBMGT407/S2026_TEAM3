@@ -201,6 +201,22 @@ body {
   font-weight: 400;
 }
 
+.gju-search-input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #343c6a;
+  font-family: "Inter", "Inter-Regular", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+}
+
+.gju-search-input::placeholder {
+  color: #8ba3cb;
+}
+
 .gju-btn-create {
   display: inline-flex;
   align-items: center;
@@ -280,6 +296,10 @@ body {
   gap: 12px;
 }
 
+.gju-inline-form {
+  margin: 0;
+}
+
 .gju-btn {
   display: inline-flex;
   align-items: center;
@@ -307,6 +327,11 @@ body {
   color: #718ebf;
   font-family: "Inter", "Inter-Medium", sans-serif;
   font-weight: 500;
+}
+
+.gju-group-card--empty {
+  min-height: 140px;
+  padding: 36px;
 }
 
 .gju-members-heading {
