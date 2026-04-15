@@ -20,6 +20,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+from uuid import uuid4
 
 try:
     from dotenv import load_dotenv
@@ -34,6 +35,7 @@ from flask_mysqldb import MySQL
 from MySQLdb import OperationalError, ProgrammingError
 from MySQLdb.cursors import DictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 app = Flask(
     __name__,
@@ -46,8 +48,13 @@ app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "localhost")
 app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "root")
 app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "motivdata")
+app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_UPLOAD_BYTES", 8 * 1024 * 1024))
 
 mysql = MySQL(app)
+
+POST_UPLOAD_SUBDIR = Path("uploads") / "posts"
+POST_UPLOAD_DIR = Path(app.static_folder) / POST_UPLOAD_SUBDIR
+ALLOWED_POST_IMAGE_EXTS = {"png", "jpg", "jpeg", "gif", "webp"}
 
 # Pages under /Admin/ that do not require platform admin session (login + register).
 ADMIN_PUBLIC_PAGES = frozenset({"index.html", "CreateAccount.html"})
@@ -98,6 +105,13 @@ def default_dashboard_for_role(role: str) -> str:
     if role == "group_admin":
         return "/GroupAdmin/GADash.html"
     return "/User/UDash.html"
+
+
+@app.errorhandler(413)
+def file_too_large(_e):
+    if request.path.startswith("/api/"):
+        return jsonify(error="Uploaded file is too large"), 413
+    return "Uploaded file is too large", 413
 
 
 def require_roles(*roles: str):
@@ -250,6 +264,81 @@ def ensure_group_workout_scheduled_time_column(cur) -> None:
         raise
 
 
+def ensure_post_photo_path_column(cur) -> None:
+    """Add post.post_photo_path when missing for photo uploads."""
+    try:
+        cur.execute(
+            """
+            ALTER TABLE post
+            ADD COLUMN post_photo_path VARCHAR(255) NULL
+            AFTER post_content
+            """
+        )
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError) as e:
+        mysql.connection.rollback()
+        if e.args[0] == 1060:
+            return
+        raise
+
+
+def fetch_posts_rows(cur) -> list[dict[str, Any]]:
+    """
+    Read posts with photo column when available, but gracefully
+    fallback on older DBs where post_photo_path does not exist yet.
+    """
+    try:
+        ensure_post_photo_path_column(cur)
+    except (OperationalError, ProgrammingError):
+        # If schema change isn't possible right now, we still render posts.
+        mysql.connection.rollback()
+    try:
+        cur.execute(
+            """
+            SELECT p.post_id, p.post_content, p.post_photo_path, p.post_created, u.user_email, p.user_id
+            FROM post p
+            JOIN app_user u ON p.user_id = u.user_id
+            ORDER BY p.post_created DESC
+            """
+        )
+        return list(cur.fetchall())
+    except OperationalError as e:
+        if e.args[0] != 1054:
+            raise
+        cur.execute(
+            """
+            SELECT p.post_id, p.post_content, p.post_created, u.user_email, p.user_id
+            FROM post p
+            JOIN app_user u ON p.user_id = u.user_id
+            ORDER BY p.post_created DESC
+            """
+        )
+        rows = list(cur.fetchall())
+        for row in rows:
+            row["post_photo_path"] = None
+        return rows
+
+
+def save_post_photo(file_obj) -> tuple[str | None, str | None]:
+    """Save uploaded post image and return (web_path, error)."""
+    if not file_obj or not getattr(file_obj, "filename", ""):
+        return None, None
+    filename = secure_filename(file_obj.filename or "")
+    if not filename or "." not in filename:
+        return None, "Invalid file name"
+    ext = filename.rsplit(".", 1)[1].lower()
+    if ext not in ALLOWED_POST_IMAGE_EXTS:
+        return None, "Unsupported image type"
+    mimetype = (getattr(file_obj, "mimetype", "") or "").lower()
+    if mimetype and not mimetype.startswith("image/"):
+        return None, "File must be an image"
+    POST_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    saved_name = f"{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{uuid4().hex}.{ext}"
+    out_path = POST_UPLOAD_DIR / saved_name
+    file_obj.save(out_path)
+    return f"/Static/{POST_UPLOAD_SUBDIR.as_posix()}/{saved_name}", None
+
+
 def get_or_create_exercise(cur, name: str, muscle: str | None, difficulty: str | None) -> int:
     name = (name or "").strip() or "Custom"
     cur.execute(
@@ -338,16 +427,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
         return _offline_page_context(ctx)
     try:
         if path in ("User/PU.html", "GroupAdmin/post-GA.html", "Admin/PostA.html"):
-            cur.execute(
-                """
-                SELECT p.post_id, p.post_content, p.post_created, u.user_email, p.user_id
-                FROM post p
-                JOIN app_user u ON p.user_id = u.user_id
-                ORDER BY p.post_created DESC
-                """
-            )
+            rows = fetch_posts_rows(cur)
             # Temporary UI requirement: show exactly first 4 shared posts.
-            ctx["posts"] = cur.fetchall()[:4]
+            ctx["posts"] = rows[:4]
         elif path == "User/WLU.html":
             uid = session.get("id") if session.get("role") == "user" else None
             if uid:
@@ -2261,32 +2343,35 @@ def api_ga_user_email_search():
 @app.get("/api/posts")
 def api_posts_get():
     cur = dict_cursor()
-    cur.execute(
-        """
-        SELECT p.post_id, p.post_content, p.post_created, p.user_id, u.user_email
-        FROM post p
-        JOIN app_user u ON p.user_id = u.user_id
-        ORDER BY p.post_created DESC
-        """
-    )
-    rows = [serialize_row(dict(r)) for r in cur.fetchall()]
+    rows = [serialize_row(dict(r)) for r in fetch_posts_rows(cur)]
     cur.close()
     return jsonify(rows)
 
 
 @app.post("/api/posts")
 def api_posts_post():
-    if not request.is_json:
-        return jsonify(error="Expected JSON"), 400
     role = session.get("role")
     if role not in ("user", "group_admin"):
         return jsonify(error="Login as app user or group admin required"), 401
-    data = request.get_json() or {}
-    content = (data.get("post_content") or "").strip()
-    if not content:
-        return jsonify(error="post_content required"), 400
     uid = session.get("id")
+    content = ""
+    photo_path = None
+    is_multipart = request.mimetype == "multipart/form-data"
+    if request.is_json:
+        data = request.get_json(silent=True) or {}
+        content = (data.get("post_content") or "").strip()
+    elif is_multipart:
+        content = (request.form.get("post_content") or "").strip()
+    else:
+        return jsonify(error="Expected JSON or multipart form data"), 400
+
     cur = mysql.connection.cursor()
+    try:
+        ensure_post_photo_path_column(cur)
+    except (OperationalError, ProgrammingError):
+        cur.close()
+        return jsonify(error="Post photo schema is unavailable"), 500
+
     if role == "group_admin":
         # Group admins post through an app_user identity with matching email.
         # If missing, create/sync one so GA posting works reliably.
@@ -2321,10 +2406,22 @@ def api_posts_post():
             (f"{first} {last}".strip(), first, last, email, synthetic_pw_hash),
         )
         uid = cur.lastrowid
+
+    if is_multipart:
+        photo_path, upload_err = save_post_photo(request.files.get("photo"))
+        if upload_err:
+            mysql.connection.rollback()
+            cur.close()
+            return jsonify(error=upload_err), 400
+    if not content and not photo_path:
+        mysql.connection.rollback()
+        cur.close()
+        return jsonify(error="Provide post_content or a photo"), 400
+
     cur.execute(
-        """INSERT INTO post (post_content, user_id, post_date, post_time)
-           VALUES (%s, %s, CURDATE(), CURTIME())""",
-        (content, uid),
+        """INSERT INTO post (post_content, post_photo_path, user_id, post_date, post_time)
+           VALUES (%s, %s, %s, CURDATE(), CURTIME())""",
+        (content or None, photo_path, uid),
     )
     mysql.connection.commit()
     cur.close()

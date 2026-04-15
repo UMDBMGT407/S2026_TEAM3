@@ -60,6 +60,7 @@ CREATE TABLE user_group (
 CREATE TABLE post (
   post_id INT AUTO_INCREMENT PRIMARY KEY,
   post_content TEXT,
+  post_photo_path VARCHAR(255) NULL,
   post_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   post_time TIME NULL,
   post_date DATE NULL,

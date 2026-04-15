@@ -45,13 +45,25 @@
               <img src="../../Static/Images%202/PUadd-button0.svg" alt="" />
             </button>
           </div>
+          <div id="pu-compose-panel" class="pu-compose-panel d-none">
+            <label class="pu-compose-label" for="pu-post-content">Post text</label>
+            <textarea id="pu-post-content" class="pu-compose-text" rows="3" placeholder="Write your post..."></textarea>
+            <label class="pu-compose-label" for="pu-post-photo">Photo (optional)</label>
+            <input id="pu-post-photo" class="pu-compose-file" type="file" accept="image/*" />
+            <div class="pu-compose-actions">
+              <button id="pu-submit-post" class="pu-compose-submit" type="button">Post</button>
+              <button id="pu-cancel-post" class="pu-compose-cancel" type="button">Cancel</button>
+            </div>
+          </div>
 
           <div class="pu-posts-grid-wrap">
           <div class="row g-4 pu-post-grid">
             {% for p in posts %}
             <div class="col-12 col-lg-6">
               <article class="pu-post-card">
-                <div class="pu-image-shell"><img src="../../Static/Images%202/PUplaceholder{{ (loop.index0 % 4) }}.png" alt="Post image" /></div>
+                <div class="pu-image-shell">
+                  <img src="{{ p.post_photo_path or ('../../Static/Images%202/PUplaceholder' ~ (loop.index0 % 4) ~ '.png') }}" alt="Post image" />
+                </div>
                 <div class="pu-post-meta d-flex justify-content-between align-items-center">
                   <span>{{ p.user_email }}</span>
                   {% if session_role == 'user' and session_id == p.user_id %}
@@ -68,17 +80,46 @@
           </div>
         </div>
         <script>
-        document.getElementById('pu-add-btn').addEventListener('click', async function () {
-          var content = window.prompt('Write your post:');
-          if (!content || !content.trim()) return;
-          var r = await fetch('/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ post_content: content.trim() })
-          });
+        var puAddBtn = document.getElementById('pu-add-btn');
+        var puCompose = document.getElementById('pu-compose-panel');
+        var puCancel = document.getElementById('pu-cancel-post');
+        var puSubmit = document.getElementById('pu-submit-post');
+        var puContent = document.getElementById('pu-post-content');
+        var puPhoto = document.getElementById('pu-post-photo');
+
+        puAddBtn.addEventListener('click', function () {
+          puCompose.classList.toggle('d-none');
+          if (!puCompose.classList.contains('d-none')) puContent.focus();
+        });
+
+        puCancel.addEventListener('click', function () {
+          puCompose.classList.add('d-none');
+          puContent.value = '';
+          puPhoto.value = '';
+        });
+
+        puSubmit.addEventListener('click', async function () {
+          var content = (puContent.value || '').trim();
+          var file = puPhoto.files && puPhoto.files[0] ? puPhoto.files[0] : null;
+          if (!content && !file) {
+            alert('Add text or choose a photo.');
+            return;
+          }
+          var fd = new FormData();
+          if (content) fd.append('post_content', content);
+          if (file) fd.append('photo', file);
+          var r = await fetch('/api/posts', { method: 'POST', credentials: 'same-origin', body: fd });
           if (r.status === 401) { alert('Log in as a user (e.g. john@motiv.test) to post.'); return; }
-          if (r.ok) location.reload(); else alert('Could not save post.');
+          if (r.ok) {
+            location.reload();
+            return;
+          }
+          var msg = 'Could not save post.';
+          try {
+            var j = await r.json();
+            if (j && j.error) msg = j.error;
+          } catch (_e) {}
+          alert(msg);
         });
         async function deletePost(id) {
           var r = await fetch('/api/posts/' + id, { method: 'DELETE', credentials: 'same-origin' });

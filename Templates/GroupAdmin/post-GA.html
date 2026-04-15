@@ -45,13 +45,25 @@
               <img src="../../Static/images/P2GAadd-button0.svg" alt="" />
             </button>
           </div>
+          <div id="pga-compose-panel" class="pga-compose-panel d-none">
+            <label class="pga-compose-label" for="pga-post-content">Post text</label>
+            <textarea id="pga-post-content" class="pga-compose-text" rows="3" placeholder="Write your post..."></textarea>
+            <label class="pga-compose-label" for="pga-post-photo">Photo (optional)</label>
+            <input id="pga-post-photo" class="pga-compose-file" type="file" accept="image/*" />
+            <div class="pga-compose-actions">
+              <button id="pga-submit-post" class="pga-compose-submit" type="button">Post</button>
+              <button id="pga-cancel-post" class="pga-compose-cancel" type="button">Cancel</button>
+            </div>
+          </div>
 
           <div class="pga-posts-grid-wrap">
             <div class="row g-4 pga-post-grid">
               {% for p in posts %}
               <div class="col-12 col-lg-6">
                 <article class="pga-post-card">
-                  <div class="pga-image-shell"><img src="../../Static/images/P2GAplaceholder{{ (loop.index0 % 4) }}.png" alt="Post image" /></div>
+                  <div class="pga-image-shell">
+                    <img src="{{ p.post_photo_path or ('../../Static/images/P2GAplaceholder' ~ (loop.index0 % 4) ~ '.png') }}" alt="Post image" />
+                  </div>
                   <div class="pga-post-meta d-flex justify-content-between align-items-center">
                     <span>{{ p.user_email }}</span>
                     {% if p.user_email == session_email %}
@@ -68,16 +80,45 @@
           </div>
         </div>
         <script>
-        document.getElementById('pga-add-btn').addEventListener('click', async function () {
-          var content = window.prompt('Write your post:');
-          if (!content || !content.trim()) return;
-          var r = await fetch('/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ post_content: content.trim() })
-          });
-          if (r.ok) location.reload(); else alert('Could not save post.');
+        var pgaAddBtn = document.getElementById('pga-add-btn');
+        var pgaCompose = document.getElementById('pga-compose-panel');
+        var pgaCancel = document.getElementById('pga-cancel-post');
+        var pgaSubmit = document.getElementById('pga-submit-post');
+        var pgaContent = document.getElementById('pga-post-content');
+        var pgaPhoto = document.getElementById('pga-post-photo');
+
+        pgaAddBtn.addEventListener('click', function () {
+          pgaCompose.classList.toggle('d-none');
+          if (!pgaCompose.classList.contains('d-none')) pgaContent.focus();
+        });
+
+        pgaCancel.addEventListener('click', function () {
+          pgaCompose.classList.add('d-none');
+          pgaContent.value = '';
+          pgaPhoto.value = '';
+        });
+
+        pgaSubmit.addEventListener('click', async function () {
+          var content = (pgaContent.value || '').trim();
+          var file = pgaPhoto.files && pgaPhoto.files[0] ? pgaPhoto.files[0] : null;
+          if (!content && !file) {
+            alert('Add text or choose a photo.');
+            return;
+          }
+          var fd = new FormData();
+          if (content) fd.append('post_content', content);
+          if (file) fd.append('photo', file);
+          var r = await fetch('/api/posts', { method: 'POST', credentials: 'same-origin', body: fd });
+          if (r.ok) {
+            location.reload();
+            return;
+          }
+          var msg = 'Could not save post.';
+          try {
+            var j = await r.json();
+            if (j && j.error) msg = j.error;
+          } catch (_e) {}
+          alert(msg);
         });
         async function gaDeletePost(id) {
           if (!confirm('Delete this post?')) return;
