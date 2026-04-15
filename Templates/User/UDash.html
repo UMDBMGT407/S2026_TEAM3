@@ -48,7 +48,7 @@
                   <div class="du-stat-icon-wrap"><img src="../../Static/Images%202/DUgroup-11712749010.svg" alt="" /></div>
                   <div>
                     <p class="du-stat-label">Workouts</p>
-                    <p class="du-stat-value">4 <span>This Week</span></p>
+                    <p class="du-stat-value">{{ user_workouts_this_week or 0 }} <span>This Week</span></p>
                   </div>
                 </article>
               </div>
@@ -57,7 +57,11 @@
                   <div class="du-stat-icon-wrap"><img src="../../Static/Images%202/DUgroup-logcircle0.svg" alt="" /></div>
                   <div>
                     <p class="du-stat-label">Current Streak</p>
-                    <p class="du-stat-value">3 Days <span>Keep it up!</span></p>
+                    <p class="du-stat-value">
+                      {{ user_current_streak_days or 0 }}
+                      {% if (user_current_streak_days or 0) == 1 %}Day{% else %}Days{% endif %}
+                      <span>Keep it up!</span>
+                    </p>
                   </div>
                 </article>
               </div>
@@ -66,7 +70,7 @@
                   <div class="du-stat-icon-wrap"><img class="du-stat-icon--minutes" src="../../Static/Images%202/DUminutes-icon0.svg" alt="" /></div>
                   <div>
                     <p class="du-stat-label">Total Minutes</p>
-                    <p class="du-stat-value">85 <span>This Week</span></p>
+                    <p class="du-stat-value">{{ user_total_minutes_this_week or 0 }} <span>This Week</span></p>
                   </div>
                 </article>
               </div>
@@ -99,14 +103,17 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td><span class="du-rank-badge">1</span></td><td>John Doe</td><td>12</td></tr>
-                  <tr><td><span class="du-rank-badge">2</span></td><td>John Doe</td><td>11</td></tr>
-                  <tr><td><span class="du-rank-badge">3</span></td><td>John Doe</td><td>10</td></tr>
-                  <tr><td><span class="du-rank-badge">4</span></td><td>John Doe</td><td>10</td></tr>
-                  <tr><td><span class="du-rank-badge">5</span></td><td>John Doe</td><td>9</td></tr>
-                  <tr><td><span class="du-rank-badge">6</span></td><td>John Doe</td><td>5</td></tr>
-                  <tr><td><span class="du-rank-badge">7</span></td><td>John Doe</td><td>4</td></tr>
-                  <tr><td><span class="du-rank-badge">8</span></td><td>John Doe</td><td>2</td></tr>
+                  {% for row in user_workout_leaderboard %}
+                  <tr>
+                    <td><span class="du-rank-badge">{{ row.rank }}</span></td>
+                    <td>{{ row.user_name }}</td>
+                    <td>{{ row.weekly_workouts }}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No workouts logged this week.</td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
