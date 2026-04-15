@@ -520,6 +520,10 @@ def _offline_page_context(base: dict) -> dict:
             "admin_reps_done_count": 0,
             "wldu_workouts": [],
             "ga_workout_history": [],
+            "ga_workouts_this_week": 0,
+            "ga_current_streak_days": 0,
+            "ga_total_minutes_this_week": 0,
+            "ga_workout_leaderboard": [],
             "user_invites": [],
             "nu_invite_err": None,
             "ga_group_invites": [],
@@ -1070,6 +1074,131 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_challenge_participants"] = participants
             else:
                 ctx["ga_created_challenges"] = []
+        elif path == "GroupAdmin/GADash.html":
+            ga_id = session.get("id") if session.get("role") == "group_admin" else None
+            ctx["ga_workouts_this_week"] = 0
+            ctx["ga_current_streak_days"] = 0
+            ctx["ga_total_minutes_this_week"] = 0
+            ctx["ga_workout_leaderboard"] = []
+            if ga_id:
+                week_start_sql = "DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)"
+                next_week_start_sql = (
+                    "DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)"
+                )
+                try:
+                    cur.execute(
+                        f"""
+                        SELECT
+                          COUNT(w.workout_id) AS workouts_this_week,
+                          COALESCE(SUM(w.workout_duration_minutes), 0) AS total_minutes_this_week
+                        FROM workout w
+                        JOIN (
+                          SELECT DISTINCT ug.user_id
+                          FROM user_group ug
+                          JOIN motiv_group g ON g.group_id = ug.group_id
+                          WHERE g.group_admin_id = %s
+                        ) ga_users ON ga_users.user_id = w.user_id
+                        WHERE w.workout_date >= {week_start_sql}
+                          AND w.workout_date < {next_week_start_sql}
+                        """,
+                        (ga_id,),
+                    )
+                    summary = cur.fetchone() or {}
+                    ctx["ga_workouts_this_week"] = summary.get("workouts_this_week", 0) or 0
+                    ctx["ga_total_minutes_this_week"] = (
+                        summary.get("total_minutes_this_week", 0) or 0
+                    )
+                except Exception:
+                    pass
+                try:
+                    cur.execute(
+                        """
+                        SELECT user_id
+                        FROM app_user
+                        WHERE user_email = (
+                          SELECT group_admin_email
+                          FROM group_admin
+                          WHERE group_admin_id = %s
+                          LIMIT 1
+                        )
+                        LIMIT 1
+                        """,
+                        (ga_id,),
+                    )
+                    ga_user = cur.fetchone()
+                    ga_user_id = (ga_user or {}).get("user_id")
+                    if ga_user_id:
+                        cur.execute(
+                            """
+                            SELECT DISTINCT workout_date
+                            FROM workout
+                            WHERE user_id = %s
+                            ORDER BY workout_date DESC
+                            """,
+                            (ga_user_id,),
+                        )
+                        workout_dates = [r.get("workout_date") for r in (cur.fetchall() or [])]
+                        workout_date_set = {d for d in workout_dates if d}
+                        streak = 0
+                        day_cursor = date.today()
+                        while day_cursor in workout_date_set:
+                            streak += 1
+                            day_cursor -= timedelta(days=1)
+                        ctx["ga_current_streak_days"] = streak
+                except Exception:
+                    pass
+                try:
+                    cur.execute(
+                        f"""
+                        SELECT
+                          u.user_id,
+                          u.user_first_name,
+                          u.user_last_name,
+                          COUNT(w.workout_id) AS weekly_workouts,
+                          COALESCE(SUM(w.workout_duration_minutes), 0) AS weekly_minutes
+                        FROM (
+                          SELECT DISTINCT ug.user_id
+                          FROM user_group ug
+                          JOIN motiv_group g ON g.group_id = ug.group_id
+                          WHERE g.group_admin_id = %s
+                        ) ga_users
+                        JOIN app_user u ON u.user_id = ga_users.user_id
+                        LEFT JOIN workout w
+                          ON w.user_id = u.user_id
+                          AND w.workout_date >= {week_start_sql}
+                          AND w.workout_date < {next_week_start_sql}
+                        GROUP BY u.user_id, u.user_first_name, u.user_last_name
+                        HAVING COUNT(w.workout_id) > 0
+                        ORDER BY weekly_workouts DESC, weekly_minutes DESC,
+                                 u.user_first_name, u.user_last_name, u.user_id
+                        """,
+                        (ga_id,),
+                    )
+                    leaderboard_rows = cur.fetchall() or []
+                    leaderboard = []
+                    previous_score: tuple[int, int] | None = None
+                    current_rank = 0
+                    for idx, row in enumerate(leaderboard_rows, start=1):
+                        score = (
+                            int(row.get("weekly_workouts") or 0),
+                            int(row.get("weekly_minutes") or 0),
+                        )
+                        if score != previous_score:
+                            current_rank = idx
+                            previous_score = score
+                        leaderboard.append(
+                            {
+                                "rank": current_rank,
+                                "user_name": (
+                                    f"{row.get('user_first_name', '')} "
+                                    f"{row.get('user_last_name', '')}"
+                                ).strip(),
+                                "weekly_workouts": score[0],
+                            }
+                        )
+                    ctx["ga_workout_leaderboard"] = leaderboard
+                except Exception:
+                    pass
         elif path == "GroupAdmin/created-groups-GA.html":
             ga_id = session.get("id") if session.get("role") == "group_admin" else None
             ctx["selected_group_id"] = None
