@@ -264,6 +264,72 @@ def ensure_group_workout_scheduled_time_column(cur) -> None:
         raise
 
 
+def ensure_group_workout_attendance_table(cur) -> None:
+    """Create RSVP table when missing; same DDL as sql/migration_group_workout_attendance.sql."""
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS group_workout_attendance (
+          attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+          group_workout_id INT NOT NULL,
+          user_id INT NOT NULL,
+          attendance_status VARCHAR(16) NOT NULL DEFAULT 'pending',
+          attendance_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          CONSTRAINT fk_gwa_workout FOREIGN KEY (group_workout_id)
+            REFERENCES group_workout (group_workout_id) ON DELETE CASCADE,
+          CONSTRAINT fk_gwa_user FOREIGN KEY (user_id)
+            REFERENCES app_user (user_id) ON DELETE CASCADE,
+          UNIQUE KEY uq_gwa_workout_user (group_workout_id, user_id)
+        )
+        """
+    )
+
+
+def fetch_workout_attendance_rows(cur, workout_id: int, group_id: int) -> list[dict[str, Any]]:
+    """Fetch group member attendance for a workout using RSVP table, with safe fallback."""
+    try:
+        ensure_group_workout_attendance_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+    try:
+        cur.execute(
+            """
+            SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email,
+              CASE COALESCE(gwa.attendance_status, 'pending')
+                WHEN 'going' THEN 'Going'
+                WHEN 'not_going' THEN 'Not Going'
+                ELSE 'Pending'
+              END AS attendance_status
+            FROM user_group ug
+            JOIN app_user u ON u.user_id = ug.user_id
+            LEFT JOIN group_workout_attendance gwa
+              ON gwa.group_workout_id = %s AND gwa.user_id = u.user_id
+            WHERE ug.group_id = %s
+            ORDER BY u.user_first_name, u.user_last_name, u.user_id
+            """,
+            (workout_id, group_id),
+        )
+        return cur.fetchall()
+    except OperationalError as e:
+        if e.args[0] != 1146:
+            raise
+        cur.execute(
+            """
+            SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email,
+              CASE WHEN EXISTS (
+                  SELECT 1 FROM workout w
+                  WHERE w.group_workout_id = %s AND w.user_id = u.user_id
+              ) THEN 'Going' ELSE 'Pending' END AS attendance_status
+            FROM user_group ug
+            JOIN app_user u ON u.user_id = ug.user_id
+            WHERE ug.group_id = %s
+            ORDER BY u.user_first_name, u.user_last_name, u.user_id
+            """,
+            (workout_id, group_id),
+        )
+        return cur.fetchall()
+
+
 def ensure_post_photo_path_column(cur) -> None:
     """Add post.post_photo_path when missing for photo uploads."""
     try:
@@ -469,12 +535,15 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 ctx["wldu_workouts"] = []
         elif path == "User/SU.html":
             uid = session.get("id") if session.get("role") == "user" else None
+            ctx["selected_workout_id"] = None
+            ctx["selected_workout"] = None
+            ctx["selected_workout_attendance"] = []
             if uid:
                 cur.execute(
                     """
                     SELECT gw.group_workout_id, gw.group_workout_title,
                            gw.group_workout_scheduled_date, gw.group_workout_location,
-                           g.group_name
+                           g.group_id, g.group_name
                     FROM group_workout gw
                     JOIN motiv_group g ON gw.group_id = g.group_id
                     JOIN user_group ug ON ug.group_id = g.group_id
@@ -483,7 +552,24 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     """,
                     (uid,),
                 )
-                ctx["schedules"] = cur.fetchall()
+                schedules = cur.fetchall()
+                ctx["schedules"] = schedules
+                if schedules:
+                    selected_workout_id = request.args.get("workout_id", type=int)
+                    valid_workout_ids = {s["group_workout_id"] for s in schedules}
+                    if selected_workout_id not in valid_workout_ids:
+                        selected_workout_id = schedules[0]["group_workout_id"]
+                    ctx["selected_workout_id"] = selected_workout_id
+
+                    selected_workout = next(
+                        (s for s in schedules if s["group_workout_id"] == selected_workout_id),
+                        None,
+                    )
+                    if selected_workout:
+                        ctx["selected_workout"] = selected_workout
+                        ctx["selected_workout_attendance"] = fetch_workout_attendance_rows(
+                            cur, selected_workout_id, selected_workout["group_id"]
+                        )
             else:
                 ctx["schedules"] = []
         elif path == "Admin/ADash.html":
@@ -803,21 +889,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 selected_workout.get("group_workout_scheduled_time")
                             )
                         )
-                        cur.execute(
-                            """
-                            SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email,
-                              CASE WHEN EXISTS (
-                                  SELECT 1 FROM workout w
-                                  WHERE w.group_workout_id = %s AND w.user_id = u.user_id
-                              ) THEN 'Going' ELSE 'Pending' END AS attendance_status
-                            FROM user_group ug
-                            JOIN app_user u ON u.user_id = ug.user_id
-                            WHERE ug.group_id = %s
-                            ORDER BY u.user_first_name, u.user_last_name, u.user_id
-                            """,
-                            (selected_workout_id, selected_workout["group_id"]),
+                        ctx["selected_workout_attendance"] = fetch_workout_attendance_rows(
+                            cur, selected_workout_id, selected_workout["group_id"]
                         )
-                        ctx["selected_workout_attendance"] = cur.fetchall()
             else:
                 ctx["ga_schedule_sessions"] = []
         elif path == "GroupAdmin/created-challenges-GA.html":
@@ -1618,6 +1692,50 @@ def user_group_invite_respond():
     mysql.connection.commit()
     cur.close()
     return redirect(notif_url)
+
+
+@app.post("/actions/user/schedule/<int:wid>/rsvp")
+@require_roles("user")
+def user_schedule_rsvp(wid):
+    status = (request.form.get("status") or "").strip().lower()
+    if status not in ("going", "not_going"):
+        return redirect(f"/User/SU.html?workout_id={wid}&rsvp_err=invalid")
+    uid = session.get("id")
+    cur = dict_cursor()
+    cur.execute(
+        """
+        SELECT gw.group_workout_id
+        FROM group_workout gw
+        JOIN user_group ug ON ug.group_id = gw.group_id
+        WHERE gw.group_workout_id = %s AND ug.user_id = %s
+        LIMIT 1
+        """,
+        (wid, uid),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/User/SU.html?rsvp_err=invalid")
+    try:
+        ensure_group_workout_attendance_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+        cur.close()
+        return redirect(f"/User/SU.html?workout_id={wid}&rsvp_err=schema")
+    cur.execute(
+        """
+        INSERT INTO group_workout_attendance
+          (group_workout_id, user_id, attendance_status)
+        VALUES (%s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+          attendance_status = VALUES(attendance_status),
+          attendance_updated = CURRENT_TIMESTAMP
+        """,
+        (wid, uid, status),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect(f"/User/SU.html?workout_id={wid}")
 
 
 @app.post("/actions/group-admin/challenge")

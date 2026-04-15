@@ -61,7 +61,10 @@
                 </div>
                 <div class="su-card-actions">
                   <span class="su-status su-status--upcoming">Upcoming</span>
-                  <button type="button" class="su-outline-btn">View Details</button>
+                  <form method="get" action="SU.html" class="m-0">
+                    <input type="hidden" name="workout_id" value="{{ s.group_workout_id }}" />
+                    <button type="submit" class="su-outline-btn">View Details</button>
+                  </form>
                 </div>
               </article>
             </div>
@@ -76,20 +79,30 @@
               <section class="su-detail-card">
                 <div class="su-detail-head">Workout Details</div>
                 <div class="su-detail-body">
-                  {% if schedules and schedules|length > 0 %}
-                  {% set s = schedules[0] %}
-                  <h3>{{ s.group_workout_title }}</h3>
-                  <p>{{ s.group_workout_scheduled_date }}</p>
-                  <p>{{ s.group_workout_location }}</p>
-                  <p class="su-group">{{ s.group_name }}</p>
+                  {% if selected_workout %}
+                  <h3>{{ selected_workout.group_workout_title }}</h3>
+                  <p>{{ selected_workout.group_workout_scheduled_date }}</p>
+                  <p>{{ selected_workout.group_workout_location }}</p>
+                  <p class="su-group">{{ selected_workout.group_name }}</p>
                   {% else %}
                   <h3>No selection</h3>
                   <p>Join a group with upcoming workouts to see details.</p>
                   {% endif %}
                 </div>
                 <div class="su-detail-actions">
-                  <button class="su-attend-btn su-attend-btn--yes" type="button">I’m Going</button>
-                  <button class="su-attend-btn su-attend-btn--no" type="button">Can’t Make It</button>
+                  {% if selected_workout_id %}
+                  <form method="post" action="/actions/user/schedule/{{ selected_workout_id }}/rsvp" class="m-0 d-inline">
+                    <input type="hidden" name="status" value="going" />
+                    <button class="su-attend-btn su-attend-btn--yes" type="submit">I’m Going</button>
+                  </form>
+                  <form method="post" action="/actions/user/schedule/{{ selected_workout_id }}/rsvp" class="m-0 d-inline">
+                    <input type="hidden" name="status" value="not_going" />
+                    <button class="su-attend-btn su-attend-btn--no" type="submit">Can’t Make It</button>
+                  </form>
+                  {% else %}
+                  <button class="su-attend-btn su-attend-btn--yes" type="button" disabled>I’m Going</button>
+                  <button class="su-attend-btn su-attend-btn--no" type="button" disabled>Can’t Make It</button>
+                  {% endif %}
                 </div>
               </section>
             </div>
@@ -101,10 +114,15 @@
               </div>
               <section class="su-attendance-card">
                 <div class="su-attendance-head"><span>Member Name</span><span>Status</span></div>
-                <div class="su-attendance-row"><span>John Doe</span><span class="su-state su-state--going">Going</span></div>
-                <div class="su-attendance-row"><span>John Doe</span><span class="su-state su-state--no">Not Going</span></div>
-                <div class="su-attendance-row"><span>John Doe</span><span class="su-state su-state--pending">Pending</span></div>
-                <div class="su-attendance-row"><span>John Doe</span><span class="su-state su-state--going">Going</span></div>
+                {% for m in selected_workout_attendance %}
+                {% set st = m.attendance_status %}
+                <div class="su-attendance-row">
+                  <span>{{ m.user_first_name }} {{ m.user_last_name }}</span>
+                  <span class="su-state {% if st == 'Going' %}su-state--going{% elif st == 'Not Going' %}su-state--no{% else %}su-state--pending{% endif %}">{{ st }}</span>
+                </div>
+                {% else %}
+                <div class="su-attendance-row"><span class="text-muted">No attendance data yet.</span><span class="su-state su-state--pending">Pending</span></div>
+                {% endfor %}
               </section>
             </div>
           </div>

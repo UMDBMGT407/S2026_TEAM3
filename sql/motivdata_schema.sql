@@ -57,6 +57,19 @@ CREATE TABLE user_group (
   CONSTRAINT fk_ug_group FOREIGN KEY (group_id) REFERENCES motiv_group (group_id) ON DELETE CASCADE
 );
 
+CREATE TABLE group_workout_attendance (
+  attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+  group_workout_id INT NOT NULL,
+  user_id INT NOT NULL,
+  attendance_status VARCHAR(16) NOT NULL DEFAULT 'pending',
+  attendance_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_gwa_workout FOREIGN KEY (group_workout_id)
+    REFERENCES group_workout (group_workout_id) ON DELETE CASCADE,
+  CONSTRAINT fk_gwa_user FOREIGN KEY (user_id)
+    REFERENCES app_user (user_id) ON DELETE CASCADE,
+  UNIQUE KEY uq_gwa_workout_user (group_workout_id, user_id)
+);
+
 CREATE TABLE post (
   post_id INT AUTO_INCREMENT PRIMARY KEY,
   post_content TEXT,
