@@ -1355,11 +1355,17 @@ def ga_invite_group_member():
     if not cur.fetchone():
         cur.close()
         return redirect("/GroupAdmin/created-groups-GA.html?invite_err=invalid")
+    row = None
     try:
         cur.execute(
             "SELECT user_id FROM app_user WHERE user_id = %s AND is_active = 1 LIMIT 1",
             (uid,),
         )
+        row = cur.fetchone()
+        if not row:
+            # Older datasets may not have is_active populated yet.
+            cur.execute("SELECT user_id FROM app_user WHERE user_id = %s LIMIT 1", (uid,))
+            row = cur.fetchone()
     except OperationalError as e:
         if e.args[0] != 1054:
             raise
@@ -1367,7 +1373,8 @@ def ga_invite_group_member():
             "SELECT user_id FROM app_user WHERE user_id = %s LIMIT 1",
             (uid,),
         )
-    if not cur.fetchone():
+        row = cur.fetchone()
+    if not row:
         cur.close()
         return redirect(
             f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=invalid"
@@ -2203,6 +2210,24 @@ def api_ga_user_email_search():
             """,
             (like, group_id),
         )
+        rows = cur.fetchall()
+        if not rows:
+            # Fallback for older data where is_active isn't maintained.
+            cur.execute(
+                """
+                SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
+                FROM app_user u
+                WHERE u.user_email LIKE %s
+                  AND NOT EXISTS (
+                    SELECT 1 FROM user_group ug
+                    WHERE ug.user_id = u.user_id AND ug.group_id = %s
+                  )
+                ORDER BY u.user_email
+                LIMIT 15
+                """,
+                (like, group_id),
+            )
+            rows = cur.fetchall()
     except OperationalError as e:
         if e.args[0] != 1054:
             raise
@@ -2220,13 +2245,14 @@ def api_ga_user_email_search():
             """,
             (like, group_id),
         )
+        rows = cur.fetchall()
     rows = [
         {
             "user_id": r["user_id"],
             "user_email": r["user_email"],
             "user_name": f"{r['user_first_name']} {r['user_last_name']}".strip(),
         }
-        for r in cur.fetchall()
+        for r in rows
     ]
     cur.close()
     return jsonify(rows)

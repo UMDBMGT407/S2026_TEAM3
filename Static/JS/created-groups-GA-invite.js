@@ -16,6 +16,7 @@
   function hideList() {
     listEl.classList.add("d-none");
     listEl.setAttribute("hidden", "hidden");
+    listEl.style.display = "none";
     listEl.innerHTML = "";
     lastResults = [];
   }
@@ -23,6 +24,7 @@
   function showList() {
     listEl.classList.remove("d-none");
     listEl.removeAttribute("hidden");
+    listEl.style.display = "block";
   }
 
   function clearSelection() {
@@ -65,7 +67,7 @@
             var li = document.createElement("li");
             li.setAttribute("role", "option");
             li.setAttribute("tabindex", "0");
-            li.className = "cgga-invite-suggestion";
+            li.className = "cgga-invite-suggestion list-group-item";
             li.dataset.userId = String(row.user_id);
             li.dataset.email = row.user_email || "";
             var primary = document.createElement("span");

@@ -232,13 +232,114 @@ body {
   flex-wrap: wrap;
 }
 
+.cgga-invite-wrap {
+  position: relative;
+  z-index: 30;
+}
+
+.cgga-invite-form {
+  position: relative;
+  gap: 10px;
+  padding: 0 18px;
+}
+
+.cgga-invite-label {
+  color: #8ba3cb;
+  font-size: 15px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.cgga-invite-email-input {
+  min-width: 180px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 15px;
+  color: #8ba3cb;
+  outline: none;
+}
+
+.cgga-invite-email-input::placeholder {
+  color: #8ba3cb;
+}
+
+.cgga-invite-email-input:focus {
+  border: 0;
+  background: transparent;
+}
+
+.cgga-invite-send-btn {
+  height: auto;
+  border: 0;
+  border-left: 1px solid #dfe8f3;
+  border-radius: 0;
+  background: transparent;
+  color: #8ba3cb;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0 0 0 12px;
+  line-height: 1;
+}
+
+.cgga-invite-send-btn:disabled,
+.cgga-invite-email-input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cgga-invite-send-btn:not(:disabled):hover {
+  color: #5f7eb2;
+}
+
+.cgga-invite-form img {
+  width: 20px;
+  height: 20px;
+}
+
+.cgga-invite-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #ffffff;
+  z-index: 20;
+  border-radius: 14px;
+  border: 1px solid #e6eff5;
+  box-shadow: 4px 6px 16px rgba(25, 42, 89, 0.08);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.cgga-invite-suggestion {
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 0;
+}
+
+.cgga-invite-suggestion-email {
+  display: block;
+  color: #343c6a;
+  font-size: 14px;
+}
+
+.cgga-invite-suggestion-name {
+  display: block;
+  color: #8ba3cb;
+  font-size: 13px;
+}
+
 .cgga-invite-pill {
   padding: 0 18px;
   gap: 8px;
 }
 
 .cgga-invite-label {
-  color: #232323;
+  color: #8ba3cb;
   font-size: 15px;
 }
 
@@ -312,5 +413,15 @@ body {
   .cgga-create-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .cgga-invite-wrap,
+  .cgga-invite-form {
+    width: 100%;
+  }
+
+  .cgga-invite-email-input {
+    min-width: 0;
+    width: 100%;
   }
 }

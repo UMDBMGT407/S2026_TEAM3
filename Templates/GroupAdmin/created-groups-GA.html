@@ -109,13 +109,66 @@
                   <img src="../../Static/images/CGGAgroup0.svg" alt="" />
                   <span>Search Member</span>
                 </div>
-                <div class="cgga-invite-pill">
-                  <span class="cgga-invite-label">Invite Member:</span>
-                  <span class="cgga-invite-value">Email</span>
-                  <img src="../../Static/images/CGGAvector5.svg" alt="" />
+                <div
+                  class="cgga-invite-wrap"
+                  data-group-id="{{ selected_group_id or '' }}"
+                  data-search-url="/api/group-admin/user-email-search"
+                >
+                  <form
+                    id="cgga-invite-form"
+                    method="post"
+                    action="/actions/group-admin/invite-group-member"
+                    class="cgga-invite-form cgga-search-pill"
+                    autocomplete="off"
+                  >
+                    <input type="hidden" name="group_id" value="{{ selected_group_id or '' }}" />
+                    <input type="hidden" name="user_id" id="cgga-invite-user-id" />
+                    <img src="../../Static/images/CGGAgroup0.svg" alt="" aria-hidden="true" />
+                    <label class="cgga-invite-label" for="cgga-invite-email-input">Invite Member:</label>
+                    <input
+                      id="cgga-invite-email-input"
+                      type="email"
+                      class="cgga-invite-email-input"
+                      placeholder="Email"
+                      {% if not selected_group_id %}disabled{% endif %}
+                    />
+                    <button
+                      type="submit"
+                      class="cgga-invite-send-btn"
+                      {% if not selected_group_id %}disabled{% endif %}
+                    >
+                      Send
+                    </button>
+                    <ul
+                      id="cgga-invite-suggestions"
+                      class="cgga-invite-suggestions list-group d-none"
+                      hidden
+                    ></ul>
+                  </form>
                 </div>
               </div>
             </div>
+            {% if invite_ok %}
+            <div class="alert alert-success py-2 px-3 mb-3" role="status">
+              Invite sent successfully.
+            </div>
+            {% elif invite_err == "duplicate" %}
+            <div class="alert alert-warning py-2 px-3 mb-3" role="alert">
+              That user already has a pending invite.
+            </div>
+            {% elif invite_err == "member" %}
+            <div class="alert alert-warning py-2 px-3 mb-3" role="alert">
+              That user is already in this group.
+            </div>
+            {% elif invite_err == "invalid" %}
+            <div class="alert alert-warning py-2 px-3 mb-3" role="alert">
+              Select a valid group and choose a user from suggestions.
+            </div>
+            {% elif invite_err == "schema" %}
+            <div class="alert alert-danger py-2 px-3 mb-3" role="alert">
+              Invite table is unavailable. Please refresh and try again.
+            </div>
+            {% endif %}
 
             <div class="table-responsive">
               <table class="table cgga-table mb-0">
@@ -168,5 +221,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/created-groups-GA-invite.js"></script>
 </body>
 </html>
