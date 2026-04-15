@@ -47,7 +47,7 @@
             </div>
 
             {% if edit_w %}
-            <form class="wleu-form" method="post" action="/actions/user/workout/{{ edit_w.workout_id }}/edit">
+            <form class="wleu-form" method="post" action="{% if session_role == 'group_admin' %}/actions/group-admin/workout/{{ edit_w.workout_id }}/edit{% else %}/actions/user/workout/{{ edit_w.workout_id }}/edit{% endif %}">
               <div class="row g-4">
                 <div class="col-12 col-xl-6">
                   <label class="wleu-label" for="wleu-date">Date</label>
@@ -89,11 +89,11 @@
 
               <div class="wleu-actions">
                 <button type="submit" class="wleu-btn wleu-btn--primary border-0">Save</button>
-                <a href="WLU.html" class="wleu-btn wleu-btn--secondary">Cancel</a>
+                <a href="{% if session_role == 'group_admin' %}/GroupAdmin/workout-history-GA.html{% else %}WLU.html{% endif %}" class="wleu-btn wleu-btn--secondary">Cancel</a>
               </div>
             </form>
             {% else %}
-            <p class="p-3">Open from <a href="WLU.html">Workout Log</a> with <code>?id=</code> (workout id).</p>
+            <p class="p-3">{% if session_role == 'group_admin' %}Use <code>?id=</code> with a workout id for a member of one of your groups, or go back to <a href="/GroupAdmin/workout-history-GA.html">workout history</a>.{% else %}Open from <a href="WLU.html">Workout Log</a> (View Details) or <a href="WLDU.html">Workout Details</a> (Edit) so the URL includes the workout id.{% endif %}</p>
             {% endif %}
           </section>
         </div>

@@ -240,6 +240,8 @@ def _offline_page_context(base: dict) -> dict:
             "admin_sets_done_count": 0,
             "admin_exercises_done_count": 0,
             "admin_reps_done_count": 0,
+            "wldu_workouts": [],
+            "ga_workout_history": [],
         }
     )
     return base
@@ -282,6 +284,29 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 ctx["workouts"] = cur.fetchall()
             else:
                 ctx["workouts"] = []
+        elif path == "User/WLDU.html":
+            uid = session.get("id") if session.get("role") == "user" else None
+            if uid:
+                cur.execute(
+                    """
+                    SELECT w.workout_id, w.workout_date, w.workout_duration_minutes,
+                           wl.workout_num_sets, wl.workout_num_reps, wl.workout_num_weight,
+                           e.exercise_name, e.exercise_difficulty_level, e.exercise_muscle_group
+                    FROM workout w
+                    LEFT JOIN workout_log wl ON wl.workout_id = w.workout_id
+                      AND wl.workout_log_id = (
+                        SELECT MIN(wl2.workout_log_id) FROM workout_log wl2
+                        WHERE wl2.workout_id = w.workout_id
+                      )
+                    LEFT JOIN exercise e ON e.exercise_id = wl.exercise_id
+                    WHERE w.user_id = %s
+                    ORDER BY w.workout_date DESC, w.workout_id DESC
+                    """,
+                    (uid,),
+                )
+                ctx["wldu_workouts"] = cur.fetchall()
+            else:
+                ctx["wldu_workouts"] = []
         elif path == "User/SU.html":
             uid = session.get("id") if session.get("role") == "user" else None
             if uid:
@@ -780,25 +805,41 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["edit_w"] = None
             ctx["edit_log"] = None
             ctx["edit_ex"] = None
-            uid = session.get("id") if session.get("role") == "user" else None
-            if wid and uid:
+            role = session.get("role")
+            if wid and role == "user":
+                uid = session["id"]
                 cur.execute(
                     "SELECT * FROM workout WHERE workout_id = %s AND user_id = %s",
                     (wid, uid),
                 )
                 ctx["edit_w"] = cur.fetchone()
-                if ctx["edit_w"]:
-                    cur.execute(
-                        "SELECT * FROM workout_log WHERE workout_id = %s LIMIT 1",
-                        (wid,),
+            elif wid and role == "group_admin":
+                ga_id = session["id"]
+                cur.execute(
+                    """
+                    SELECT w.* FROM workout w
+                    WHERE w.workout_id = %s
+                    AND EXISTS (
+                      SELECT 1 FROM user_group ug
+                      JOIN motiv_group g ON g.group_id = ug.group_id
+                      WHERE ug.user_id = w.user_id AND g.group_admin_id = %s
                     )
-                    ctx["edit_log"] = cur.fetchone()
-                    if ctx["edit_log"]:
-                        eid = ctx["edit_log"]["exercise_id"]
-                        cur.execute(
-                            "SELECT * FROM exercise WHERE exercise_id = %s", (eid,)
-                        )
-                        ctx["edit_ex"] = cur.fetchone()
+                    """,
+                    (wid, ga_id),
+                )
+                ctx["edit_w"] = cur.fetchone()
+            if ctx["edit_w"]:
+                cur.execute(
+                    "SELECT * FROM workout_log WHERE workout_id = %s LIMIT 1",
+                    (wid,),
+                )
+                ctx["edit_log"] = cur.fetchone()
+                if ctx["edit_log"] and ctx["edit_log"].get("exercise_id"):
+                    eid = ctx["edit_log"]["exercise_id"]
+                    cur.execute(
+                        "SELECT * FROM exercise WHERE exercise_id = %s", (eid,)
+                    )
+                    ctx["edit_ex"] = cur.fetchone()
         elif path == "Admin/GroupAed.html":
             gid = request.args.get("id", type=int)
             ctx["edit_group"] = None
@@ -833,6 +874,27 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     "SELECT * FROM app_user WHERE user_id = %s", (session["id"],)
                 )
                 ctx["user_me"] = cur.fetchone()
+        elif path == "GroupAdmin/workout-history-GA.html":
+            ga_id = session.get("id") if session.get("role") == "group_admin" else None
+            if ga_id:
+                cur.execute(
+                    """
+                    SELECT w.workout_id, w.workout_date, w.workout_duration_minutes,
+                           u.user_first_name, u.user_last_name
+                    FROM workout w
+                    JOIN app_user u ON u.user_id = w.user_id
+                    WHERE EXISTS (
+                      SELECT 1 FROM user_group ug
+                      JOIN motiv_group g ON g.group_id = ug.group_id
+                      WHERE ug.user_id = w.user_id AND g.group_admin_id = %s
+                    )
+                    ORDER BY w.workout_date DESC, w.workout_id DESC
+                    """,
+                    (ga_id,),
+                )
+                ctx["ga_workout_history"] = cur.fetchall()
+            else:
+                ctx["ga_workout_history"] = []
         elif path == "GroupAdmin/profile-GA.html":
             ctx["ga_me"] = None
             if session.get("role") == "group_admin":
@@ -876,6 +938,15 @@ def admin_page(filename):
         ctx["login_error"] = request.args.get("error") == "1"
         ctx["login_denied"] = request.args.get("error") == "denied"
     return render_template(f"Admin/{filename}", **ctx)
+
+
+@app.route("/User/WLEU.html")
+@require_roles("user", "group_admin")
+def user_workout_edit_page():
+    if not allowed_page("WLEU.html"):
+        abort(404)
+    ctx = build_template_context("User", "WLEU.html")
+    return render_template("User/WLEU.html", **ctx)
 
 
 @app.route("/User/<path:filename>")
@@ -1423,7 +1494,9 @@ def user_workout():
 @app.post("/actions/user/workout/<int:wid>/edit")
 def user_workout_edit(wid):
     if session.get("role") != "user":
-        return redirect("/User/WLEU.html")
+        if session.get("role") == "group_admin":
+            return redirect(f"/User/WLEU.html?id={wid}")
+        return redirect("/User/WLU.html")
     uid = session["id"]
     wdate = parse_date(request.form.get("workout_date")) or date.today()
     duration = parse_int(request.form.get("duration_minutes"))
@@ -1463,6 +1536,69 @@ def user_workout_edit(wid):
     mysql.connection.commit()
     cur.close()
     return redirect("/User/WLU.html")
+
+
+def _ga_can_edit_workout(cur, wid: int, ga_id: int) -> bool:
+    cur.execute(
+        """
+        SELECT 1 FROM workout w
+        WHERE w.workout_id = %s
+        AND EXISTS (
+          SELECT 1 FROM user_group ug
+          JOIN motiv_group g ON g.group_id = ug.group_id
+          WHERE ug.user_id = w.user_id AND g.group_admin_id = %s
+        )
+        """,
+        (wid, ga_id),
+    )
+    return cur.fetchone() is not None
+
+
+@app.post("/actions/group-admin/workout/<int:wid>/edit")
+def ga_workout_edit(wid):
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/workout-history-GA.html")
+    wdate = parse_date(request.form.get("workout_date")) or date.today()
+    duration = parse_int(request.form.get("duration_minutes"))
+    sets = parse_int(request.form.get("num_sets"))
+    reps = parse_int(request.form.get("num_reps"))
+    weight = request.form.get("weight")
+    try:
+        wfloat = float(weight) if weight not in (None, "") else None
+    except ValueError:
+        wfloat = None
+    ex_name = request.form.get("exercise_name", "").strip()
+    muscle = request.form.get("muscle_group", "").strip()
+    diff = request.form.get("difficulty", "").strip()
+    cur = mysql.connection.cursor()
+    if not _ga_can_edit_workout(cur, wid, session["id"]):
+        cur.close()
+        return redirect("/GroupAdmin/workout-history-GA.html")
+    cur.execute(
+        """UPDATE workout SET workout_date = %s, workout_duration_minutes = %s
+           WHERE workout_id = %s""",
+        (wdate, duration, wid),
+    )
+    eid = get_or_create_exercise(cur, ex_name, muscle, diff)
+    cur.execute("SELECT workout_log_id FROM workout_log WHERE workout_id = %s LIMIT 1", (wid,))
+    lr = cur.fetchone()
+    if lr:
+        log_id = lr[0]
+        cur.execute(
+            """UPDATE workout_log SET workout_num_sets = %s, workout_num_reps = %s,
+               workout_num_weight = %s, exercise_id = %s WHERE workout_log_id = %s""",
+            (sets, reps, wfloat, eid, log_id),
+        )
+    else:
+        cur.execute(
+            """INSERT INTO workout_log
+               (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
+               VALUES (%s, %s, %s, %s, %s)""",
+            (sets, reps, wfloat, wid, eid),
+        )
+    mysql.connection.commit()
+    cur.close()
+    return redirect(f"/User/WLEU.html?id={wid}")
 
 
 @app.post("/actions/user/workout/<int:wid>/delete")

@@ -53,18 +53,26 @@
                     <th>Workout No</th>
                     <th>Date</th>
                     <th>Duration</th>
+                    <th>Member</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>01.</td><td>03/27/2026</td><td>40 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button0.svg" alt="" /></button></div></td></tr>
-                  <tr><td>02.</td><td>03/27/2026</td><td>36 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button1.svg" alt="" /></button></div></td></tr>
-                  <tr><td>03.</td><td>03/27/2026</td><td>25 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button2.svg" alt="" /></button></div></td></tr>
-                  <tr><td>04.</td><td>03/27/2026</td><td>15 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button3.svg" alt="" /></button></div></td></tr>
-                  <tr><td>05.</td><td>03/27/2026</td><td>80 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button4.svg" alt="" /></button></div></td></tr>
-                  <tr><td>06.</td><td>03/27/2026</td><td>30 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button5.svg" alt="" /></button></div></td></tr>
-                  <tr><td>07.</td><td>03/27/2026</td><td>20 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button6.svg" alt="" /></button></div></td></tr>
-                  <tr><td>08.</td><td>03/27/2026</td><td>40 Minutes</td><td><div class="whga-actions"><a href="workout-details-GA.html" class="whga-view-btn">View Details</a><button class="whga-trash-btn" type="button" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button7.svg" alt="" /></button></div></td></tr>
+                  {% for w in ga_workout_history %}
+                  <tr>
+                    <td>{{ '%02d'|format(loop.index) }}.</td>
+                    <td>{{ w.workout_date }}</td>
+                    <td>{% if w.workout_duration_minutes %}{{ w.workout_duration_minutes }} Minutes{% else %}—{% endif %}</td>
+                    <td>{{ w.user_first_name }} {{ w.user_last_name }}</td>
+                    <td>
+                      <div class="whga-actions">
+                        <a href="/User/WLEU.html?id={{ w.workout_id }}" class="whga-view-btn">Edit</a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr><td colspan="5">No workouts from members of your groups yet. <a href="workout-logging-GA.html">Log a workout</a> for a member.</td></tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
