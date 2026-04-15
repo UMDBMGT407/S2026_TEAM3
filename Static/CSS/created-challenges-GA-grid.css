@@ -199,9 +199,28 @@ body {
   font-size: 15px;
 }
 
+.ccga-search-pill--interactive {
+  min-width: 245px;
+  padding-right: 14px;
+}
+
 .ccga-search-pill img {
   width: 20px;
   height: 20px;
+}
+
+.ccga-search-input {
+  width: 190px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #546a99;
+  font-size: 15px;
+  outline: none;
+}
+
+.ccga-search-input::placeholder {
+  color: #8ba3cb;
 }
 
 .ccga-challenge-pill {
@@ -259,6 +278,23 @@ body {
   margin-left: 12px;
 }
 
+.ccga-row-delete-btn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.ccga-row-delete-btn img {
+  width: 17px;
+  height: 20px;
+}
+
+.ccga-row-highlight td {
+  background: #f4f7ff;
+}
+
 .ccga-rank-badge {
   width: 39px;
   height: 39px;
@@ -294,5 +330,13 @@ body {
   .ccga-create-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .ccga-search-pill--interactive {
+    width: 100%;
+  }
+
+  .ccga-search-input {
+    width: 100%;
   }
 }

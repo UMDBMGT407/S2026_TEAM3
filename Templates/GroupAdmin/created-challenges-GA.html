@@ -51,13 +51,25 @@
             <div class="ccga-card-head">
               <h2>Challenge Management</h2>
               <div class="ccga-head-actions">
-                <div class="ccga-search-pill"><img src="../../Static/images/CCGAgroup0.svg" alt="" /><span>Search Challenge</span></div>
+                <div class="ccga-search-pill ccga-search-pill--interactive">
+                  <img src="../../Static/images/CCGAgroup0.svg" alt="" />
+                  <input
+                    id="ccga-challenge-search"
+                    class="ccga-search-input"
+                    type="text"
+                    list="ccga-challenge-search-list"
+                    placeholder="Search Challenge"
+                    aria-label="Search Challenge"
+                    autocomplete="off"
+                  />
+                  <datalist id="ccga-challenge-search-list"></datalist>
+                </div>
                 <a href="challenge-creation-GA.html" class="ccga-create-btn">Create New Challenge</a>
               </div>
             </div>
 
             <div class="table-responsive">
-              <table class="table ccga-table mb-0">
+              <table id="ccga-challenge-table" class="table ccga-table mb-0">
                 <thead>
                   <tr>
                     <th>Group Name</th>
@@ -72,7 +84,12 @@
                 </thead>
                 <tbody>
                   {% for ch in ga_created_challenges %}
-                  <tr>
+                  <tr
+                    data-challenge-row
+                    data-group-name="{{ ch.group_name }}"
+                    data-challenge-name="{{ ch.challenge_title }}"
+                    data-challenge-id="{{ ch.challenge_id }}"
+                  >
                     <td>{{ ch.group_name }}</td>
                     <td>{{ ch.challenge_title }}</td>
                     <td>{% if ch.challenge_start_date %}{{ ch.challenge_start_date }}{% else %}—{% endif %}</td>
@@ -106,11 +123,23 @@
                 <h2 class="mb-0">Participation -</h2>
                 <div class="ccga-challenge-pill">{% if selected_challenge_name %}{{ selected_challenge_name }}{% else %}—{% endif %}</div>
               </div>
-              <div class="ccga-search-pill"><img src="../../Static/images/CCGAgroup1.svg" alt="" /><span>Search Member</span></div>
+              <div class="ccga-search-pill ccga-search-pill--interactive">
+                <img src="../../Static/images/CCGAgroup1.svg" alt="" />
+                <input
+                  id="ccga-member-search"
+                  class="ccga-search-input"
+                  type="text"
+                  list="ccga-member-search-list"
+                  placeholder="Search Member"
+                  aria-label="Search Member"
+                  autocomplete="off"
+                />
+                <datalist id="ccga-member-search-list"></datalist>
+              </div>
             </div>
 
             <div class="table-responsive">
-              <table class="table ccga-table mb-0">
+              <table id="ccga-participation-table" class="table ccga-table mb-0">
                 <thead>
                   <tr>
                     <th>Member Name</th>
@@ -122,19 +151,23 @@
                 <tbody>
                   {% if selected_challenge_id %}
                     {% for p in selected_challenge_participants %}
-                    <tr>
+                    <tr data-member-row data-member-name="{{ p.member_name }}">
                       <td>{{ p.member_name }}</td>
                       <td><span class="ccga-rank-badge">{{ p.rank }}</span></td>
                       <td>{{ p.goal_progress }}</td>
-                      <td class="text-end"><img src="../../Static/images/CCGAtrash-can-button{{ (loop.index0 % 5) + 5 }}.svg" alt="" aria-hidden="true" /></td>
+                      <td class="text-end">
+                        <button type="button" class="ccga-row-delete-btn" aria-label="Remove member from this challenge">
+                          <img src="../../Static/images/CCGAtrash-can-button{{ (loop.index0 % 5) + 5 }}.svg" alt="" aria-hidden="true" />
+                        </button>
+                      </td>
                     </tr>
                     {% else %}
-                    <tr>
+                    <tr data-member-empty-row>
                       <td colspan="4" class="text-muted p-4">No participants found for this challenge's group.</td>
                     </tr>
                     {% endfor %}
                   {% else %}
-                  <tr>
+                  <tr data-member-empty-row>
                     <td colspan="4" class="text-muted p-4">Select a challenge using View.</td>
                   </tr>
                   {% endif %}
@@ -146,5 +179,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/created-challenges-GA-interactions.js"></script>
 </body>
 </html>
