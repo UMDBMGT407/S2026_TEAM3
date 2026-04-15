@@ -31,7 +31,7 @@ except ImportError:
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, session
 from flask_mysqldb import MySQL
-from MySQLdb import OperationalError
+from MySQLdb import OperationalError, ProgrammingError
 from MySQLdb.cursors import DictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -178,6 +178,29 @@ def parse_int(s: Any, default: int | None = None):
         return default
 
 
+def ensure_group_invite_table(cur) -> None:
+    """Create group_invite when missing (avoids 1146); same DDL as sql/migration_group_invite.sql."""
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS group_invite (
+          invite_id INT AUTO_INCREMENT PRIMARY KEY,
+          group_id INT NOT NULL,
+          invited_user_id INT NOT NULL,
+          invited_by_group_admin_id INT NOT NULL,
+          invite_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          invite_status VARCHAR(32) NOT NULL DEFAULT 'pending',
+          CONSTRAINT fk_gi_group FOREIGN KEY (group_id)
+            REFERENCES motiv_group (group_id) ON DELETE CASCADE,
+          CONSTRAINT fk_gi_user FOREIGN KEY (invited_user_id)
+            REFERENCES app_user (user_id) ON DELETE CASCADE,
+          CONSTRAINT fk_gi_ga FOREIGN KEY (invited_by_group_admin_id)
+            REFERENCES group_admin (group_admin_id),
+          UNIQUE KEY uq_group_invite_user (group_id, invited_user_id)
+        )
+        """
+    )
+
+
 def get_or_create_exercise(cur, name: str, muscle: str | None, difficulty: str | None) -> int:
     name = (name or "").strip() or "Custom"
     cur.execute(
@@ -242,6 +265,8 @@ def _offline_page_context(base: dict) -> dict:
             "admin_reps_done_count": 0,
             "wldu_workouts": [],
             "ga_workout_history": [],
+            "user_invites": [],
+            "nu_invite_err": None,
         }
     )
     return base
@@ -713,6 +738,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["selected_group_id"] = None
             ctx["selected_group_name"] = None
             ctx["selected_group_members"] = []
+            ctx["invite_err"] = request.args.get("invite_err")
+            ctx["invite_ok"] = request.args.get("invite_ok") == "1"
             if ga_id:
                 cur.execute(
                     """
@@ -779,6 +806,26 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_group_members"] = selected_members
             else:
                 ctx["ga_created_groups"] = []
+        elif path == "User/NU.html":
+            ctx["user_invites"] = []
+            ctx["nu_invite_err"] = request.args.get("invite_err")
+            uid = session.get("id") if session.get("role") == "user" else None
+            if uid:
+                try:
+                    cur.execute(
+                        """
+                        SELECT i.invite_id, i.group_id, g.group_name
+                        FROM group_invite i
+                        JOIN motiv_group g ON g.group_id = i.group_id
+                        WHERE i.invited_user_id = %s AND i.invite_status = 'pending'
+                        ORDER BY i.invite_created DESC, i.invite_id DESC
+                        """,
+                        (uid,),
+                    )
+                    ctx["user_invites"] = cur.fetchall()
+                except (OperationalError, ProgrammingError) as e:
+                    if e.args[0] != 1146:
+                        raise
         elif path == "GroupAdmin/group-creation-GA.html":
             cur.execute(
                 "SELECT admin_id, admin_first_name, admin_last_name, admin_email FROM admin"
@@ -1186,6 +1233,175 @@ def ga_remove_group_member():
     mysql.connection.commit()
     cur.close()
     return redirect(f"/GroupAdmin/created-groups-GA.html?group_id={gid}")
+
+
+@app.post("/actions/group-admin/invite-group-member")
+def ga_invite_group_member():
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/created-groups-GA.html")
+    gid = parse_int(request.form.get("group_id"))
+    uid = parse_int(request.form.get("user_id"))
+    if not gid:
+        return redirect("/GroupAdmin/created-groups-GA.html?invite_err=invalid")
+    if not uid:
+        return redirect(
+            f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=invalid"
+        )
+    ga_id = session["id"]
+    cur = dict_cursor()
+    cur.execute(
+        """SELECT 1 FROM motiv_group
+           WHERE group_id = %s AND group_admin_id = %s LIMIT 1""",
+        (gid, ga_id),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/GroupAdmin/created-groups-GA.html?invite_err=invalid")
+    try:
+        cur.execute(
+            "SELECT user_id FROM app_user WHERE user_id = %s AND is_active = 1 LIMIT 1",
+            (uid,),
+        )
+    except OperationalError as e:
+        if e.args[0] != 1054:
+            raise
+        cur.execute(
+            "SELECT user_id FROM app_user WHERE user_id = %s LIMIT 1",
+            (uid,),
+        )
+    if not cur.fetchone():
+        cur.close()
+        return redirect(
+            f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=invalid"
+        )
+    cur.execute(
+        "SELECT 1 FROM user_group WHERE user_id = %s AND group_id = %s LIMIT 1",
+        (uid, gid),
+    )
+    if cur.fetchone():
+        cur.close()
+        return redirect(
+            f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=member"
+        )
+    try:
+        ensure_group_invite_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+        cur.close()
+        return redirect(
+            f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=schema"
+        )
+    try:
+        cur.execute(
+            """
+            SELECT invite_id, invite_status FROM group_invite
+            WHERE group_id = %s AND invited_user_id = %s LIMIT 1
+            """,
+            (gid, uid),
+        )
+        inv = cur.fetchone()
+        if inv:
+            st = (inv.get("invite_status") or "").lower()
+            if st == "pending":
+                cur.close()
+                return redirect(
+                    f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=duplicate"
+                )
+            if st == "accepted":
+                cur.close()
+                return redirect(
+                    f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=member"
+                )
+            if st == "rejected":
+                cur.execute(
+                    """
+                    UPDATE group_invite SET invite_status = 'pending',
+                      invited_by_group_admin_id = %s,
+                      invite_created = CURRENT_TIMESTAMP
+                    WHERE invite_id = %s
+                    """,
+                    (ga_id, inv["invite_id"]),
+                )
+        else:
+            cur.execute(
+                """
+                INSERT INTO group_invite
+                  (group_id, invited_user_id, invited_by_group_admin_id, invite_status)
+                VALUES (%s, %s, %s, 'pending')
+                """,
+                (gid, uid, ga_id),
+            )
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError) as e:
+        mysql.connection.rollback()
+        cur.close()
+        if e.args[0] == 1146:
+            return redirect(
+                f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_err=schema"
+            )
+        raise
+    cur.close()
+    return redirect(
+        f"/GroupAdmin/created-groups-GA.html?group_id={gid}&invite_ok=1"
+    )
+
+
+@app.post("/actions/user/group-invite/respond")
+@require_roles("user")
+def user_group_invite_respond():
+    invite_id = parse_int(request.form.get("invite_id"))
+    action = (request.form.get("action") or "").strip().lower()
+    if not invite_id or action not in ("accept", "reject"):
+        return redirect("/User/NU.html?invite_err=invalid")
+    cur = dict_cursor()
+    try:
+        ensure_group_invite_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+        cur.close()
+        return redirect("/User/NU.html?invite_err=schema")
+    try:
+        cur.execute(
+            """
+            SELECT invite_id, group_id, invited_user_id, invite_status
+            FROM group_invite WHERE invite_id = %s
+            """,
+            (invite_id,),
+        )
+    except (OperationalError, ProgrammingError) as e:
+        cur.close()
+        if e.args[0] == 1146:
+            return redirect("/User/NU.html?invite_err=schema")
+        raise
+    row = cur.fetchone()
+    if not row or row["invited_user_id"] != session["id"]:
+        cur.close()
+        return redirect("/User/NU.html?invite_err=invalid")
+    if (row.get("invite_status") or "").lower() != "pending":
+        cur.close()
+        return redirect("/User/NU.html?invite_err=invalid")
+    gid = row["group_id"]
+    if action == "reject":
+        cur.execute(
+            "UPDATE group_invite SET invite_status = 'rejected' WHERE invite_id = %s",
+            (invite_id,),
+        )
+        mysql.connection.commit()
+        cur.close()
+        return redirect("/User/NU.html")
+    cur.execute(
+        "INSERT IGNORE INTO user_group (user_id, group_id) VALUES (%s, %s)",
+        (session["id"], gid),
+    )
+    cur.execute(
+        "UPDATE group_invite SET invite_status = 'accepted' WHERE invite_id = %s",
+        (invite_id,),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect("/User/NU.html")
 
 
 @app.post("/actions/group-admin/challenge")
@@ -1794,6 +2010,67 @@ def admin_schedule_edit(wid):
 
 
 # --- JSON API (BMGT407 style) ---
+
+
+@app.get("/api/group-admin/user-email-search")
+@require_roles("group_admin")
+def api_ga_user_email_search():
+    q = (request.args.get("q") or "").strip()
+    group_id = request.args.get("group_id", type=int)
+    if not group_id or len(q) < 2:
+        return jsonify(error="group_id and q (at least 2 characters) required"), 400
+    cur = dict_cursor()
+    cur.execute(
+        """SELECT 1 FROM motiv_group
+           WHERE group_id = %s AND group_admin_id = %s LIMIT 1""",
+        (group_id, session["id"]),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return jsonify(error="Group not found or forbidden"), 404
+    like = f"%{q}%"
+    try:
+        cur.execute(
+            """
+            SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
+            FROM app_user u
+            WHERE u.is_active = 1 AND u.user_email LIKE %s
+              AND NOT EXISTS (
+                SELECT 1 FROM user_group ug
+                WHERE ug.user_id = u.user_id AND ug.group_id = %s
+              )
+            ORDER BY u.user_email
+            LIMIT 15
+            """,
+            (like, group_id),
+        )
+    except OperationalError as e:
+        if e.args[0] != 1054:
+            raise
+        cur.execute(
+            """
+            SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
+            FROM app_user u
+            WHERE u.user_email LIKE %s
+              AND NOT EXISTS (
+                SELECT 1 FROM user_group ug
+                WHERE ug.user_id = u.user_id AND ug.group_id = %s
+              )
+            ORDER BY u.user_email
+            LIMIT 15
+            """,
+            (like, group_id),
+        )
+    rows = [
+        {
+            "user_id": r["user_id"],
+            "user_email": r["user_email"],
+            "user_name": f"{r['user_first_name']} {r['user_last_name']}".strip(),
+        }
+        for r in cur.fetchall()
+    ]
+    cur.close()
+    return jsonify(rows)
 
 
 @app.get("/api/posts")

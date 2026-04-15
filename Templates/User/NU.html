@@ -46,46 +46,31 @@
               <span>Actions</span>
             </div>
 
+            {% if nu_invite_err == 'invalid' %}
+            <p class="text-danger small px-3 pt-2 mb-0">That action could not be completed.</p>
+            {% elif nu_invite_err == 'schema' %}
+            <p class="text-danger small px-3 pt-2 mb-0">Database not migrated: run sql/migration_group_invite.sql.</p>
+            {% endif %}
             <div class="nu-invites">
+              {% for inv in user_invites %}
               <article class="nu-invite-row">
-                <p class="nu-invite-label">Group Name 1</p>
+                <p class="nu-invite-label">Group invite: {{ inv.group_name }}</p>
                 <div class="nu-actions">
-                  <button class="nu-action-btn" type="button">Accept</button>
-                  <button class="nu-action-btn" type="button">Reject</button>
+                  <form method="post" action="/actions/user/group-invite/respond" class="d-inline">
+                    <input type="hidden" name="invite_id" value="{{ inv.invite_id }}" />
+                    <input type="hidden" name="action" value="accept" />
+                    <button class="nu-action-btn" type="submit">Accept</button>
+                  </form>
+                  <form method="post" action="/actions/user/group-invite/respond" class="d-inline">
+                    <input type="hidden" name="invite_id" value="{{ inv.invite_id }}" />
+                    <input type="hidden" name="action" value="reject" />
+                    <button class="nu-action-btn" type="submit">Reject</button>
+                  </form>
                 </div>
               </article>
-
-              <article class="nu-invite-row">
-                <p class="nu-invite-label">Group 1 : Challenge Name</p>
-                <div class="nu-actions">
-                  <button class="nu-action-btn" type="button">Accept</button>
-                  <button class="nu-action-btn" type="button">Reject</button>
-                </div>
-              </article>
-
-              <article class="nu-invite-row">
-                <p class="nu-invite-label">Group Name 2</p>
-                <div class="nu-actions">
-                  <button class="nu-action-btn" type="button">Accept</button>
-                  <button class="nu-action-btn" type="button">Reject</button>
-                </div>
-              </article>
-
-              <article class="nu-invite-row">
-                <p class="nu-invite-label">Group Name : Challenge Name</p>
-                <div class="nu-actions">
-                  <button class="nu-action-btn" type="button">Accept</button>
-                  <button class="nu-action-btn" type="button">Reject</button>
-                </div>
-              </article>
-
-              <article class="nu-invite-row">
-                <p class="nu-invite-label">Group Name 5</p>
-                <div class="nu-actions">
-                  <button class="nu-action-btn" type="button">Accept</button>
-                  <button class="nu-action-btn" type="button">Reject</button>
-                </div>
-              </article>
+              {% else %}
+              <p class="text-muted px-3 py-4 mb-0">No pending invites.</p>
+              {% endfor %}
             </div>
           </section>
         </main>

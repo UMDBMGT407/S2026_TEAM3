@@ -252,6 +252,95 @@ body {
   height: 17px;
 }
 
+.cgga-invite-wrap {
+  position: relative;
+  max-width: 100%;
+}
+
+.cgga-invite-form {
+  position: relative;
+}
+
+.cgga-invite-pill--interactive {
+  flex-wrap: wrap;
+}
+
+.cgga-invite-pill--disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.cgga-invite-input {
+  border: none;
+  background: transparent;
+  color: #718ebf;
+  font-size: 15px;
+  min-width: 140px;
+  max-width: 220px;
+  outline: none;
+}
+
+.cgga-invite-input::placeholder {
+  color: #8ba3cb;
+}
+
+.cgga-invite-submit {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cgga-invite-suggestions {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 20;
+  min-width: min(320px, 100vw - 48px);
+  max-height: 220px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 4px 4px 18px -2px rgba(231, 228, 232, 0.95);
+  border: 1px solid #e6eff5;
+  padding: 6px 0;
+}
+
+.cgga-invite-suggestion {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cgga-invite-suggestion:hover,
+.cgga-invite-suggestion:focus {
+  background: #f4f6fb;
+  outline: none;
+}
+
+.cgga-invite-suggestion-email {
+  color: #232323;
+  font-size: 15px;
+}
+
+.cgga-invite-suggestion-name {
+  color: #8ba3cb;
+  font-size: 13px;
+}
+
+.cgga-invite-feedback {
+  margin-bottom: 8px !important;
+}
+
+.cgga-invite-feedback--ok {
+  color: #2e7d32;
+}
+
+.cgga-invite-feedback--err {
+  color: #c62828;
+}
+
 .cgga-table thead th {
   color: #718ebf;
   font-size: 16px;
