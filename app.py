@@ -697,6 +697,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["selected_workout_id"] = None
             ctx["selected_workout"] = None
             ctx["selected_workout_attendance"] = []
+            ctx["selected_workout_time_display"] = ""
             cur.execute(
                 """
                 SELECT gw.group_workout_id, gw.group_workout_title, g.group_id, g.group_name,
@@ -718,7 +719,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 cur.execute(
                     """
                     SELECT gw.group_workout_id, gw.group_workout_title, gw.group_workout_scheduled_date,
-                      gw.group_workout_start_date, gw.group_workout_end_date, gw.group_workout_location,
+                      gw.group_workout_scheduled_time, gw.group_workout_start_date,
+                      gw.group_workout_end_date, gw.group_workout_location,
                       gw.group_id, g.group_name
                     FROM group_workout gw
                     JOIN motiv_group g ON g.group_id = gw.group_id
@@ -730,21 +732,12 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 selected_workout = cur.fetchone()
                 if selected_workout:
                     ctx["selected_workout"] = selected_workout
-                    cur.execute(
-                        """
-                        SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email,
-                          CASE WHEN EXISTS (
-                              SELECT 1 FROM workout w
-                              WHERE w.group_workout_id = %s AND w.user_id = u.user_id
-                          ) THEN 'Going' ELSE 'Pending' END AS attendance_status
-                        FROM user_group ug
-                        JOIN app_user u ON u.user_id = ug.user_id
-                        WHERE ug.group_id = %s
-                        ORDER BY u.user_first_name, u.user_last_name, u.user_id
-                        """,
-                        (selected_workout_id, selected_workout["group_id"]),
+                    ctx["selected_workout_time_display"] = format_time_for_html_input(
+                        selected_workout.get("group_workout_scheduled_time")
                     )
-                    ctx["selected_workout_attendance"] = cur.fetchall()
+                    ctx["selected_workout_attendance"] = fetch_workout_attendance_rows(
+                        cur, selected_workout_id, selected_workout["group_id"]
+                    )
         elif path == "Admin/ScheduleA.html":
             ctx["selected_challenge_id"] = None
             ctx["selected_challenge_name"] = None
@@ -1150,11 +1143,21 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
         elif path == "Admin/ChallengeAed.html":
             wid = request.args.get("id", type=int)
             ctx["edit_session"] = None
+            ctx["groups"] = []
+            ctx["edit_workout_time"] = ""
+            cur.execute(
+                "SELECT group_id, group_name FROM motiv_group ORDER BY group_name"
+            )
+            ctx["groups"] = cur.fetchall()
             if wid:
                 cur.execute(
                     "SELECT * FROM group_workout WHERE group_workout_id = %s", (wid,)
                 )
                 ctx["edit_session"] = cur.fetchone()
+                if ctx["edit_session"]:
+                    ctx["edit_workout_time"] = format_time_for_html_input(
+                        ctx["edit_session"].get("group_workout_scheduled_time")
+                    )
         elif path == "Admin/ScheduleAed.html":
             cid = request.args.get("id", type=int)
             ctx["edit_challenge_admin"] = None
@@ -2363,12 +2366,32 @@ def admin_schedule_edit(wid):
     sched_date = parse_date(
         request.form.get("scheduled_date") or request.form.get("date_field")
     )
+    group_id = parse_int(request.form.get("group_id"))
+    sched_time_raw = request.form.get("scheduled_time")
+    sched_time = parse_time(sched_time_raw)
     cur = mysql.connection.cursor()
+    ensure_group_workout_scheduled_time_column(cur)
+    cur.execute("SELECT * FROM group_workout WHERE group_workout_id = %s", (wid,))
+    existing = cur.fetchone()
+    if not existing:
+        cur.close()
+        return redirect("/Admin/ChallengeA.html")
+    if not title:
+        title = (existing.get("group_workout_title") or "").strip()
+    if group_id is None:
+        group_id = existing.get("group_id")
+    else:
+        cur.execute("SELECT 1 FROM motiv_group WHERE group_id = %s LIMIT 1", (group_id,))
+        if not cur.fetchone():
+            group_id = existing.get("group_id")
+    if not (sched_time_raw or "").strip():
+        sched_time = existing.get("group_workout_scheduled_time")
     cur.execute(
         """UPDATE group_workout SET group_workout_title = %s, group_workout_location = %s,
            group_workout_scheduled_date = %s, group_workout_start_date = %s,
-           group_workout_end_date = %s WHERE group_workout_id = %s""",
-        (title, loc, sched_date, sched_date, sched_date, wid),
+           group_workout_end_date = %s, group_workout_scheduled_time = %s,
+           group_id = %s WHERE group_workout_id = %s""",
+        (title, loc, sched_date, sched_date, sched_date, sched_time, group_id, wid),
     )
     mysql.connection.commit()
     cur.close()

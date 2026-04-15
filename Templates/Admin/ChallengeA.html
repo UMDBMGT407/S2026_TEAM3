@@ -168,7 +168,7 @@
                       {% if selected_workout %}
                       <tr>
                         <td>{{ selected_workout.group_workout_scheduled_date or '—' }}</td>
-                        <td>{{ selected_workout.group_workout_start_date or selected_workout.group_workout_end_date or '—' }}</td>
+                        <td>{{ selected_workout_time_display or '—' }}</td>
                         <td>{{ selected_workout.group_workout_location or '—' }}</td>
                       </tr>
                       {% else %}

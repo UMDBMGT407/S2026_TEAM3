@@ -76,8 +76,20 @@
                 <input id="sessionName" name="session_name" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_title }}" />
               </div>
               <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="groupField">Group</label>
+                <select id="groupField" name="group_id" class="form-select custom-input" aria-label="Group">
+                  {% for g in groups %}
+                  <option value="{{ g.group_id }}" {% if g.group_id == edit_session.group_id %}selected{% endif %}>{{ g.group_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="dateField">Date</label>
                 <input id="dateField" name="date_field" class="form-control custom-input" type="date" value="{{ edit_session.group_workout_scheduled_date }}" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label-custom" for="timeField">Time</label>
+                <input id="timeField" name="scheduled_time" class="form-control custom-input" type="time" value="{{ edit_workout_time }}" />
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="locationField">Location</label>
