@@ -676,8 +676,8 @@ def _site_wide_weekly_leaderboard_raw_rows(
           COALESCE(NULLIF(TRIM(u.user_last_name), ''), CAST(ids.user_id AS CHAR)) AS user_last_name,
           COALESCE(wc.cnt, 0) AS weekly_workouts,
           COALESCE(wc.mins, 0) AS weekly_minutes,
-          COALESCE(st.sets, 0) AS weekly_sets,
-          COALESCE(st.reps, 0) AS weekly_reps
+          COALESCE(st.sets_total, 0) AS weekly_sets,
+          COALESCE(st.reps_total, 0) AS weekly_reps
         FROM (
           SELECT user_id FROM app_user
           UNION
@@ -698,8 +698,8 @@ def _site_wide_weekly_leaderboard_raw_rows(
         ) wc ON wc.user_id = ids.user_id
         LEFT JOIN (
           SELECT w.user_id,
-            COALESCE(SUM(wl.workout_num_sets), 0) AS sets,
-            COALESCE(SUM(wl.workout_num_reps), 0) AS reps
+            COALESCE(SUM(wl.workout_num_sets), 0) AS sets_total,
+            COALESCE(SUM(wl.workout_num_reps), 0) AS reps_total
           FROM workout w
           INNER JOIN workout_log wl ON wl.workout_id = w.workout_id
           WHERE w.workout_date >= {week_start_sql}
@@ -813,8 +813,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
     try:
         if path in ("User/PU.html", "GroupAdmin/post-GA.html", "Admin/PostA.html"):
             rows = fetch_posts_rows(cur)
-            # Temporary UI requirement: show exactly first 4 shared posts.
-            ctx["posts"] = rows[:4]
+            # Show full shared post feed for all role-specific post pages.
+            ctx["posts"] = rows
         elif path == "User/WLU.html":
             uid = session.get("id") if session.get("role") == "user" else None
             if uid:
