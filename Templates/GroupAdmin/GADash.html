@@ -77,18 +77,18 @@
             </div>
           </section>
 
-          <section class="ga-leaderboard-card mt-4">
+          <section class="ga-leaderboard-card mt-4" data-lb-prefix="ga">
             <div class="ga-leaderboard-top">
               <div>
                 <h2 class="ga-section-title">Leaderboard</h2>
-                <p class="ga-section-subtitle">See how you rank based on different metrics. Rankings update weekly.</p>
+                <p class="ga-section-subtitle">Site-wide this week (Mon–Sun). Rankings update weekly.</p>
               </div>
               <div class="ga-rank-filter">
                 <label for="ga-rank-by">Rank By</label>
-                <select id="ga-rank-by">
-                  <option>Workouts</option>
-                  <option>Sets</option>
-                  <option>Reps</option>
+                <select id="ga-rank-by" aria-label="Rank leaderboard by">
+                  <option value="workouts" selected>Workouts</option>
+                  <option value="sets">Sets</option>
+                  <option value="reps">Reps</option>
                 </select>
               </div>
             </div>
@@ -99,21 +99,53 @@
                   <tr>
                     <th>#</th>
                     <th>User</th>
-                    <th>Workouts</th>
+                    <th id="ga-lb-metric-th">Workouts</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="ga-lb-tbody-workouts">
+                  {% if ga_workout_leaderboard %}
                   {% for row in ga_workout_leaderboard %}
                   <tr>
                     <td><span class="ga-rank-badge">{{ row.rank }}</span></td>
                     <td>{{ row.user_name }}</td>
-                    <td>{{ row.weekly_workouts }}</td>
-                  </tr>
-                  {% else %}
-                  <tr>
-                    <td colspan="3" class="text-muted">No workouts logged this week.</td>
+                    <td>{{ row.metric_value }}</td>
                   </tr>
                   {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+                <tbody id="ga-lb-tbody-sets" class="d-none" hidden>
+                  {% if ga_leaderboard_sets %}
+                  {% for row in ga_leaderboard_sets %}
+                  <tr>
+                    <td><span class="ga-rank-badge">{{ row.rank }}</span></td>
+                    <td>{{ row.user_name }}</td>
+                    <td>{{ row.metric_value }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+                <tbody id="ga-lb-tbody-reps" class="d-none" hidden>
+                  {% if ga_leaderboard_reps %}
+                  {% for row in ga_leaderboard_reps %}
+                  <tr>
+                    <td><span class="ga-rank-badge">{{ row.rank }}</span></td>
+                    <td>{{ row.user_name }}</td>
+                    <td>{{ row.metric_value }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>
@@ -152,5 +184,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/dashboard-leaderboard.js" defer></script>
 </body>
 </html>

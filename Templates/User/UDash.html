@@ -77,18 +77,18 @@
             </div>
           </section>
 
-          <section class="du-leaderboard-card mt-4">
+          <section class="du-leaderboard-card mt-4" data-lb-prefix="du">
             <div class="du-leaderboard-top">
               <div>
                 <h2 class="du-section-title">Leaderboard</h2>
-                <p class="du-section-subtitle">See how you rank based on different metrics. Rankings update weekly.</p>
+                <p class="du-section-subtitle">Site-wide this week (Mon–Sun). Rankings update weekly.</p>
               </div>
               <div class="du-rank-filter">
                 <label for="du-rank-by">Rank By</label>
-                <select id="du-rank-by">
-                  <option>Workouts</option>
-                  <option>Sets</option>
-                  <option>Reps</option>
+                <select id="du-rank-by" aria-label="Rank leaderboard by">
+                  <option value="workouts" selected>Workouts</option>
+                  <option value="sets">Sets</option>
+                  <option value="reps">Reps</option>
                 </select>
               </div>
             </div>
@@ -99,21 +99,53 @@
                   <tr>
                     <th>#</th>
                     <th>User</th>
-                    <th>Workouts</th>
+                    <th id="du-lb-metric-th">Workouts</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="du-lb-tbody-workouts">
+                  {% if user_workout_leaderboard %}
                   {% for row in user_workout_leaderboard %}
                   <tr>
                     <td><span class="du-rank-badge">{{ row.rank }}</span></td>
                     <td>{{ row.user_name }}</td>
-                    <td>{{ row.weekly_workouts }}</td>
-                  </tr>
-                  {% else %}
-                  <tr>
-                    <td colspan="3" class="text-muted">No workouts logged this week.</td>
+                    <td>{{ row.metric_value }}</td>
                   </tr>
                   {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+                <tbody id="du-lb-tbody-sets" class="d-none" hidden>
+                  {% if user_leaderboard_sets %}
+                  {% for row in user_leaderboard_sets %}
+                  <tr>
+                    <td><span class="du-rank-badge">{{ row.rank }}</span></td>
+                    <td>{{ row.user_name }}</td>
+                    <td>{{ row.metric_value }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+                <tbody id="du-lb-tbody-reps" class="d-none" hidden>
+                  {% if user_leaderboard_reps %}
+                  {% for row in user_leaderboard_reps %}
+                  <tr>
+                    <td><span class="du-rank-badge">{{ row.rank }}</span></td>
+                    <td>{{ row.user_name }}</td>
+                    <td>{{ row.metric_value }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No users registered yet.</td>
+                  </tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>
@@ -152,5 +184,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/dashboard-leaderboard.js" defer></script>
 </body>
 </html>

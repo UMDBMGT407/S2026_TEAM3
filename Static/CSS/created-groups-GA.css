@@ -230,6 +230,46 @@ body {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  overflow: visible;
+}
+
+.cgga-member-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  min-height: 48px;
+}
+
+.cgga-group-member-select,
+.cgga-invite-candidate-select {
+  min-width: 160px;
+  max-width: min(280px, 100%);
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  color: #8ba3cb;
+  outline: none;
+  cursor: pointer;
+}
+
+.cgga-group-member-select:disabled,
+.cgga-invite-candidate-select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cgga-invite-candidate-select {
+  max-width: min(220px, 42vw);
+}
+
+.cgga-table tbody tr.cgga-member-row-flash {
+  background-color: #eef2ff;
+  transition: background-color 0.2s ease;
+}
+
+.cgga-members-toolbar {
+  overflow: visible;
 }
 
 .cgga-invite-wrap {
@@ -241,6 +281,7 @@ body {
   position: relative;
   gap: 10px;
   padding: 0 18px;
+  overflow: visible;
 }
 
 .cgga-invite-label {
@@ -321,13 +362,14 @@ body {
   border: 0;
 }
 
-.cgga-invite-suggestion-email {
+.cgga-invite-suggestion-name {
   display: block;
   color: #343c6a;
   font-size: 14px;
+  font-weight: 500;
 }
 
-.cgga-invite-suggestion-name {
+.cgga-invite-suggestion-email {
   display: block;
   color: #8ba3cb;
   font-size: 13px;

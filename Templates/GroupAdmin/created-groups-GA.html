@@ -105,14 +105,30 @@
                 <div class="cgga-id-pill">{% if selected_group_id %}#G{{ selected_group_id }}{% else %}—{% endif %}</div>
               </div>
               <div class="cgga-members-filters">
-                <div class="cgga-search-pill">
-                  <img src="../../Static/images/CGGAgroup0.svg" alt="" />
-                  <span>Search Member</span>
+                <div class="cgga-member-select-wrap cgga-search-pill">
+                  <img src="../../Static/images/CGGAgroup0.svg" alt="" aria-hidden="true" />
+                  <label class="visually-hidden" for="cgga-group-member-select">Current group member</label>
+                  <select
+                    id="cgga-group-member-select"
+                    class="cgga-group-member-select"
+                    aria-label="Members in this group"
+                    {% if not selected_group_id %}disabled{% endif %}
+                  >
+                    <option value="">Select a group member…</option>
+                    {% if selected_group_id %}
+                      {% for m in selected_group_members %}
+                      <option
+                        {% if m.member_kind == 'app_user' %}value="{{ m.user_id }}"{% else %}value="" disabled{% endif %}
+                      >{{ m.member_name }}{% if m.member_email %} ({{ m.member_email }}){% endif %} — {{ m.member_role }}</option>
+                      {% endfor %}
+                    {% endif %}
+                  </select>
                 </div>
                 <div
                   class="cgga-invite-wrap"
                   data-group-id="{{ selected_group_id or '' }}"
                   data-search-url="/api/group-admin/user-email-search"
+                  data-candidates-url="/api/group-admin/group-invite-candidates"
                 >
                   <form
                     id="cgga-invite-form"
@@ -124,12 +140,26 @@
                     <input type="hidden" name="group_id" value="{{ selected_group_id or '' }}" />
                     <input type="hidden" name="user_id" id="cgga-invite-user-id" />
                     <img src="../../Static/images/CGGAgroup0.svg" alt="" aria-hidden="true" />
-                    <label class="cgga-invite-label" for="cgga-invite-email-input">Invite Member:</label>
+                    <label class="cgga-invite-label" for="cgga-invite-candidate-select">Invite Member:</label>
+                    <select
+                      id="cgga-invite-candidate-select"
+                      class="cgga-invite-candidate-select"
+                      aria-label="Choose someone to invite"
+                      {% if not selected_group_id %}disabled{% endif %}
+                    >
+                      <option value="">Select someone to invite…</option>
+                    </select>
+                    <label class="visually-hidden" for="cgga-invite-email-input">Search by name or email</label>
                     <input
                       id="cgga-invite-email-input"
-                      type="email"
+                      type="text"
                       class="cgga-invite-email-input"
-                      placeholder="Email"
+                      placeholder="Or search name or email"
+                      autocomplete="off"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-controls="cgga-invite-suggestions"
+                      aria-expanded="false"
                       {% if not selected_group_id %}disabled{% endif %}
                     />
                     <button
@@ -184,7 +214,7 @@
                 <tbody>
                   {% if selected_group_id %}
                     {% for m in selected_group_members %}
-                    <tr>
+                    <tr{% if m.member_kind == 'app_user' %} data-cgga-user-id="{{ m.user_id }}"{% endif %}>
                       <td>{{ m.member_id_label }}</td>
                       <td>{{ m.member_name }}</td>
                       <td>{{ m.member_role }}</td>

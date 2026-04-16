@@ -618,6 +618,11 @@ def _offline_page_context(base: dict) -> dict:
             "ga_current_streak_days": 0,
             "ga_total_minutes_this_week": 0,
             "ga_workout_leaderboard": [],
+            "ga_leaderboard_sets": [],
+            "ga_leaderboard_reps": [],
+            "user_workout_leaderboard": [],
+            "user_leaderboard_sets": [],
+            "user_leaderboard_reps": [],
             "dash_challenges": [],
             "dash_selected_challenge": None,
             "user_invites": [],
@@ -634,6 +639,164 @@ def _offline_page_context(base: dict) -> dict:
         }
     )
     return base
+
+
+def _lb_int(val: Any) -> int:
+    """Coerce MySQL driver values (Decimal, str, etc.) to int for leaderboard math."""
+    if val is None:
+        return 0
+    if isinstance(val, bool):
+        return int(val)
+    if isinstance(val, int):
+        return val
+    try:
+        return int(val)
+    except (TypeError, ValueError):
+        try:
+            return int(float(val))
+        except (TypeError, ValueError):
+            try:
+                return int(float(str(val).strip()))
+            except (TypeError, ValueError):
+                return 0
+
+
+def _site_wide_weekly_leaderboard_raw_rows(
+    cur: Any, week_start_sql: str, next_week_start_sql: str
+) -> list[dict[str, Any]]:
+    """Weekly workout/set/rep totals per user for the site-wide leaderboard.
+
+    Rows are keyed by every ``app_user`` plus any ``user_id`` that appears in
+    ``workout`` this week (covers empty/misaligned ``app_user`` or orphan ids).
+    """
+    sql = f"""
+        SELECT
+          ids.user_id AS user_id,
+          COALESCE(NULLIF(TRIM(u.user_first_name), ''), 'User') AS user_first_name,
+          COALESCE(NULLIF(TRIM(u.user_last_name), ''), CAST(ids.user_id AS CHAR)) AS user_last_name,
+          COALESCE(wc.cnt, 0) AS weekly_workouts,
+          COALESCE(wc.mins, 0) AS weekly_minutes,
+          COALESCE(st.sets, 0) AS weekly_sets,
+          COALESCE(st.reps, 0) AS weekly_reps
+        FROM (
+          SELECT user_id FROM app_user
+          UNION
+          SELECT DISTINCT user_id
+          FROM workout
+          WHERE workout_date >= {week_start_sql}
+            AND workout_date < {next_week_start_sql}
+        ) ids
+        LEFT JOIN app_user u ON u.user_id = ids.user_id
+        LEFT JOIN (
+          SELECT user_id,
+            COUNT(workout_id) AS cnt,
+            COALESCE(SUM(workout_duration_minutes), 0) AS mins
+          FROM workout
+          WHERE workout_date >= {week_start_sql}
+            AND workout_date < {next_week_start_sql}
+          GROUP BY user_id
+        ) wc ON wc.user_id = ids.user_id
+        LEFT JOIN (
+          SELECT w.user_id,
+            COALESCE(SUM(wl.workout_num_sets), 0) AS sets,
+            COALESCE(SUM(wl.workout_num_reps), 0) AS reps
+          FROM workout w
+          INNER JOIN workout_log wl ON wl.workout_id = w.workout_id
+          WHERE w.workout_date >= {week_start_sql}
+            AND w.workout_date < {next_week_start_sql}
+          GROUP BY w.user_id
+        ) st ON st.user_id = ids.user_id
+        ORDER BY user_first_name, user_last_name, ids.user_id
+    """
+    cur.execute(sql)
+    return list(cur.fetchall() or [])
+
+
+def _dense_rank_leaderboard_sorted(
+    sorted_rows: list[dict[str, Any]],
+    score_tuple_fn: Any,
+    metric_value_fn: Any,
+) -> list[dict[str, Any]]:
+    """Dense rank: tied scores share rank; next rank is position index (same as prior GA/UDash logic)."""
+    out: list[dict[str, Any]] = []
+    previous: tuple[int, ...] | None = None
+    current_rank = 0
+    for idx, row in enumerate(sorted_rows, start=1):
+        sc = score_tuple_fn(row)
+        if sc != previous:
+            current_rank = idx
+            previous = sc
+        uname = (
+            f"{row.get('user_first_name', '')} {row.get('user_last_name', '')}"
+        ).strip()
+        out.append(
+            {
+                "rank": current_rank,
+                "user_name": uname,
+                "metric_value": _lb_int(metric_value_fn(row)),
+            }
+        )
+    return out
+
+
+def build_site_wide_weekly_leaderboards(
+    cur: Any, week_start_sql: str, next_week_start_sql: str
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Site-wide this-week leaderboards: workouts, sets, reps (includes users with zeros)."""
+    try:
+        raw = _site_wide_weekly_leaderboard_raw_rows(cur, week_start_sql, next_week_start_sql)
+        if not raw:
+            return [], [], []
+
+        def _nm(r: dict[str, Any]) -> str:
+            return (
+                f"{r.get('user_first_name', '')} {r.get('user_last_name', '')}"
+            ).strip().lower()
+
+        w_sorted = sorted(
+            raw,
+            key=lambda r: (
+                -_lb_int(r.get("weekly_workouts")),
+                -_lb_int(r.get("weekly_minutes")),
+                _nm(r),
+            ),
+        )
+        s_sorted = sorted(
+            raw,
+            key=lambda r: (
+                -_lb_int(r.get("weekly_sets")),
+                -_lb_int(r.get("weekly_reps")),
+                _nm(r),
+            ),
+        )
+        r_sorted = sorted(
+            raw,
+            key=lambda r: (
+                -_lb_int(r.get("weekly_reps")),
+                -_lb_int(r.get("weekly_sets")),
+                _nm(r),
+            ),
+        )
+
+        lb_w = _dense_rank_leaderboard_sorted(
+            w_sorted,
+            lambda r: (_lb_int(r.get("weekly_workouts")), _lb_int(r.get("weekly_minutes"))),
+            lambda r: r.get("weekly_workouts"),
+        )
+        lb_s = _dense_rank_leaderboard_sorted(
+            s_sorted,
+            lambda r: (_lb_int(r.get("weekly_sets")), _lb_int(r.get("weekly_reps"))),
+            lambda r: r.get("weekly_sets"),
+        )
+        lb_r = _dense_rank_leaderboard_sorted(
+            r_sorted,
+            lambda r: (_lb_int(r.get("weekly_reps")), _lb_int(r.get("weekly_sets"))),
+            lambda r: r.get("weekly_reps"),
+        )
+        return lb_w, lb_s, lb_r
+    except Exception:
+        app.logger.exception("build_site_wide_weekly_leaderboards failed")
+        return [], [], []
 
 
 def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
@@ -1360,6 +1523,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["ga_current_streak_days"] = 0
             ctx["ga_total_minutes_this_week"] = 0
             ctx["ga_workout_leaderboard"] = []
+            ctx["ga_leaderboard_sets"] = []
+            ctx["ga_leaderboard_reps"] = []
             ctx["dash_challenges"] = []
             ctx["dash_selected_challenge"] = None
             if ga_id:
@@ -1367,31 +1532,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 next_week_start_sql = (
                     "DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)"
                 )
-                try:
-                    cur.execute(
-                        f"""
-                        SELECT
-                          COUNT(w.workout_id) AS workouts_this_week,
-                          COALESCE(SUM(w.workout_duration_minutes), 0) AS total_minutes_this_week
-                        FROM workout w
-                        JOIN (
-                          SELECT DISTINCT ug.user_id
-                          FROM user_group ug
-                          JOIN motiv_group g ON g.group_id = ug.group_id
-                          WHERE g.group_admin_id = %s
-                        ) ga_users ON ga_users.user_id = w.user_id
-                        WHERE w.workout_date >= {week_start_sql}
-                          AND w.workout_date < {next_week_start_sql}
-                        """,
-                        (ga_id,),
-                    )
-                    summary = cur.fetchone() or {}
-                    ctx["ga_workouts_this_week"] = summary.get("workouts_this_week", 0) or 0
-                    ctx["ga_total_minutes_this_week"] = (
-                        summary.get("total_minutes_this_week", 0) or 0
-                    )
-                except Exception:
-                    pass
+                ga_app_uid: int | None = None
                 try:
                     cur.execute(
                         """
@@ -1408,8 +1549,44 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         (ga_id,),
                     )
                     ga_user = cur.fetchone()
-                    ga_user_id = (ga_user or {}).get("user_id")
-                    if ga_user_id:
+                    ga_app_uid = (ga_user or {}).get("user_id")
+                except Exception:
+                    ga_app_uid = None
+                if ga_app_uid is None:
+                    try:
+                        ga_email_fb = (session.get("email") or "").strip()
+                        if ga_email_fb:
+                            cur.execute(
+                                "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                                (ga_email_fb,),
+                            )
+                            ur = cur.fetchone()
+                            if ur:
+                                ga_app_uid = ur.get("user_id")
+                    except Exception:
+                        pass
+                if ga_app_uid:
+                    try:
+                        cur.execute(
+                            f"""
+                            SELECT
+                              COUNT(w.workout_id) AS workouts_this_week,
+                              COALESCE(SUM(w.workout_duration_minutes), 0) AS total_minutes_this_week
+                            FROM workout w
+                            WHERE w.user_id = %s
+                              AND w.workout_date >= {week_start_sql}
+                              AND w.workout_date < {next_week_start_sql}
+                            """,
+                            (ga_app_uid,),
+                        )
+                        summary = cur.fetchone() or {}
+                        ctx["ga_workouts_this_week"] = summary.get("workouts_this_week", 0) or 0
+                        ctx["ga_total_minutes_this_week"] = (
+                            summary.get("total_minutes_this_week", 0) or 0
+                        )
+                    except Exception:
+                        pass
+                    try:
                         cur.execute(
                             """
                             SELECT DISTINCT workout_date
@@ -1417,7 +1594,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                             WHERE user_id = %s
                             ORDER BY workout_date DESC
                             """,
-                            (ga_user_id,),
+                            (ga_app_uid,),
                         )
                         workout_dates = [r.get("workout_date") for r in (cur.fetchall() or [])]
                         workout_date_set = {d for d in workout_dates if d}
@@ -1427,60 +1604,19 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                             streak += 1
                             day_cursor -= timedelta(days=1)
                         ctx["ga_current_streak_days"] = streak
-                except Exception:
-                    pass
+                    except Exception:
+                        pass
                 try:
-                    cur.execute(
-                        f"""
-                        SELECT
-                          u.user_id,
-                          u.user_first_name,
-                          u.user_last_name,
-                          COUNT(w.workout_id) AS weekly_workouts,
-                          COALESCE(SUM(w.workout_duration_minutes), 0) AS weekly_minutes
-                        FROM (
-                          SELECT DISTINCT ug.user_id
-                          FROM user_group ug
-                          JOIN motiv_group g ON g.group_id = ug.group_id
-                          WHERE g.group_admin_id = %s
-                        ) ga_users
-                        JOIN app_user u ON u.user_id = ga_users.user_id
-                        LEFT JOIN workout w
-                          ON w.user_id = u.user_id
-                          AND w.workout_date >= {week_start_sql}
-                          AND w.workout_date < {next_week_start_sql}
-                        GROUP BY u.user_id, u.user_first_name, u.user_last_name
-                        HAVING COUNT(w.workout_id) > 0
-                        ORDER BY weekly_workouts DESC, weekly_minutes DESC,
-                                 u.user_first_name, u.user_last_name, u.user_id
-                        """,
-                        (ga_id,),
+                    lb_w, lb_s, lb_r = build_site_wide_weekly_leaderboards(
+                        cur, week_start_sql, next_week_start_sql
                     )
-                    leaderboard_rows = cur.fetchall() or []
-                    leaderboard = []
-                    previous_score: tuple[int, int] | None = None
-                    current_rank = 0
-                    for idx, row in enumerate(leaderboard_rows, start=1):
-                        score = (
-                            int(row.get("weekly_workouts") or 0),
-                            int(row.get("weekly_minutes") or 0),
-                        )
-                        if score != previous_score:
-                            current_rank = idx
-                            previous_score = score
-                        leaderboard.append(
-                            {
-                                "rank": current_rank,
-                                "user_name": (
-                                    f"{row.get('user_first_name', '')} "
-                                    f"{row.get('user_last_name', '')}"
-                                ).strip(),
-                                "weekly_workouts": score[0],
-                            }
-                        )
-                    ctx["ga_workout_leaderboard"] = leaderboard
+                    ctx["ga_workout_leaderboard"] = lb_w
+                    ctx["ga_leaderboard_sets"] = lb_s
+                    ctx["ga_leaderboard_reps"] = lb_r
                 except Exception:
-                    pass
+                    app.logger.exception(
+                        "GADash: build_site_wide_weekly_leaderboards failed"
+                    )
                 try:
                     ga_email = (session.get("email") or "").strip()
                     ga_uid: int | None = None
@@ -1986,6 +2122,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["user_current_streak_days"] = 0
             ctx["user_total_minutes_this_week"] = 0
             ctx["user_workout_leaderboard"] = []
+            ctx["user_leaderboard_sets"] = []
+            ctx["user_leaderboard_reps"] = []
             ctx["dash_challenges"] = []
             ctx["dash_selected_challenge"] = None
             if uid:
@@ -2034,57 +2172,16 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 except Exception:
                     pass
                 try:
-                    cur.execute(
-                        f"""
-                        SELECT
-                          u.user_id,
-                          u.user_first_name,
-                          u.user_last_name,
-                          COUNT(w.workout_id) AS weekly_workouts,
-                          COALESCE(SUM(w.workout_duration_minutes), 0) AS weekly_minutes
-                        FROM (
-                          SELECT DISTINCT ug2.user_id
-                          FROM user_group ug1
-                          JOIN user_group ug2 ON ug2.group_id = ug1.group_id
-                          WHERE ug1.user_id = %s
-                        ) peer_users
-                        JOIN app_user u ON u.user_id = peer_users.user_id
-                        LEFT JOIN workout w
-                          ON w.user_id = u.user_id
-                          AND w.workout_date >= {week_start_sql}
-                          AND w.workout_date < {next_week_start_sql}
-                        GROUP BY u.user_id, u.user_first_name, u.user_last_name
-                        HAVING COUNT(w.workout_id) > 0
-                        ORDER BY weekly_workouts DESC, weekly_minutes DESC,
-                                 u.user_first_name, u.user_last_name, u.user_id
-                        """,
-                        (uid,),
+                    lb_w, lb_s, lb_r = build_site_wide_weekly_leaderboards(
+                        cur, week_start_sql, next_week_start_sql
                     )
-                    leaderboard_rows = cur.fetchall() or []
-                    leaderboard = []
-                    previous_score: tuple[int, int] | None = None
-                    current_rank = 0
-                    for idx, row in enumerate(leaderboard_rows, start=1):
-                        score = (
-                            int(row.get("weekly_workouts") or 0),
-                            int(row.get("weekly_minutes") or 0),
-                        )
-                        if score != previous_score:
-                            current_rank = idx
-                            previous_score = score
-                        leaderboard.append(
-                            {
-                                "rank": current_rank,
-                                "user_name": (
-                                    f"{row.get('user_first_name', '')} "
-                                    f"{row.get('user_last_name', '')}"
-                                ).strip(),
-                                "weekly_workouts": score[0],
-                            }
-                        )
-                    ctx["user_workout_leaderboard"] = leaderboard
+                    ctx["user_workout_leaderboard"] = lb_w
+                    ctx["user_leaderboard_sets"] = lb_s
+                    ctx["user_leaderboard_reps"] = lb_r
                 except Exception:
-                    pass
+                    app.logger.exception(
+                        "UDash: build_site_wide_weekly_leaderboards failed"
+                    )
                 try:
                     ensure_user_challenge_leave_table(cur)
                     ensure_challenge_participant_exclusion_table(cur)
@@ -3900,10 +3997,10 @@ def admin_schedule_delete(wid):
 @app.get("/api/group-admin/user-email-search")
 @require_roles("group_admin")
 def api_ga_user_email_search():
-    q = (request.args.get("q") or "").strip()
+    q = (request.args.get("q") or "").strip()[:80]
     group_id = request.args.get("group_id", type=int)
-    if not group_id or len(q) < 2:
-        return jsonify(error="group_id and q (at least 2 characters) required"), 400
+    if not group_id or len(q) < 1:
+        return jsonify(error="group_id and q (at least 1 character) required"), 400
     cur = dict_cursor()
     cur.execute(
         """SELECT 1 FROM motiv_group
@@ -3914,12 +4011,20 @@ def api_ga_user_email_search():
         cur.close()
         return jsonify(error="Group not found or forbidden"), 404
     like = f"%{q}%"
+    name_match_sql = """
+              ( u.user_email LIKE %s
+                OR u.user_first_name LIKE %s
+                OR u.user_last_name LIKE %s
+                OR CONCAT(TRIM(u.user_first_name), ' ', TRIM(u.user_last_name)) LIKE %s
+                OR COALESCE(u.user_name, '') LIKE %s )
+    """
+    like5 = (like, like, like, like, like)
     try:
         cur.execute(
-            """
+            f"""
             SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
             FROM app_user u
-            WHERE u.is_active = 1 AND u.user_email LIKE %s
+            WHERE u.is_active = 1 AND {name_match_sql}
               AND NOT EXISTS (
                 SELECT 1 FROM user_group ug
                 WHERE ug.user_id = u.user_id AND ug.group_id = %s
@@ -3927,16 +4032,16 @@ def api_ga_user_email_search():
             ORDER BY u.user_email
             LIMIT 15
             """,
-            (like, group_id),
+            (*like5, group_id),
         )
         rows = cur.fetchall()
         if not rows:
             # Fallback for older data where is_active isn't maintained.
             cur.execute(
-                """
+                f"""
                 SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
                 FROM app_user u
-                WHERE u.user_email LIKE %s
+                WHERE {name_match_sql}
                   AND NOT EXISTS (
                     SELECT 1 FROM user_group ug
                     WHERE ug.user_id = u.user_id AND ug.group_id = %s
@@ -3944,17 +4049,17 @@ def api_ga_user_email_search():
                 ORDER BY u.user_email
                 LIMIT 15
                 """,
-                (like, group_id),
+                (*like5, group_id),
             )
             rows = cur.fetchall()
     except OperationalError as e:
         if e.args[0] != 1054:
             raise
         cur.execute(
-            """
+            f"""
             SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
             FROM app_user u
-            WHERE u.user_email LIKE %s
+            WHERE {name_match_sql}
               AND NOT EXISTS (
                 SELECT 1 FROM user_group ug
                 WHERE ug.user_id = u.user_id AND ug.group_id = %s
@@ -3962,7 +4067,7 @@ def api_ga_user_email_search():
             ORDER BY u.user_email
             LIMIT 15
             """,
-            (like, group_id),
+            (*like5, group_id),
         )
         rows = cur.fetchall()
     rows = [
@@ -3975,6 +4080,68 @@ def api_ga_user_email_search():
     ]
     cur.close()
     return jsonify(rows)
+
+
+@app.get("/api/group-admin/group-invite-candidates")
+@require_roles("group_admin")
+def api_ga_group_invite_candidates():
+    """All active app users not in the given group (cap 500) for invite dropdown."""
+    group_id = request.args.get("group_id", type=int)
+    if not group_id:
+        return jsonify(error="group_id required"), 400
+    cur = dict_cursor()
+    cur.execute(
+        """SELECT 1 FROM motiv_group
+           WHERE group_id = %s AND group_admin_id = %s LIMIT 1""",
+        (group_id, session["id"]),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return jsonify(error="Group not found or forbidden"), 404
+    invite_limit = 500
+    sql = f"""
+            SELECT u.user_id, u.user_email, u.user_first_name, u.user_last_name
+            FROM app_user u
+            WHERE {{active_clause}}
+              AND NOT EXISTS (
+                SELECT 1 FROM user_group ug
+                WHERE ug.user_id = u.user_id AND ug.group_id = %s
+              )
+            ORDER BY u.user_last_name, u.user_first_name, u.user_email
+            LIMIT {invite_limit}
+            """
+    rows: list[Any] = []
+    try:
+        cur.execute(
+            sql.format(active_clause="u.is_active = 1"),
+            (group_id,),
+        )
+        rows = list(cur.fetchall() or [])
+    except OperationalError as e:
+        if e.args[0] != 1054:
+            raise
+        cur.execute(
+            sql.format(active_clause="1"),
+            (group_id,),
+        )
+        rows = list(cur.fetchall() or [])
+    else:
+        if not rows:
+            cur.execute(
+                sql.format(active_clause="1"),
+                (group_id,),
+            )
+            rows = list(cur.fetchall() or [])
+    out = [
+        {
+            "user_id": r["user_id"],
+            "user_email": r["user_email"],
+            "user_name": f"{r['user_first_name']} {r['user_last_name']}".strip(),
+        }
+        for r in rows
+    ]
+    cur.close()
+    return jsonify(out)
 
 
 @app.get("/api/posts")
