@@ -55,52 +55,38 @@
           </div>
 
           <div class="row g-4 mb-4">
+            {% for ch in ga_joined_challenges %}
             <div class="col-12 col-xl-4">
               <article class="jcga-challenge-card">
-                <h3>Challenge Name</h3>
-                <p class="jcga-group-name">Group Name</p>
-                <span class="jcga-status">Status</span>
-                <p class="jcga-goal-label">Workouts Completed</p>
-                <p class="jcga-goal-value">5/10</p>
+                <h3>{{ ch.challenge_title }}</h3>
+                <p class="jcga-group-name">{{ ch.group_name }}</p>
+                <span class="jcga-status">{{ ch.challenge_status or '—' }}</span>
+                <p class="jcga-goal-label">Goal</p>
+                <p class="jcga-goal-value">{{ ch.challenge_goal_display }}</p>
                 <div class="jcga-card-actions">
-                  <button type="button" class="jcga-btn jcga-btn--primary">View Challenge</button>
+                  <form method="get" action="joined-challenges-GA.html" class="m-0 d-inline">
+                    <input type="hidden" name="challenge_id" value="{{ ch.challenge_id }}" />
+                    <button type="submit" class="jcga-btn jcga-btn--primary">View Challenge</button>
+                  </form>
                   <button type="button" class="jcga-btn jcga-btn--secondary">Leave Challenge</button>
                 </div>
               </article>
             </div>
-            <div class="col-12 col-xl-4">
+            {% else %}
+            <div class="col-12">
               <article class="jcga-challenge-card">
-                <h3>Challenge Name</h3>
-                <p class="jcga-group-name">Group Name</p>
-                <span class="jcga-status">Status</span>
-                <p class="jcga-goal-label">Workouts Completed</p>
-                <p class="jcga-goal-value">5/10</p>
-                <div class="jcga-card-actions">
-                  <button type="button" class="jcga-btn jcga-btn--primary">View Challenge</button>
-                  <button type="button" class="jcga-btn jcga-btn--secondary">Leave Challenge</button>
-                </div>
+                <h3>No joined challenges found.</h3>
+                <p class="jcga-group-name">This account is not currently joined to any other group challenges.</p>
               </article>
             </div>
-            <div class="col-12 col-xl-4">
-              <article class="jcga-challenge-card">
-                <h3>Challenge Name</h3>
-                <p class="jcga-group-name">Group Name</p>
-                <span class="jcga-status">Status</span>
-                <p class="jcga-goal-label">Workouts Completed</p>
-                <p class="jcga-goal-value">5/10</p>
-                <div class="jcga-card-actions">
-                  <button type="button" class="jcga-btn jcga-btn--primary">View Challenge</button>
-                  <button type="button" class="jcga-btn jcga-btn--secondary">Leave Challenge</button>
-                </div>
-              </article>
-            </div>
+            {% endfor %}
           </div>
 
           <section class="jcga-card">
             <div class="jcga-card-head">
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <h2 class="mb-0">Selected Challenge -</h2>
-                <div class="jcga-selected-pill">Challenge Name</div>
+                <div class="jcga-selected-pill">{{ selected_challenge_name or "No Challenge Selected" }}</div>
               </div>
             </div>
 
@@ -114,14 +100,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td><span class="jcga-rank-badge">1</span></td><td>Member Name</td><td>8/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">2</span></td><td>Member Name</td><td>6/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">3</span></td><td>Member Name</td><td>4/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">4</span></td><td>Member Name</td><td>3/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">5</span></td><td>Member Name</td><td>3/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">6</span></td><td>Member Name</td><td>3/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">7</span></td><td>Member Name</td><td>3/10</td></tr>
-                  <tr><td><span class="jcga-rank-badge">8</span></td><td>Member Name</td><td>3/10</td></tr>
+                  {% for p in selected_challenge_participants %}
+                  <tr>
+                    <td><span class="jcga-rank-badge">{{ p.rank }}</span></td>
+                    <td>{{ p.member_name }}</td>
+                    <td>{{ p.goal_progress }}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted p-4">
+                      {% if ga_joined_challenges %}
+                      No participants found for the selected challenge.
+                      {% else %}
+                      Join a challenge to see participant details here.
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

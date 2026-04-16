@@ -93,7 +93,7 @@
               </div>
             </form>
             {% else %}
-            <p class="p-3">{% if session_role == 'group_admin' %}Use <code>?id=</code> with a workout id for a member of one of your groups, or go back to <a href="/GroupAdmin/workout-history-GA.html">workout history</a>.{% else %}Open from <a href="WLU.html">Workout Log</a> (View Details) or <a href="WLDU.html">Workout Details</a> (Edit) so the URL includes the workout id.{% endif %}</p>
+            <p class="p-3">{% if session_role == 'group_admin' %}Use <code>?id=</code> with a workout id for a member of one of your groups, or go back to <a href="/GroupAdmin/workout-history-GA.html">workout history</a>.{% else %}Open <a href="WLAU.html">Add / edit workout</a> from your <a href="WLU.html">workout history</a>, or use <code>?workout_id=</code> on the editor URL.{% endif %}</p>
             {% endif %}
           </section>
         </div>

@@ -169,6 +169,26 @@ body {
 .chu-search img {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
+}
+
+.chu-search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  color: #343c6a;
+  outline: none;
+}
+
+.chu-search-input::placeholder {
+  color: #8ba3cb;
+}
+
+.chu-filter-empty {
+  font-size: 13px;
+  color: #718ebf;
 }
 
 .chu-arrows-wrap {

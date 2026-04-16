@@ -123,13 +123,29 @@
             <img class="du-challenge-icon" src="../../Static/Images%202/DUchallenges-icon0.svg" alt="" />
             <div class="du-challenge-text">
               <p class="du-challenge-kicker">Challenges</p>
-              <h3>April Strength Challenge</h3>
-              <p>Apr 1 - Apr 30 • Complete This Weeks Challenge!</p>
+              {% if dash_challenges and dash_selected_challenge %}
+              <h3>{{ dash_selected_challenge.challenge_title }}</h3>
+              <p>{{ dash_selected_challenge.detail_line }}</p>
+              {% else %}
+              <h3>No challenges yet</h3>
+              <p>Join a group with an active challenge to see it here.</p>
+              {% endif %}
             </div>
             <div class="du-challenge-filter">
-              <select>
+              {% if dash_challenges %}
+              <form method="get" action="UDash.html" class="m-0">
+                <label class="visually-hidden" for="du-dash-challenge-select">Select challenge</label>
+                <select id="du-dash-challenge-select" name="challenge_id" aria-label="Select challenge" onchange="this.form.submit()">
+                  {% for ch in dash_challenges %}
+                  <option value="{{ ch.challenge_id }}"{% if dash_selected_challenge and ch.challenge_id == dash_selected_challenge.challenge_id %} selected{% endif %}>{{ ch.challenge_title }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              {% else %}
+              <select id="du-dash-challenge-select-empty" aria-label="Challenges" disabled>
                 <option>Challenges</option>
               </select>
+              {% endif %}
             </div>
           </section>
         </main>

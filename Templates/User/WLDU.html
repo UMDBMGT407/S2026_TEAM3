@@ -43,8 +43,8 @@
           <div class="wldu-head-row">
             <h2 class="wldu-title">Workout Details</h2>
             <div class="wldu-actions-top">
-              <a href="WLAU.html" class="wldu-btn">Add New Exercise</a>
-              <a href="WLU.html" class="wldu-btn">Save Workout</a>
+              <a href="WLAU.html" class="wldu-btn">Create New Workout</a>
+              <a href="WLU.html" class="wldu-btn">Workout History</a>
             </div>
           </div>
 
@@ -75,7 +75,7 @@
                     <td>{{ row.exercise_muscle_group or '—' }}</td>
                     <td>
                       <div class="wldu-row-actions">
-                        <a class="wldu-edit-btn" href="WLEU.html?id={{ row.workout_id }}" aria-label="Edit"><img src="../../Static/Images%202/WLDUedit-button{{ (loop.index0 % 8) }}.svg" alt="" /></a>
+                        <a class="wldu-edit-btn" href="WLAU.html?workout_id={{ row.workout_id }}" aria-label="Edit"><img src="../../Static/Images%202/WLDUedit-button{{ (loop.index0 % 8) }}.svg" alt="" /></a>
                         <form method="post" action="/actions/user/workout/{{ row.workout_id }}/delete" style="display:inline;" onsubmit="return confirm('Delete this workout?');">
                           <button class="wldu-trash-btn" type="submit" aria-label="Delete"><img src="../../Static/Images%202/WLDUtrash-can-button{{ (loop.index0 % 8) }}.svg" alt="" /></button>
                         </form>

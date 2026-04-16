@@ -96,7 +96,19 @@
                         <button type="submit" class="view-btn">View Details</button>
                       </form>
                     </td>
-                    <td class="text-end action-icons"><a href="ChallengeAed.html?id={{ s.group_workout_id }}"><img src="../../Static/Images%201/ChallengeAedit-button0.svg" alt="Edit" /></a></td>
+                    <td class="text-end action-icons">
+                      <a href="ChallengeAed.html?id={{ s.group_workout_id }}"><img src="../../Static/Images%201/ChallengeAedit-button0.svg" alt="Edit" /></a>
+                      <form
+                        method="post"
+                        action="/actions/admin/schedule/{{ s.group_workout_id }}/delete"
+                        class="m-0 d-inline"
+                        onsubmit="return confirm('Delete this scheduled workout?');"
+                      >
+                        <button type="submit" class="border-0 bg-transparent p-0" aria-label="Delete scheduled workout">
+                          <img src="../../Static/Images%201/ChallengeAtrash-can-button0.svg" alt="Delete" />
+                        </button>
+                      </form>
+                    </td>
                   </tr>
                   {% else %}
                   <tr><td colspan="5">No scheduled sessions.</td></tr>

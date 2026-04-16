@@ -43,7 +43,7 @@
           <section class="whga-history-card">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
               <h2 class="whga-history-title">Workout History</h2>
-              <a href="workout-details-GA.html" class="whga-create-btn">Create New Workout</a>
+              <a href="workout-logging-GA.html" class="whga-create-btn">Create New Workout</a>
             </div>
 
             <div class="table-responsive">
@@ -53,7 +53,6 @@
                     <th>Workout No</th>
                     <th>Date</th>
                     <th>Duration</th>
-                    <th>Member</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -63,15 +62,17 @@
                     <td>{{ '%02d'|format(loop.index) }}.</td>
                     <td>{{ w.workout_date }}</td>
                     <td>{% if w.workout_duration_minutes %}{{ w.workout_duration_minutes }} Minutes{% else %}—{% endif %}</td>
-                    <td>{{ w.user_first_name }} {{ w.user_last_name }}</td>
                     <td>
                       <div class="whga-actions">
-                        <a href="/User/WLEU.html?id={{ w.workout_id }}" class="whga-view-btn">Edit</a>
+                        <a href="workout-logging-GA.html?workout_id={{ w.workout_id }}" class="whga-view-btn">Edit</a>
+                        <form method="post" action="/actions/group-admin/workout/{{ w.workout_id }}/delete" style="display:inline;" onsubmit="return confirm('Delete this workout?');">
+                          <button class="whga-trash-btn" type="submit" aria-label="Delete"><img src="../../Static/images/WHGAtrash-can-button{{ (loop.index0 % 8) }}.svg" alt="" /></button>
+                        </form>
                       </div>
                     </td>
                   </tr>
                   {% else %}
-                  <tr><td colspan="5">No workouts from members of your groups yet. <a href="workout-logging-GA.html">Log a workout</a> for a member.</td></tr>
+                  <tr><td colspan="4">No personal workouts logged yet. <a href="workout-logging-GA.html">Create your first workout</a>.</td></tr>
                   {% endfor %}
                 </tbody>
               </table>

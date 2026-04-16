@@ -212,6 +212,12 @@ body {
   min-height: 35px;
 }
 
+.action-icons a,
+.action-icons form {
+  display: inline-flex;
+  align-items: center;
+}
+
 .action-icons img {
   width: 18px;
   height: 18px;

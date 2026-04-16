@@ -250,6 +250,30 @@ def format_workout_goal_display(s: Any) -> str:
     return f"{n} {suffix}"
 
 
+def format_challenge_date_range(start: Any, end: Any) -> str:
+    """Human-readable date span for challenge banners (e.g. Apr 01 – Apr 30)."""
+    d_start = start.date() if isinstance(start, datetime) else start
+    d_end = end.date() if isinstance(end, datetime) else end
+
+    def one(d: Any) -> str:
+        if d is None:
+            return ""
+        if isinstance(d, datetime):
+            d = d.date()
+        if hasattr(d, "strftime"):
+            return d.strftime("%b %d, %Y")
+        return str(d)[:10]
+
+    a, b = one(d_start), one(d_end)
+    if a and b:
+        return f"{a} – {b}" if a != b else a
+    if a:
+        return f"Starts {a}"
+    if b:
+        return f"Ends {b}"
+    return "—"
+
+
 def ensure_group_invite_table(cur) -> None:
     """Create group_invite when missing (avoids 1146); same DDL as sql/migration_group_invite.sql."""
     cur.execute(
@@ -306,6 +330,25 @@ def ensure_group_workout_attendance_table(cur) -> None:
           CONSTRAINT fk_gwa_user FOREIGN KEY (user_id)
             REFERENCES app_user (user_id) ON DELETE CASCADE,
           UNIQUE KEY uq_gwa_workout_user (group_workout_id, user_id)
+        )
+        """
+    )
+
+
+def ensure_user_challenge_leave_table(cur) -> None:
+    """Create user_challenge_leave when missing; user self-opt-out from a challenge."""
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS user_challenge_leave (
+          leave_id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id INT NOT NULL,
+          challenge_id INT NOT NULL,
+          left_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT fk_ucl_user FOREIGN KEY (user_id)
+            REFERENCES app_user (user_id) ON DELETE CASCADE,
+          CONSTRAINT fk_ucl_challenge FOREIGN KEY (challenge_id)
+            REFERENCES challenge (challenge_id) ON DELETE CASCADE,
+          UNIQUE KEY uq_ucl_user_challenge (user_id, challenge_id)
         )
         """
     )
@@ -454,6 +497,57 @@ def save_post_photo(file_obj) -> tuple[str | None, str | None]:
     return f"/Static/{POST_UPLOAD_SUBDIR.as_posix()}/{saved_name}", None
 
 
+def collect_workout_exercises_from_request() -> list[dict[str, Any]]:
+    """Parse multi-row exercise fields from request.form (same shape as GA workout log)."""
+    exercise_names = request.form.getlist("exercise_name[]")
+    sets_values = request.form.getlist("num_sets[]")
+    reps_values = request.form.getlist("num_reps[]")
+    weight_values = request.form.getlist("weight[]")
+    muscle_values = request.form.getlist("muscle_group[]")
+    if not exercise_names and request.form.get("exercise_name"):
+        exercise_names = [request.form.get("exercise_name", "")]
+        sets_values = [request.form.get("num_sets", "")]
+        reps_values = [request.form.get("num_reps", "")]
+        weight_values = [request.form.get("weight", "")]
+        muscle_values = [request.form.get("muscle_group", "")]
+
+    exercises: list[dict[str, Any]] = []
+    for idx, exercise_name_raw in enumerate(exercise_names):
+        ex_name = (exercise_name_raw or "").strip()
+        sets_raw = sets_values[idx] if idx < len(sets_values) else ""
+        reps_raw = reps_values[idx] if idx < len(reps_values) else ""
+        weight_raw = weight_values[idx] if idx < len(weight_values) else ""
+        muscle_raw = muscle_values[idx] if idx < len(muscle_values) else ""
+        if not any(
+            [
+                ex_name,
+                str(sets_raw).strip(),
+                str(reps_raw).strip(),
+                str(weight_raw).strip(),
+                str(muscle_raw).strip(),
+            ]
+        ):
+            continue
+        sets = parse_int(sets_raw)
+        reps = parse_int(reps_raw)
+        try:
+            wfloat = (
+                float(weight_raw) if str(weight_raw).strip() not in ("", "None") else None
+            )
+        except ValueError:
+            wfloat = None
+        exercises.append(
+            {
+                "exercise_name": ex_name or "Custom",
+                "num_sets": sets,
+                "num_reps": reps,
+                "weight": wfloat,
+                "muscle_group": str(muscle_raw).strip(),
+            }
+        )
+    return exercises
+
+
 def get_or_create_exercise(cur, name: str, muscle: str | None, difficulty: str | None) -> int:
     name = (name or "").strip() or "Custom"
     cur.execute(
@@ -524,10 +618,19 @@ def _offline_page_context(base: dict) -> dict:
             "ga_current_streak_days": 0,
             "ga_total_minutes_this_week": 0,
             "ga_workout_leaderboard": [],
+            "dash_challenges": [],
+            "dash_selected_challenge": None,
             "user_invites": [],
             "nu_invite_err": None,
             "ga_group_invites": [],
             "ga_invite_err": None,
+            "chu_joined_challenges": [],
+            "user_workout_editor_err": None,
+            "user_editor_workout_id": None,
+            "user_editor_workout_date": "",
+            "user_editor_duration_minutes": "",
+            "user_editor_exercises": [],
+            "user_editor_mode": "create",
         }
     )
     return base
@@ -630,6 +733,8 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["admin_group_count"] = 0
             ctx["admin_post_count"] = 0
             ctx["admin_workouts_logged_count"] = 0
+            ctx["admin_busiest_workout_day"] = "—"
+            ctx["admin_avg_workout_duration_minutes"] = 0
             ctx["admin_sets_done_count"] = 0
             ctx["admin_exercises_done_count"] = 0
             ctx["admin_reps_done_count"] = 0
@@ -662,6 +767,41 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 cur.execute("SELECT COUNT(*) AS c FROM workout")
                 row = cur.fetchone()
                 ctx["admin_workouts_logged_count"] = (row or {}).get("c", 0)
+            except Exception:
+                pass
+            try:
+                cur.execute(
+                    """
+                    SELECT
+                      WEEKDAY(w.workout_date) AS weekday_idx,
+                      DAYNAME(w.workout_date) AS busiest_workout_day,
+                      COUNT(w.workout_id) AS workout_count
+                    FROM workout w
+                    WHERE w.workout_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+                      AND w.workout_date < DATE_ADD(
+                        DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY),
+                        INTERVAL 7 DAY
+                      )
+                    GROUP BY WEEKDAY(w.workout_date), DAYNAME(w.workout_date)
+                    ORDER BY workout_count DESC, weekday_idx ASC
+                    LIMIT 1
+                    """
+                )
+                row = cur.fetchone() or {}
+                day_name = (row.get("busiest_workout_day") or "").strip()
+                if day_name:
+                    ctx["admin_busiest_workout_day"] = day_name
+            except Exception:
+                pass
+            try:
+                cur.execute(
+                    """
+                    SELECT COALESCE(ROUND(AVG(w.workout_duration_minutes), 0), 0) AS c
+                    FROM workout w
+                    """
+                )
+                row = cur.fetchone()
+                ctx["admin_avg_workout_duration_minutes"] = int((row or {}).get("c", 0) or 0)
             except Exception:
                 pass
             try:
@@ -1074,12 +1214,154 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_challenge_participants"] = participants
             else:
                 ctx["ga_created_challenges"] = []
+        elif path == "GroupAdmin/schedule-joined-workouts-GA.html":
+            ga_id = session.get("id") if session.get("role") == "group_admin" else None
+            ga_email = (session.get("email") or "").strip()
+            ctx["ga_joined_schedule_sessions"] = []
+            ctx["selected_workout_id"] = None
+            ctx["selected_workout"] = None
+            ctx["selected_workout_time_display"] = ""
+            ctx["selected_workout_attendance"] = []
+            if ga_id and ga_email:
+                cur.execute(
+                    "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                    (ga_email,),
+                )
+                ga_user = cur.fetchone() or {}
+                ga_user_id = ga_user.get("user_id")
+                if ga_user_id:
+                    cur.execute(
+                        """
+                        SELECT gw.group_workout_id, gw.group_workout_title, gw.group_workout_scheduled_date,
+                          gw.group_workout_scheduled_time, gw.group_workout_location, gw.group_id, g.group_name
+                        FROM group_workout gw
+                        JOIN user_group ug ON ug.group_id = gw.group_id
+                        JOIN motiv_group g ON g.group_id = gw.group_id
+                        WHERE ug.user_id = %s AND gw.group_admin_id <> %s
+                        ORDER BY (gw.group_workout_scheduled_date IS NULL),
+                                 gw.group_workout_scheduled_date DESC,
+                                 gw.group_workout_id DESC
+                        """,
+                        (ga_user_id, ga_id),
+                    )
+                    sessions = cur.fetchall() or []
+                    for s in sessions:
+                        s["scheduled_time_display"] = format_time_for_html_input(
+                            s.get("group_workout_scheduled_time")
+                        )
+                    ctx["ga_joined_schedule_sessions"] = sessions
+                    if sessions:
+                        selected_workout_id = request.args.get("workout_id", type=int)
+                        valid_workout_ids = {s["group_workout_id"] for s in sessions}
+                        if selected_workout_id not in valid_workout_ids:
+                            selected_workout_id = sessions[0]["group_workout_id"]
+                        ctx["selected_workout_id"] = selected_workout_id
+                        selected_workout = next(
+                            (
+                                s
+                                for s in sessions
+                                if s["group_workout_id"] == selected_workout_id
+                            ),
+                            None,
+                        )
+                        if selected_workout:
+                            ctx["selected_workout"] = selected_workout
+                            ctx["selected_workout_time_display"] = (
+                                selected_workout.get("scheduled_time_display") or ""
+                            )
+                            ctx["selected_workout_attendance"] = (
+                                fetch_workout_attendance_rows(
+                                    cur,
+                                    selected_workout_id,
+                                    selected_workout["group_id"],
+                                )
+                            )
+        elif path == "GroupAdmin/joined-challenges-GA.html":
+            ga_id = session.get("id") if session.get("role") == "group_admin" else None
+            ga_email = (session.get("email") or "").strip()
+            ctx["ga_joined_challenges"] = []
+            ctx["selected_challenge_id"] = None
+            ctx["selected_challenge_name"] = None
+            ctx["selected_challenge_participants"] = []
+            if ga_id and ga_email:
+                cur.execute(
+                    "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                    (ga_email,),
+                )
+                ga_user = cur.fetchone() or {}
+                ga_user_id = ga_user.get("user_id")
+                if ga_user_id:
+                    cur.execute(
+                        """
+                        SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
+                          c.challenge_end_date, c.challenge_status, c.challenge_goal,
+                          c.group_id, g.group_name
+                        FROM challenge c
+                        JOIN user_group ug ON ug.group_id = c.group_id
+                        JOIN motiv_group g ON g.group_id = c.group_id
+                        WHERE ug.user_id = %s AND c.group_admin_id <> %s
+                        ORDER BY (c.challenge_start_date IS NULL),
+                                 c.challenge_start_date DESC,
+                                 c.challenge_id DESC
+                        """,
+                        (ga_user_id, ga_id),
+                    )
+                    joined_challenges = cur.fetchall() or []
+                    for ch in joined_challenges:
+                        ch["challenge_goal_display"] = format_workout_goal_display(
+                            ch.get("challenge_goal")
+                        )
+                    ctx["ga_joined_challenges"] = joined_challenges
+                    if joined_challenges:
+                        selected_challenge_id = request.args.get("challenge_id", type=int)
+                        valid_challenge_ids = {
+                            c["challenge_id"] for c in joined_challenges
+                        }
+                        if selected_challenge_id not in valid_challenge_ids:
+                            selected_challenge_id = joined_challenges[0]["challenge_id"]
+                        ctx["selected_challenge_id"] = selected_challenge_id
+                        selected_challenge = next(
+                            (
+                                c
+                                for c in joined_challenges
+                                if c["challenge_id"] == selected_challenge_id
+                            ),
+                            None,
+                        )
+                        if selected_challenge:
+                            ctx["selected_challenge_name"] = selected_challenge[
+                                "challenge_title"
+                            ]
+                            cur.execute(
+                                """
+                                SELECT u.user_first_name, u.user_last_name, u.user_email
+                                FROM user_group ug
+                                JOIN app_user u ON u.user_id = ug.user_id
+                                WHERE ug.group_id = %s
+                                ORDER BY u.user_first_name, u.user_last_name, u.user_id
+                                """,
+                                (selected_challenge["group_id"],),
+                            )
+                            participants = []
+                            for idx, u in enumerate(cur.fetchall(), start=1):
+                                participants.append(
+                                    {
+                                        "member_name": (
+                                            f"{u['user_first_name']} {u['user_last_name']}"
+                                        ),
+                                        "rank": idx,
+                                        "goal_progress": "—",
+                                    }
+                                )
+                            ctx["selected_challenge_participants"] = participants
         elif path == "GroupAdmin/GADash.html":
             ga_id = session.get("id") if session.get("role") == "group_admin" else None
             ctx["ga_workouts_this_week"] = 0
             ctx["ga_current_streak_days"] = 0
             ctx["ga_total_minutes_this_week"] = 0
             ctx["ga_workout_leaderboard"] = []
+            ctx["dash_challenges"] = []
+            ctx["dash_selected_challenge"] = None
             if ga_id:
                 week_start_sql = "DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)"
                 next_week_start_sql = (
@@ -1199,6 +1481,134 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     ctx["ga_workout_leaderboard"] = leaderboard
                 except Exception:
                     pass
+                try:
+                    ga_email = (session.get("email") or "").strip()
+                    ga_uid: int | None = None
+                    if ga_email:
+                        cur.execute(
+                            "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                            (ga_email,),
+                        )
+                        ur = cur.fetchone()
+                        if ur:
+                            ga_uid = ur.get("user_id")
+                    uid_param = ga_uid if ga_uid is not None else -1
+                    cur.execute(
+                        """
+                        SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
+                          c.challenge_end_date, c.challenge_status, c.challenge_goal,
+                          c.group_id, c.group_admin_id, g.group_name,
+                          (SELECT COUNT(*) FROM workout w
+                           WHERE w.user_id = %s
+                             AND (c.challenge_start_date IS NULL
+                                  OR w.workout_date >= c.challenge_start_date)
+                             AND (c.challenge_end_date IS NULL
+                                  OR w.workout_date <= c.challenge_end_date)
+                          ) AS my_workout_count
+                        FROM challenge c
+                        JOIN motiv_group g ON g.group_id = c.group_id
+                        WHERE c.group_admin_id = %s
+                        ORDER BY (c.challenge_start_date IS NULL),
+                                 c.challenge_start_date DESC,
+                                 c.challenge_id DESC
+                        """,
+                        (uid_param, ga_id),
+                    )
+                    created = cur.fetchall() or []
+                    joined_rows: list[dict[str, Any]] = []
+                    if ga_uid:
+                        cur.execute(
+                            """
+                            SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
+                              c.challenge_end_date, c.challenge_status, c.challenge_goal,
+                              c.group_id, c.group_admin_id, g.group_name,
+                              (SELECT COUNT(*) FROM workout w
+                               WHERE w.user_id = %s
+                                 AND (c.challenge_start_date IS NULL
+                                      OR w.workout_date >= c.challenge_start_date)
+                                 AND (c.challenge_end_date IS NULL
+                                      OR w.workout_date <= c.challenge_end_date)
+                              ) AS my_workout_count
+                            FROM challenge c
+                            JOIN user_group ug ON ug.group_id = c.group_id
+                            JOIN motiv_group g ON g.group_id = c.group_id
+                            WHERE ug.user_id = %s AND c.group_admin_id <> %s
+                            ORDER BY (c.challenge_start_date IS NULL),
+                                     c.challenge_start_date DESC,
+                                     c.challenge_id DESC
+                            """,
+                            (uid_param, ga_uid, ga_id),
+                        )
+                        joined_rows = cur.fetchall() or []
+                    by_id: dict[int, dict[str, Any]] = {}
+                    for row in created:
+                        by_id[row["challenge_id"]] = dict(row)
+                    for row in joined_rows:
+                        cid = row["challenge_id"]
+                        if cid not in by_id:
+                            by_id[cid] = dict(row)
+                    merged = list(by_id.values())
+
+                    def _ga_dash_challenge_sort_key(r: dict[str, Any]) -> tuple[Any, ...]:
+                        sd = r.get("challenge_start_date")
+                        if isinstance(sd, datetime):
+                            sd = sd.date()
+                        if sd is None:
+                            return (1, 0, -(r.get("challenge_id") or 0))
+                        if not isinstance(sd, date):
+                            return (1, 0, -(r.get("challenge_id") or 0))
+                        return (0, -sd.toordinal(), -(r.get("challenge_id") or 0))
+
+                    merged.sort(key=_ga_dash_challenge_sort_key)
+                    for ch in merged:
+                        ch["challenge_goal_display"] = format_workout_goal_display(
+                            ch.get("challenge_goal")
+                        )
+                        goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                        cnt = int(ch.get("my_workout_count") or 0)
+                        if goal_n:
+                            ch["my_progress_display"] = f"{cnt}/{goal_n}"
+                        else:
+                            ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                        ch["dash_is_organizer"] = int(
+                            ch.get("group_admin_id") or 0
+                        ) == int(ga_id)
+                    ctx["dash_challenges"] = merged
+                    if merged:
+                        selected_id = request.args.get("challenge_id", type=int)
+                        valid_ids = {c["challenge_id"] for c in merged}
+                        if selected_id not in valid_ids:
+                            selected_id = merged[0]["challenge_id"]
+                        sel = next(
+                            (c for c in merged if c["challenge_id"] == selected_id), None
+                        )
+                        if sel:
+                            dr = format_challenge_date_range(
+                                sel.get("challenge_start_date"),
+                                sel.get("challenge_end_date"),
+                            )
+                            bits: list[str] = [dr]
+                            gn = (sel.get("group_name") or "").strip()
+                            if gn:
+                                bits.append(gn)
+                            bits.append(
+                                "Organizing"
+                                if sel.get("dash_is_organizer")
+                                else "Participating"
+                            )
+                            prog = sel.get("my_progress_display")
+                            if prog and prog != "—":
+                                bits.append(f"Progress: {prog}")
+                            st = (sel.get("challenge_status") or "").strip()
+                            if st:
+                                bits.append(st)
+                            ctx["dash_selected_challenge"] = {
+                                "challenge_id": sel["challenge_id"],
+                                "challenge_title": sel.get("challenge_title") or "Challenge",
+                                "detail_line": " • ".join(bits),
+                            }
+                except Exception:
+                    pass
         elif path == "GroupAdmin/created-groups-GA.html":
             ga_id = session.get("id") if session.get("role") == "group_admin" else None
             ctx["selected_group_id"] = None
@@ -1272,6 +1682,88 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_group_members"] = selected_members
             else:
                 ctx["ga_created_groups"] = []
+        elif path == "GroupAdmin/groups-joined-GA.html":
+            ga_email = (session.get("email") or "").strip()
+            ctx["ga_joined_groups"] = []
+            ctx["selected_group_id"] = None
+            ctx["selected_group_name"] = None
+            ctx["selected_group_members"] = []
+            if ga_email:
+                cur.execute(
+                    "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                    (ga_email,),
+                )
+                ga_user = cur.fetchone() or {}
+                ga_user_id = ga_user.get("user_id")
+                if ga_user_id:
+                    cur.execute(
+                        """
+                        SELECT g.group_id, g.group_name,
+                          (SELECT COUNT(*) FROM user_group ug2 WHERE ug2.group_id = g.group_id) AS member_count
+                        FROM user_group ug
+                        JOIN motiv_group g ON g.group_id = ug.group_id
+                        WHERE ug.user_id = %s
+                        ORDER BY g.group_name, g.group_id
+                        """,
+                        (ga_user_id,),
+                    )
+                    joined_groups = cur.fetchall()
+                    ctx["ga_joined_groups"] = joined_groups
+                    if joined_groups:
+                        selected_group_id = request.args.get("group_id", type=int)
+                        valid_group_ids = {g["group_id"] for g in joined_groups}
+                        if selected_group_id not in valid_group_ids:
+                            selected_group_id = joined_groups[0]["group_id"]
+                        ctx["selected_group_id"] = selected_group_id
+                        cur.execute(
+                            """
+                            SELECT g.group_name, ga.group_admin_id,
+                              ga.group_admin_first_name, ga.group_admin_last_name, ga.group_admin_email
+                            FROM motiv_group g
+                            JOIN group_admin ga ON ga.group_admin_id = g.group_admin_id
+                            JOIN user_group ug ON ug.group_id = g.group_id
+                            WHERE g.group_id = %s AND ug.user_id = %s
+                            LIMIT 1
+                            """,
+                            (selected_group_id, ga_user_id),
+                        )
+                        selected_group = cur.fetchone()
+                        if selected_group:
+                            ctx["selected_group_name"] = selected_group["group_name"]
+                            selected_members = [
+                                {
+                                    "member_kind": "group_admin",
+                                    "member_name": (
+                                        f"{selected_group['group_admin_first_name']} "
+                                        f"{selected_group['group_admin_last_name']}"
+                                    ),
+                                    "member_role": "Group Admin",
+                                    "member_email": selected_group["group_admin_email"],
+                                }
+                            ]
+                            cur.execute(
+                                """
+                                SELECT u.user_id, u.user_first_name, u.user_last_name, u.user_email
+                                FROM user_group ug
+                                JOIN app_user u ON u.user_id = ug.user_id
+                                WHERE ug.group_id = %s
+                                ORDER BY u.user_first_name, u.user_last_name, u.user_id
+                                """,
+                                (selected_group_id,),
+                            )
+                            for u in cur.fetchall():
+                                selected_members.append(
+                                    {
+                                        "member_kind": "app_user",
+                                        "user_id": u["user_id"],
+                                        "member_name": (
+                                            f"{u['user_first_name']} {u['user_last_name']}"
+                                        ),
+                                        "member_role": "Member",
+                                        "member_email": u["user_email"],
+                                    }
+                                )
+                            ctx["selected_group_members"] = selected_members
         elif path == "User/GJU.html":
             uid = session.get("id") if session.get("role") == "user" else None
             ctx["user_joined_groups"] = []
@@ -1351,12 +1843,151 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 }
                             )
                         ctx["selected_group_members"] = selected_members
+        elif path == "User/CHU.html":
+            uid = session.get("id") if session.get("role") == "user" else None
+            ctx["chu_joined_challenges"] = []
+            ctx["selected_challenge_id"] = None
+            ctx["selected_challenge_name"] = None
+            ctx["selected_challenge_participants"] = []
+            if uid:
+                try:
+                    ensure_user_challenge_leave_table(cur)
+                    ensure_challenge_participant_exclusion_table(cur)
+                    mysql.connection.commit()
+                except (OperationalError, ProgrammingError):
+                    mysql.connection.rollback()
+                cur.execute(
+                    """
+                    SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
+                           c.challenge_end_date, c.challenge_status, c.challenge_goal,
+                           c.group_id, g.group_name,
+                           (SELECT COUNT(*) FROM workout w
+                            WHERE w.user_id = %s
+                              AND (c.challenge_start_date IS NULL
+                                   OR w.workout_date >= c.challenge_start_date)
+                              AND (c.challenge_end_date IS NULL
+                                   OR w.workout_date <= c.challenge_end_date)
+                           ) AS my_workout_count
+                    FROM challenge c
+                    JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
+                    JOIN motiv_group g ON g.group_id = c.group_id
+                    WHERE NOT EXISTS (
+                      SELECT 1 FROM user_challenge_leave ucl
+                      WHERE ucl.user_id = %s AND ucl.challenge_id = c.challenge_id
+                    )
+                    ORDER BY (c.challenge_start_date IS NULL),
+                             c.challenge_start_date DESC,
+                             c.challenge_id DESC
+                    """,
+                    (uid, uid, uid),
+                )
+                joined = cur.fetchall() or []
+                for ch in joined:
+                    ch["challenge_goal_display"] = format_workout_goal_display(
+                        ch.get("challenge_goal")
+                    )
+                    goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                    cnt = int(ch.get("my_workout_count") or 0)
+                    if goal_n:
+                        ch["my_progress_display"] = f"{cnt}/{goal_n}"
+                    else:
+                        ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                ctx["chu_joined_challenges"] = joined
+                if joined:
+                    selected_id = request.args.get("challenge_id", type=int)
+                    valid_ids = {c["challenge_id"] for c in joined}
+                    if selected_id not in valid_ids:
+                        selected_id = joined[0]["challenge_id"]
+                    ctx["selected_challenge_id"] = selected_id
+                    sel = next(
+                        (c for c in joined if c["challenge_id"] == selected_id), None
+                    )
+                    if sel:
+                        ctx["selected_challenge_name"] = sel["challenge_title"]
+                        start_d = sel.get("challenge_start_date")
+                        end_d = sel.get("challenge_end_date")
+                        goal_sel = parse_workout_goal_count(sel.get("challenge_goal"))
+                        cur.execute(
+                            """
+                            SELECT u.user_id, u.user_first_name, u.user_last_name
+                            FROM user_group ug
+                            JOIN app_user u ON u.user_id = ug.user_id
+                            LEFT JOIN challenge_participant_exclusion cpe
+                              ON cpe.challenge_id = %s AND cpe.user_id = u.user_id
+                            WHERE ug.group_id = %s
+                              AND cpe.exclusion_id IS NULL
+                              AND NOT EXISTS (
+                                SELECT 1 FROM user_challenge_leave ucl
+                                WHERE ucl.challenge_id = %s
+                                  AND ucl.user_id = u.user_id
+                              )
+                            ORDER BY u.user_first_name, u.user_last_name, u.user_id
+                            """,
+                            (selected_id, sel["group_id"], selected_id),
+                        )
+                        prows = cur.fetchall() or []
+                        uids_m = [r["user_id"] for r in prows]
+                        counts: dict[int, int] = {}
+                        if uids_m:
+                            placeholders = ",".join(["%s"] * len(uids_m))
+                            date_parts: list[str] = []
+                            qparams: list[Any] = list(uids_m)
+                            if start_d:
+                                date_parts.append("w.workout_date >= %s")
+                                qparams.append(start_d)
+                            if end_d:
+                                date_parts.append("w.workout_date <= %s")
+                                qparams.append(end_d)
+                            date_sql = " AND ".join(date_parts) if date_parts else "1"
+                            cur.execute(
+                                f"""
+                                SELECT w.user_id, COUNT(*) AS cnt
+                                FROM workout w
+                                WHERE w.user_id IN ({placeholders})
+                                  AND ({date_sql})
+                                GROUP BY w.user_id
+                                """,
+                                tuple(qparams),
+                            )
+                            for rr in cur.fetchall() or []:
+                                counts[rr["user_id"]] = int(rr.get("cnt") or 0)
+                        ranked: list[dict[str, Any]] = []
+                        for r in prows:
+                            cct = counts.get(r["user_id"], 0)
+                            if goal_sel:
+                                gp = f"{cct}/{goal_sel}"
+                            else:
+                                gp = "—" if cct == 0 else str(cct)
+                            ranked.append(
+                                {
+                                    "member_name": (
+                                        f"{r['user_first_name']} {r['user_last_name']}"
+                                    ),
+                                    "workout_count": cct,
+                                    "goal_progress": gp,
+                                }
+                            )
+                        ranked.sort(
+                            key=lambda x: (-x["workout_count"], x["member_name"].lower())
+                        )
+                        participants: list[dict[str, Any]] = []
+                        for idx, p in enumerate(ranked, start=1):
+                            participants.append(
+                                {
+                                    "rank": idx,
+                                    "member_name": p["member_name"],
+                                    "goal_progress": p["goal_progress"],
+                                }
+                            )
+                        ctx["selected_challenge_participants"] = participants
         elif path == "User/UDash.html":
             uid = session.get("id") if session.get("role") == "user" else None
             ctx["user_workouts_this_week"] = 0
             ctx["user_current_streak_days"] = 0
             ctx["user_total_minutes_this_week"] = 0
             ctx["user_workout_leaderboard"] = []
+            ctx["dash_challenges"] = []
+            ctx["dash_selected_challenge"] = None
             if uid:
                 week_start_sql = "DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)"
                 next_week_start_sql = (
@@ -1454,6 +2085,83 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     ctx["user_workout_leaderboard"] = leaderboard
                 except Exception:
                     pass
+                try:
+                    ensure_user_challenge_leave_table(cur)
+                    ensure_challenge_participant_exclusion_table(cur)
+                    mysql.connection.commit()
+                except (OperationalError, ProgrammingError):
+                    mysql.connection.rollback()
+                try:
+                    cur.execute(
+                        """
+                        SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
+                               c.challenge_end_date, c.challenge_status, c.challenge_goal,
+                               c.group_id, g.group_name,
+                               (SELECT COUNT(*) FROM workout w
+                                WHERE w.user_id = %s
+                                  AND (c.challenge_start_date IS NULL
+                                       OR w.workout_date >= c.challenge_start_date)
+                                  AND (c.challenge_end_date IS NULL
+                                       OR w.workout_date <= c.challenge_end_date)
+                               ) AS my_workout_count
+                        FROM challenge c
+                        JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
+                        JOIN motiv_group g ON g.group_id = c.group_id
+                        WHERE NOT EXISTS (
+                          SELECT 1 FROM user_challenge_leave ucl
+                          WHERE ucl.user_id = %s AND ucl.challenge_id = c.challenge_id
+                        )
+                        ORDER BY (c.challenge_start_date IS NULL),
+                                 c.challenge_start_date DESC,
+                                 c.challenge_id DESC
+                        """,
+                        (uid, uid, uid),
+                    )
+                    joined = cur.fetchall() or []
+                    for ch in joined:
+                        ch["challenge_goal_display"] = format_workout_goal_display(
+                            ch.get("challenge_goal")
+                        )
+                        goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                        cnt = int(ch.get("my_workout_count") or 0)
+                        if goal_n:
+                            ch["my_progress_display"] = f"{cnt}/{goal_n}"
+                        else:
+                            ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                    ctx["dash_challenges"] = joined
+                    if joined:
+                        selected_id = request.args.get("challenge_id", type=int)
+                        valid_ids = {c["challenge_id"] for c in joined}
+                        if selected_id not in valid_ids:
+                            selected_id = joined[0]["challenge_id"]
+                        sel = next(
+                            (c for c in joined if c["challenge_id"] == selected_id), None
+                        )
+                        if sel:
+                            dr = format_challenge_date_range(
+                                sel.get("challenge_start_date"),
+                                sel.get("challenge_end_date"),
+                            )
+                            bits: list[str] = [dr]
+                            gn = (sel.get("group_name") or "").strip()
+                            if gn:
+                                bits.append(gn)
+                            prog = sel.get("my_progress_display")
+                            if prog and prog != "—":
+                                bits.append(f"Progress: {prog}")
+                            st = (sel.get("challenge_status") or "").strip()
+                            if st:
+                                bits.append(st)
+                            ctx["dash_selected_challenge"] = {
+                                "challenge_id": sel["challenge_id"],
+                                "challenge_title": sel.get("challenge_title") or "Challenge",
+                                "detail_line": " • ".join(bits),
+                            }
+                except (OperationalError, ProgrammingError) as e:
+                    if e.args[0] != 1146:
+                        raise
+                except Exception:
+                    pass
         elif path == "User/NU.html":
             ctx["user_invites"] = []
             ctx["nu_invite_err"] = request.args.get("invite_err")
@@ -1515,22 +2223,124 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 "SELECT admin_id, admin_first_name, admin_last_name, admin_email FROM admin"
             )
             ctx["admins"] = cur.fetchall()
-        elif path in (
-            "GroupAdmin/workout-logging-GA.html",
-            "GroupAdmin/edit-workout-logging-GA.html",
-        ):
-            try:
+        elif path == "GroupAdmin/workout-logging-GA.html":
+            ga_email = (session.get("email") or "").strip()
+            wid = request.args.get("workout_id", type=int)
+            ctx["ga_workout_editor_err"] = request.args.get("err")
+            ctx["ga_editor_workout_id"] = None
+            ctx["ga_editor_workout_date"] = ""
+            ctx["ga_editor_duration_minutes"] = ""
+            ctx["ga_editor_exercises"] = []
+            ctx["ga_editor_mode"] = "create"
+            if ga_email:
                 cur.execute(
-                    """SELECT user_id, user_first_name, user_last_name, user_email
-                       FROM app_user WHERE is_active = 1"""
+                    "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+                    (ga_email,),
                 )
-            except OperationalError as e:
-                if e.args[0] != 1054:
-                    raise
-                cur.execute(
-                    "SELECT user_id, user_first_name, user_last_name, user_email FROM app_user"
-                )
-            ctx["app_users"] = cur.fetchall()
+                ga_user = cur.fetchone() or {}
+                ga_user_id = ga_user.get("user_id")
+                if ga_user_id and wid:
+                    cur.execute(
+                        """
+                        SELECT workout_id, workout_date, workout_duration_minutes
+                        FROM workout
+                        WHERE workout_id = %s AND user_id = %s
+                        LIMIT 1
+                        """,
+                        (wid, ga_user_id),
+                    )
+                    edit_workout = cur.fetchone()
+                    if edit_workout:
+                        ctx["ga_editor_workout_id"] = wid
+                        ctx["ga_editor_mode"] = "edit"
+                        ctx["ga_editor_workout_date"] = str(
+                            edit_workout.get("workout_date") or ""
+                        )
+                        ctx["ga_editor_duration_minutes"] = str(
+                            edit_workout.get("workout_duration_minutes") or ""
+                        )
+                        cur.execute(
+                            """
+                            SELECT wl.workout_log_id, wl.workout_num_sets, wl.workout_num_reps,
+                                   wl.workout_num_weight, e.exercise_name,
+                                   e.exercise_muscle_group
+                            FROM workout_log wl
+                            JOIN exercise e ON e.exercise_id = wl.exercise_id
+                            WHERE wl.workout_id = %s
+                            ORDER BY wl.workout_log_id
+                            """,
+                            (wid,),
+                        )
+                        rows = cur.fetchall() or []
+                        exercises = []
+                        for r in rows:
+                            exercises.append(
+                                {
+                                    "exercise_name": r.get("exercise_name") or "",
+                                    "num_sets": r.get("workout_num_sets"),
+                                    "num_reps": r.get("workout_num_reps"),
+                                    "weight": r.get("workout_num_weight"),
+                                    "muscle_group": r.get("exercise_muscle_group") or "",
+                                }
+                            )
+                        ctx["ga_editor_exercises"] = exercises
+        elif path == "User/WLAU.html":
+            uid = session.get("id") if session.get("role") == "user" else None
+            wid = request.args.get("workout_id", type=int)
+            ctx["user_workout_editor_err"] = request.args.get("err")
+            ctx["user_editor_workout_id"] = None
+            ctx["user_editor_workout_date"] = ""
+            ctx["user_editor_duration_minutes"] = ""
+            ctx["user_editor_exercises"] = []
+            ctx["user_editor_mode"] = "create"
+            if uid:
+                if wid:
+                    cur.execute(
+                        """
+                        SELECT workout_id, workout_date, workout_duration_minutes
+                        FROM workout
+                        WHERE workout_id = %s AND user_id = %s
+                        LIMIT 1
+                        """,
+                        (wid, uid),
+                    )
+                    edit_workout = cur.fetchone()
+                    if edit_workout:
+                        ctx["user_editor_workout_id"] = wid
+                        ctx["user_editor_mode"] = "edit"
+                        ctx["user_editor_workout_date"] = str(
+                            edit_workout.get("workout_date") or ""
+                        )
+                        ctx["user_editor_duration_minutes"] = str(
+                            edit_workout.get("workout_duration_minutes") or ""
+                        )
+                        cur.execute(
+                            """
+                            SELECT wl.workout_log_id, wl.workout_num_sets, wl.workout_num_reps,
+                                   wl.workout_num_weight, e.exercise_name,
+                                   e.exercise_muscle_group
+                            FROM workout_log wl
+                            JOIN exercise e ON e.exercise_id = wl.exercise_id
+                            WHERE wl.workout_id = %s
+                            ORDER BY wl.workout_log_id
+                            """,
+                            (wid,),
+                        )
+                        rows = cur.fetchall() or []
+                        exercises = []
+                        for r in rows:
+                            exercises.append(
+                                {
+                                    "exercise_name": r.get("exercise_name") or "",
+                                    "num_sets": r.get("workout_num_sets"),
+                                    "num_reps": r.get("workout_num_reps"),
+                                    "weight": r.get("workout_num_weight"),
+                                    "muscle_group": r.get("exercise_muscle_group") or "",
+                                }
+                            )
+                        ctx["user_editor_exercises"] = exercises
+        elif path == "GroupAdmin/edit-workout-logging-GA.html":
+            ctx["app_users"] = []
         elif path == "User/WLEU.html":
             wid = request.args.get("id", type=int)
             ctx["edit_w"] = None
@@ -1624,26 +2434,26 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 )
                 ctx["user_me"] = cur.fetchone()
         elif path == "GroupAdmin/workout-history-GA.html":
-            ga_id = session.get("id") if session.get("role") == "group_admin" else None
-            if ga_id:
+            ga_email = (session.get("email") or "").strip()
+            ctx["ga_workout_history"] = []
+            if ga_email:
                 cur.execute(
-                    """
-                    SELECT w.workout_id, w.workout_date, w.workout_duration_minutes,
-                           u.user_first_name, u.user_last_name
-                    FROM workout w
-                    JOIN app_user u ON u.user_id = w.user_id
-                    WHERE EXISTS (
-                      SELECT 1 FROM user_group ug
-                      JOIN motiv_group g ON g.group_id = ug.group_id
-                      WHERE ug.user_id = w.user_id AND g.group_admin_id = %s
-                    )
-                    ORDER BY w.workout_date DESC, w.workout_id DESC
-                    """,
-                    (ga_id,),
+                    "SELECT user_id, user_first_name, user_last_name FROM app_user WHERE user_email = %s LIMIT 1",
+                    (ga_email,),
                 )
-                ctx["ga_workout_history"] = cur.fetchall()
-            else:
-                ctx["ga_workout_history"] = []
+                ga_user = cur.fetchone() or {}
+                ga_user_id = ga_user.get("user_id")
+                if ga_user_id:
+                    cur.execute(
+                        """
+                        SELECT w.workout_id, w.workout_date, w.workout_duration_minutes
+                        FROM workout w
+                        WHERE w.user_id = %s
+                        ORDER BY w.workout_date DESC, w.workout_id DESC
+                        """,
+                        (ga_user_id,),
+                    )
+                    ctx["ga_workout_history"] = cur.fetchall()
         elif path == "GroupAdmin/profile-GA.html":
             ctx["ga_me"] = None
             if session.get("role") == "group_admin":
@@ -1694,6 +2504,10 @@ def admin_page(filename):
 def user_workout_edit_page():
     if not allowed_page("WLEU.html"):
         abort(404)
+    if session.get("role") == "user":
+        wid = request.args.get("id", type=int)
+        if wid:
+            return redirect(f"/User/WLAU.html?workout_id={wid}")
     ctx = build_template_context("User", "WLEU.html")
     return render_template("User/WLEU.html", **ctx)
 
@@ -2186,6 +3000,51 @@ def user_schedule_rsvp(wid):
     return redirect(f"/User/SU.html?workout_id={wid}")
 
 
+@app.post("/actions/user/challenge/<int:cid>/leave")
+@require_roles("user")
+def user_challenge_leave(cid):
+    uid = session.get("id")
+    cur = dict_cursor()
+    try:
+        ensure_user_challenge_leave_table(cur)
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError):
+        mysql.connection.rollback()
+        cur.close()
+        return redirect("/User/CHU.html?leave_err=schema")
+    cur.execute(
+        """
+        SELECT c.group_id
+        FROM challenge c
+        JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
+        WHERE c.challenge_id = %s
+        LIMIT 1
+        """,
+        (uid, cid),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/User/CHU.html?leave_err=forbidden")
+    cur.execute(
+        """
+        SELECT 1 FROM user_challenge_leave
+        WHERE user_id = %s AND challenge_id = %s
+        LIMIT 1
+        """,
+        (uid, cid),
+    )
+    if cur.fetchone():
+        cur.close()
+        return redirect("/User/CHU.html")
+    cur.execute(
+        "INSERT IGNORE INTO user_challenge_leave (user_id, challenge_id) VALUES (%s, %s)",
+        (uid, cid),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect("/User/CHU.html")
+
+
 @app.post("/actions/group-admin/challenge")
 def ga_create_challenge():
     if session.get("role") != "group_admin":
@@ -2227,6 +3086,26 @@ def ga_edit_challenge(cid):
         (title, goal, start, end, group_id, cid, session["id"]),
     )
     mysql.connection.commit()
+    cur.close()
+    return redirect("/GroupAdmin/created-challenges-GA.html")
+
+
+@app.post("/actions/group-admin/challenge/<int:cid>/delete")
+def ga_delete_challenge(cid):
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/created-challenges-GA.html")
+    ga_id = session["id"]
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute(
+            "DELETE FROM challenge WHERE challenge_id = %s AND group_admin_id = %s",
+            (cid, ga_id),
+        )
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
     cur.close()
     return redirect("/GroupAdmin/created-challenges-GA.html")
 
@@ -2367,36 +3246,87 @@ def ga_profile():
 def ga_workout_log():
     if session.get("role") != "group_admin":
         return redirect("/GroupAdmin/workout-logging-GA.html")
-    uid = parse_int(request.form.get("target_user_id"))
-    if not uid:
-        return redirect("/GroupAdmin/workout-logging-GA.html?err=1")
+    ga_email = (session.get("email") or "").strip()
+    if not ga_email:
+        return redirect("/GroupAdmin/workout-history-GA.html?err=user")
+    workout_id = parse_int(request.form.get("workout_id"))
     wdate = parse_date(request.form.get("workout_date")) or date.today()
     duration = parse_int(request.form.get("duration_minutes"))
-    sets = parse_int(request.form.get("num_sets"))
-    reps = parse_int(request.form.get("num_reps"))
-    weight = request.form.get("weight")
-    try:
-        wfloat = float(weight) if weight not in (None, "") else None
-    except ValueError:
-        wfloat = None
-    ex_name = request.form.get("exercise_name", "").strip()
-    muscle = request.form.get("muscle_group", "").strip()
-    diff = request.form.get("difficulty", "").strip()
+    exercises = collect_workout_exercises_from_request()
+
+    if not exercises:
+        target = (
+            f"/GroupAdmin/workout-logging-GA.html?workout_id={workout_id}&err=exercise"
+            if workout_id
+            else "/GroupAdmin/workout-logging-GA.html?err=exercise"
+        )
+        return redirect(target)
+
     cur = mysql.connection.cursor()
-    cur.execute(
-        """INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
-           VALUES (%s, %s, %s, NULL)""",
-        (wdate, duration, uid),
-    )
-    wid = cur.lastrowid
-    eid = get_or_create_exercise(cur, ex_name, muscle, diff)
-    cur.execute(
-        """INSERT INTO workout_log
-           (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
-           VALUES (%s, %s, %s, %s, %s)""",
-        (sets, reps, wfloat, wid, eid),
-    )
-    mysql.connection.commit()
+    try:
+        cur.execute(
+            "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
+            (ga_email,),
+        )
+        ga_user = cur.fetchone()
+        ga_user_id = (
+            ga_user.get("user_id")
+            if isinstance(ga_user, dict)
+            else (ga_user[0] if ga_user else None)
+        )
+        if not ga_user_id:
+            cur.close()
+            return redirect("/GroupAdmin/workout-history-GA.html?err=user")
+
+        if workout_id:
+            cur.execute(
+                "SELECT 1 FROM workout WHERE workout_id = %s AND user_id = %s LIMIT 1",
+                (workout_id, ga_user_id),
+            )
+            if not cur.fetchone():
+                cur.close()
+                return redirect("/GroupAdmin/workout-history-GA.html?err=forbidden")
+            cur.execute(
+                """
+                UPDATE workout
+                SET workout_date = %s, workout_duration_minutes = %s
+                WHERE workout_id = %s AND user_id = %s
+                """,
+                (wdate, duration, workout_id, ga_user_id),
+            )
+            cur.execute("DELETE FROM workout_log WHERE workout_id = %s", (workout_id,))
+            wid = workout_id
+        else:
+            cur.execute(
+                """
+                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
+                VALUES (%s, %s, %s, NULL)
+                """,
+                (wdate, duration, ga_user_id),
+            )
+            wid = cur.lastrowid
+
+        for ex in exercises:
+            eid = get_or_create_exercise(
+                cur,
+                ex["exercise_name"],
+                ex["muscle_group"],
+                None,
+            )
+            cur.execute(
+                """
+                INSERT INTO workout_log
+                    (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (ex["num_sets"], ex["num_reps"], ex["weight"], wid, eid),
+            )
+
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
     cur.close()
     return redirect("/GroupAdmin/workout-history-GA.html")
 
@@ -2539,100 +3469,104 @@ def user_profile():
 
 
 @app.post("/actions/user/workout")
+@require_roles("user")
 def user_workout():
-    if session.get("role") != "user":
-        return redirect("/User/WLAU.html")
+    """Legacy single-row create; forwards to multi-exercise save pipeline."""
+    return _user_workout_log_save(workout_id_from_form=None)
+
+
+@app.post("/actions/user/workout-log")
+@require_roles("user")
+def user_workout_log():
+    """Create or update the logged-in user's workout with multiple exercises."""
+    return _user_workout_log_save(workout_id_from_form=parse_int(request.form.get("workout_id")))
+
+
+def _user_workout_log_save(workout_id_from_form: int | None):
     uid = session["id"]
     wdate = parse_date(request.form.get("workout_date")) or date.today()
     duration = parse_int(request.form.get("duration_minutes"))
-    sets = parse_int(request.form.get("num_sets"))
-    reps = parse_int(request.form.get("num_reps"))
-    weight = request.form.get("weight")
-    try:
-        wfloat = float(weight) if weight not in (None, "") else None
-    except ValueError:
-        wfloat = None
-    ex_name = request.form.get("exercise_name", "").strip()
-    muscle = request.form.get("muscle_group", "").strip()
-    diff = request.form.get("difficulty", "").strip()
+    exercises = collect_workout_exercises_from_request()
+    if not exercises:
+        target = (
+            f"/User/WLAU.html?workout_id={workout_id_from_form}&err=exercise"
+            if workout_id_from_form
+            else "/User/WLAU.html?err=exercise"
+        )
+        return redirect(target)
+
     cur = mysql.connection.cursor()
-    cur.execute(
-        """INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
-           VALUES (%s, %s, %s, NULL)""",
-        (wdate, duration, uid),
-    )
-    wid = cur.lastrowid
-    eid = get_or_create_exercise(cur, ex_name, muscle, diff)
-    cur.execute(
-        """INSERT INTO workout_log
-           (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
-           VALUES (%s, %s, %s, %s, %s)""",
-        (sets, reps, wfloat, wid, eid),
-    )
-    mysql.connection.commit()
+    try:
+        wid_use = workout_id_from_form
+        if wid_use:
+            cur.execute(
+                "SELECT 1 FROM workout WHERE workout_id = %s AND user_id = %s LIMIT 1",
+                (wid_use, uid),
+            )
+            if not cur.fetchone():
+                cur.close()
+                return redirect("/User/WLU.html")
+            cur.execute(
+                """
+                UPDATE workout
+                SET workout_date = %s, workout_duration_minutes = %s
+                WHERE workout_id = %s AND user_id = %s
+                """,
+                (wdate, duration, wid_use, uid),
+            )
+            cur.execute("DELETE FROM workout_log WHERE workout_id = %s", (wid_use,))
+        else:
+            cur.execute(
+                """
+                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
+                VALUES (%s, %s, %s, NULL)
+                """,
+                (wdate, duration, uid),
+            )
+            wid_use = cur.lastrowid
+
+        for ex in exercises:
+            eid = get_or_create_exercise(
+                cur,
+                ex["exercise_name"],
+                ex["muscle_group"],
+                None,
+            )
+            cur.execute(
+                """
+                INSERT INTO workout_log
+                    (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (ex["num_sets"], ex["num_reps"], ex["weight"], wid_use, eid),
+            )
+
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
     cur.close()
     return redirect("/User/WLU.html")
 
 
 @app.post("/actions/user/workout/<int:wid>/edit")
+@require_roles("user")
 def user_workout_edit(wid):
-    if session.get("role") != "user":
-        if session.get("role") == "group_admin":
-            return redirect(f"/User/WLEU.html?id={wid}")
-        return redirect("/User/WLU.html")
-    uid = session["id"]
-    wdate = parse_date(request.form.get("workout_date")) or date.today()
-    duration = parse_int(request.form.get("duration_minutes"))
-    sets = parse_int(request.form.get("num_sets"))
-    reps = parse_int(request.form.get("num_reps"))
-    weight = request.form.get("weight")
-    try:
-        wfloat = float(weight) if weight not in (None, "") else None
-    except ValueError:
-        wfloat = None
-    ex_name = request.form.get("exercise_name", "").strip()
-    muscle = request.form.get("muscle_group", "").strip()
-    diff = request.form.get("difficulty", "").strip()
-    cur = mysql.connection.cursor()
-    cur.execute(
-        """UPDATE workout SET workout_date = %s, workout_duration_minutes = %s
-           WHERE workout_id = %s AND user_id = %s""",
-        (wdate, duration, wid, uid),
-    )
-    eid = get_or_create_exercise(cur, ex_name, muscle, diff)
-    cur.execute("SELECT workout_log_id FROM workout_log WHERE workout_id = %s LIMIT 1", (wid,))
-    lr = cur.fetchone()
-    if lr:
-        log_id = lr[0]
-        cur.execute(
-            """UPDATE workout_log SET workout_num_sets = %s, workout_num_reps = %s,
-               workout_num_weight = %s, exercise_id = %s WHERE workout_log_id = %s""",
-            (sets, reps, wfloat, eid, log_id),
-        )
-    else:
-        cur.execute(
-            """INSERT INTO workout_log
-               (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id)
-               VALUES (%s, %s, %s, %s, %s)""",
-            (sets, reps, wfloat, wid, eid),
-        )
-    mysql.connection.commit()
-    cur.close()
-    return redirect("/User/WLU.html")
+    """Update workout `wid` for the logged-in user (multi-exercise body)."""
+    return _user_workout_log_save(workout_id_from_form=wid)
 
 
-def _ga_can_edit_workout(cur, wid: int, ga_id: int) -> bool:
+def _ga_can_edit_workout(cur, wid: int, ga_email: str) -> bool:
     cur.execute(
         """
-        SELECT 1 FROM workout w
-        WHERE w.workout_id = %s
-        AND EXISTS (
-          SELECT 1 FROM user_group ug
-          JOIN motiv_group g ON g.group_id = ug.group_id
-          WHERE ug.user_id = w.user_id AND g.group_admin_id = %s
-        )
+        SELECT 1
+        FROM workout w
+        JOIN app_user u ON u.user_id = w.user_id
+        WHERE w.workout_id = %s AND u.user_email = %s
+        LIMIT 1
         """,
-        (wid, ga_id),
+        (wid, ga_email),
     )
     return cur.fetchone() is not None
 
@@ -2640,6 +3574,9 @@ def _ga_can_edit_workout(cur, wid: int, ga_id: int) -> bool:
 @app.post("/actions/group-admin/workout/<int:wid>/edit")
 def ga_workout_edit(wid):
     if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/workout-history-GA.html")
+    ga_email = (session.get("email") or "").strip()
+    if not ga_email:
         return redirect("/GroupAdmin/workout-history-GA.html")
     wdate = parse_date(request.form.get("workout_date")) or date.today()
     duration = parse_int(request.form.get("duration_minutes"))
@@ -2654,7 +3591,7 @@ def ga_workout_edit(wid):
     muscle = request.form.get("muscle_group", "").strip()
     diff = request.form.get("difficulty", "").strip()
     cur = mysql.connection.cursor()
-    if not _ga_can_edit_workout(cur, wid, session["id"]):
+    if not _ga_can_edit_workout(cur, wid, ga_email):
         cur.close()
         return redirect("/GroupAdmin/workout-history-GA.html")
     cur.execute(
@@ -2681,7 +3618,29 @@ def ga_workout_edit(wid):
         )
     mysql.connection.commit()
     cur.close()
-    return redirect(f"/User/WLEU.html?id={wid}")
+    return redirect("/GroupAdmin/workout-history-GA.html")
+
+
+@app.post("/actions/group-admin/workout/<int:wid>/delete")
+def ga_workout_delete(wid):
+    """Delete a personal workout log for the logged-in group admin (same app_user row as edit)."""
+    if session.get("role") != "group_admin":
+        return redirect("/GroupAdmin/workout-history-GA.html")
+    ga_email = (session.get("email") or "").strip()
+    if not ga_email:
+        return redirect("/GroupAdmin/workout-history-GA.html")
+    cur = mysql.connection.cursor()
+    cur.execute(
+        """
+        DELETE w FROM workout w
+        INNER JOIN app_user u ON u.user_id = w.user_id
+        WHERE w.workout_id = %s AND u.user_email = %s
+        """,
+        (wid, ga_email),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return redirect("/GroupAdmin/workout-history-GA.html")
 
 
 @app.post("/actions/user/workout/<int:wid>/delete")
@@ -2809,6 +3768,22 @@ def admin_challenge_edit(cid):
     return redirect("/Admin/ScheduleA.html")
 
 
+@app.post("/actions/admin/challenge/<int:cid>/delete")
+def admin_challenge_delete(cid):
+    if session.get("role") != "admin":
+        return redirect("/Admin/ScheduleA.html")
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute("DELETE FROM challenge WHERE challenge_id = %s", (cid,))
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
+    cur.close()
+    return redirect("/Admin/ScheduleA.html")
+
+
 @app.post("/actions/admin/challenge/remove-participant")
 def admin_remove_challenge_participant():
     if session.get("role") != "admin":
@@ -2895,6 +3870,26 @@ def admin_schedule_edit(wid):
         (title, loc, sched_date, sched_date, sched_date, sched_time, group_id, wid),
     )
     mysql.connection.commit()
+    cur.close()
+    return redirect("/Admin/ChallengeA.html")
+
+
+@app.post("/actions/admin/schedule/<int:wid>/delete")
+def admin_schedule_delete(wid):
+    if session.get("role") != "admin":
+        return redirect("/Admin/ChallengeA.html")
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute(
+            "UPDATE workout SET group_workout_id = NULL WHERE group_workout_id = %s",
+            (wid,),
+        )
+        cur.execute("DELETE FROM group_workout WHERE group_workout_id = %s", (wid,))
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
     cur.close()
     return redirect("/Admin/ChallengeA.html")
 

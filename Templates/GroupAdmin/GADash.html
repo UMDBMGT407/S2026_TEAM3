@@ -123,13 +123,29 @@
             <img class="ga-challenge-icon" src="../../Static/images/challenge-icon-db.svg" alt="" />
             <div class="ga-challenge-text">
               <p class="ga-challenge-kicker">Challenges</p>
-              <h3>April Strength Challenge</h3>
-              <p>Apr 1 - Apr 30 • Complete This Weeks Challenge!</p>
+              {% if dash_challenges and dash_selected_challenge %}
+              <h3>{{ dash_selected_challenge.challenge_title }}</h3>
+              <p>{{ dash_selected_challenge.detail_line }}</p>
+              {% else %}
+              <h3>No challenges yet</h3>
+              <p>Create a challenge for your groups or join another group’s challenge to see it here.</p>
+              {% endif %}
             </div>
             <div class="ga-challenge-filter">
-              <select>
+              {% if dash_challenges %}
+              <form method="get" action="GADash.html" class="m-0">
+                <label class="visually-hidden" for="ga-dash-challenge-select">Select challenge</label>
+                <select id="ga-dash-challenge-select" name="challenge_id" aria-label="Select challenge" onchange="this.form.submit()">
+                  {% for ch in dash_challenges %}
+                  <option value="{{ ch.challenge_id }}"{% if dash_selected_challenge and ch.challenge_id == dash_selected_challenge.challenge_id %} selected{% endif %}>{{ ch.challenge_title }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              {% else %}
+              <select id="ga-dash-challenge-select-empty" aria-label="Challenges" disabled>
                 <option>Challenges</option>
               </select>
+              {% endif %}
             </div>
           </section>
         </main>

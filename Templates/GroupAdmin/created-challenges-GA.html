@@ -104,7 +104,16 @@
                     </td>
                     <td class="text-end ccga-actions">
                       <a href="edit-challenge-GA.html?id={{ ch.challenge_id }}"><img src="../../Static/images/CCGAedit-button{{ loop.index0 % 5 }}.svg" alt="Edit" /></a>
-                      <img src="../../Static/images/CCGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
+                      <form
+                        method="post"
+                        action="/actions/group-admin/challenge/{{ ch.challenge_id }}/delete"
+                        class="m-0 d-inline"
+                        onsubmit="return confirm('Delete this challenge?');"
+                      >
+                        <button type="submit" class="ccga-row-delete-btn" aria-label="Delete challenge">
+                          <img src="../../Static/images/CCGAtrash-can-button{{ loop.index0 % 5 }}.svg" alt="" aria-hidden="true" />
+                        </button>
+                      </form>
                     </td>
                   </tr>
                   {% else %}

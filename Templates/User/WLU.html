@@ -43,7 +43,7 @@
           <section class="wlu-history-card">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
               <h2 class="wlu-history-title">Workout History</h2>
-              <a href="WLDU.html" class="wlu-create-btn">Create New Workout</a>
+              <a href="WLAU.html" class="wlu-create-btn">Create New Workout</a>
             </div>
 
             <div class="table-responsive">
@@ -64,7 +64,7 @@
                     <td>{% if w.workout_duration_minutes %}{{ w.workout_duration_minutes }} Minutes{% else %}—{% endif %}</td>
                     <td>
                       <div class="wlu-actions">
-                        <a href="WLEU.html?id={{ w.workout_id }}" class="wlu-view-btn">View Details</a>
+                        <a href="WLAU.html?workout_id={{ w.workout_id }}" class="wlu-view-btn">Edit</a>
                         <form method="post" action="/actions/user/workout/{{ w.workout_id }}/delete" style="display:inline;" onsubmit="return confirm('Delete this workout?');">
                           <button class="wlu-trash-btn" type="submit" aria-label="Delete"><img src="../../Static/Images%202/WLUtrash-can-button{{ (loop.index0 % 8) }}.svg" alt="" /></button>
                         </form>
@@ -72,7 +72,7 @@
                     </td>
                   </tr>
                   {% else %}
-                  <tr><td colspan="4">No workouts logged yet. <a href="WLAU.html">Create one</a>.</td></tr>
+                  <tr><td colspan="4">No workouts logged yet. <a href="WLAU.html">Create your first workout</a>.</td></tr>
                   {% endfor %}
                 </tbody>
               </table>

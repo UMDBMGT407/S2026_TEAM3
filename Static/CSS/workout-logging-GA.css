@@ -203,6 +203,26 @@ body {
   color: #ffffff;
 }
 
+.wlga-btn--small {
+  min-width: 140px;
+  min-height: 42px;
+  font-size: 15px;
+}
+
+.wlga-exercise-row {
+  border: 1px solid #e6eff5;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.wlga-remove-exercise {
+  color: #718ebf;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 @media (max-width: 991px) {
   .wlga-sidebar-inner {
     position: static;

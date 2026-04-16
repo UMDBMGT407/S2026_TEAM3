@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/WLAUstyle.css">
-  <title>Add Workout Exercise</title>
+  <title>Workout Log</title>
 </head>
 <body>
   <div class="wlau-layout container-fluid p-0">
@@ -46,48 +46,106 @@
               <span class="wlau-tab">Performance Metrics</span>
             </div>
 
-            <form class="wlau-form" action="/actions/user/workout" method="post">
+            <form class="wlau-form" action="/actions/user/workout-log" method="post">
+              {% if user_workout_editor_err == 'exercise' %}
+              <div class="alert alert-warning py-2" role="alert">
+                Add at least one exercise before saving.
+              </div>
+              {% endif %}
+              {% if user_editor_workout_id %}
+              <input type="hidden" name="workout_id" value="{{ user_editor_workout_id }}" />
+              {% endif %}
               <div class="row g-4">
                 <div class="col-12 col-xl-6">
                   <label class="wlau-label" for="wlau-date">Date</label>
-                  <input id="wlau-date" name="workout_date" class="wlau-input" type="date" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-sets">Sets</label>
-                  <input id="wlau-sets" name="num_sets" class="wlau-input" type="number" value="3" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-exercise">Exercise Name</label>
-                  <input id="wlau-exercise" name="exercise_name" class="wlau-input" type="text" value="Sit-ups" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-reps">Reps</label>
-                  <input id="wlau-reps" name="num_reps" class="wlau-input" type="number" value="10" />
+                  <input id="wlau-date" name="workout_date" class="wlau-input" type="date" value="{{ user_editor_workout_date }}" />
                 </div>
 
                 <div class="col-12 col-xl-6">
                   <label class="wlau-label" for="wlau-duration">Duration (minutes)</label>
-                  <input id="wlau-duration" name="duration_minutes" class="wlau-input" type="number" value="30" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-weight">Weights</label>
-                  <input id="wlau-weight" name="weight" class="wlau-input" type="text" value="5" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-difficulty">Difficulty Level</label>
-                  <input id="wlau-difficulty" name="difficulty" class="wlau-input" type="text" value="Medium" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="wlau-label" for="wlau-muscle">Muscle Group</label>
-                  <input id="wlau-muscle" name="muscle_group" class="wlau-input" type="text" value="Abs" />
+                  <input id="wlau-duration" name="duration_minutes" class="wlau-input" type="number" value="{{ user_editor_duration_minutes }}" />
                 </div>
               </div>
 
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4">
+                <h3 class="wlau-label m-0">
+                  {% if user_editor_mode == 'edit' %}Edit Exercises{% else %}Exercises{% endif %}
+                </h3>
+                <button type="button" id="wlau-add-exercise" class="wlau-btn wlau-btn--secondary wlau-btn--small border-0">
+                  Add Exercise
+                </button>
+              </div>
+
+              <div id="wlau-exercise-list" class="mt-3">
+                {% for ex in user_editor_exercises %}
+                <div class="wlau-exercise-row">
+                  <div class="row g-3">
+                    <div class="col-12 col-xl-3">
+                      <label class="wlau-label">Exercise Name</label>
+                      <input name="exercise_name[]" class="wlau-input" type="text" value="{{ ex.exercise_name }}" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Sets</label>
+                      <input name="num_sets[]" class="wlau-input" type="number" value="{{ ex.num_sets }}" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Reps</label>
+                      <input name="num_reps[]" class="wlau-input" type="number" value="{{ ex.num_reps }}" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Weight</label>
+                      <input name="weight[]" class="wlau-input" type="text" value="{{ ex.weight if ex.weight is not none else '' }}" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Muscle Group</label>
+                      <input name="muscle_group[]" class="wlau-input" type="text" value="{{ ex.muscle_group }}" />
+                    </div>
+                    <div class="col-12 col-xl-1 d-flex align-items-end">
+                      <button type="button" class="wlau-remove-exercise border-0 bg-transparent">Remove</button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+
+              <template id="wlau-exercise-template">
+                <div class="wlau-exercise-row">
+                  <div class="row g-3">
+                    <div class="col-12 col-xl-3">
+                      <label class="wlau-label">Exercise Name</label>
+                      <input name="exercise_name[]" class="wlau-input" type="text" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Sets</label>
+                      <input name="num_sets[]" class="wlau-input" type="number" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Reps</label>
+                      <input name="num_reps[]" class="wlau-input" type="number" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Weight</label>
+                      <input name="weight[]" class="wlau-input" type="text" />
+                    </div>
+                    <div class="col-6 col-xl-2">
+                      <label class="wlau-label">Muscle Group</label>
+                      <input name="muscle_group[]" class="wlau-input" type="text" />
+                    </div>
+                    <div class="col-12 col-xl-1 d-flex align-items-end">
+                      <button type="button" class="wlau-remove-exercise border-0 bg-transparent">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <p id="wlau-empty-note" class="text-muted mt-3 mb-0" {% if user_editor_exercises %}style="display:none;"{% endif %}>
+                No exercises added yet. Click "Add Exercise" to start this workout.
+              </p>
+
               <div class="wlau-actions">
-                <button type="submit" class="wlau-btn wlau-btn--primary border-0">Log</button>
+                <button type="submit" class="wlau-btn wlau-btn--primary border-0">
+                  {% if user_editor_mode == 'edit' %}Save Workout{% else %}Create Workout{% endif %}
+                </button>
                 <a href="WLU.html" class="wlau-btn wlau-btn--secondary">Cancel</a>
               </div>
             </form>
@@ -96,5 +154,37 @@
       </div>
     </div>
   </div>
+  <script>
+    (() => {
+      const listEl = document.getElementById("wlau-exercise-list");
+      const addBtn = document.getElementById("wlau-add-exercise");
+      const tpl = document.getElementById("wlau-exercise-template");
+      const emptyNote = document.getElementById("wlau-empty-note");
+      if (!listEl || !addBtn || !tpl || !emptyNote) return;
+
+      const syncEmptyNote = () => {
+        emptyNote.style.display = listEl.children.length ? "none" : "";
+      };
+
+      const bindRemove = (scope) => {
+        const btn = scope.querySelector(".wlau-remove-exercise");
+        if (!btn) return;
+        btn.addEventListener("click", () => {
+          scope.remove();
+          syncEmptyNote();
+        });
+      };
+
+      Array.from(listEl.children).forEach((row) => bindRemove(row));
+      addBtn.addEventListener("click", () => {
+        const node = tpl.content.firstElementChild.cloneNode(true);
+        listEl.appendChild(node);
+        bindRemove(node);
+        syncEmptyNote();
+      });
+
+      syncEmptyNote();
+    })();
+  </script>
 </body>
 </html>

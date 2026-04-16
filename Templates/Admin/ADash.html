@@ -78,9 +78,18 @@
             <div class="col-12 col-xl-4">
               <div class="metric-card tall">
                 <p class="metric-label">Busiest Workout Day</p>
-                <p class="metric-value">Monday</p>
+                <p class="metric-value">{{ admin_busiest_workout_day or '—' }}</p>
                 <p class="metric-label mt-3">Avg Duration Of A Workout</p>
-                <p class="metric-value">1H 36M</p>
+                {% set avg_minutes = (admin_avg_workout_duration_minutes or 0)|int %}
+                <p class="metric-value">
+                  {% if avg_minutes >= 60 %}
+                    {{ avg_minutes // 60 }}H {{ avg_minutes % 60 }}M
+                  {% elif avg_minutes > 0 %}
+                    {{ avg_minutes }}M
+                  {% else %}
+                    —
+                  {% endif %}
+                </p>
               </div>
             </div>
             <div class="col-12 col-xl-8">

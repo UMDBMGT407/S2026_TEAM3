@@ -40,53 +40,94 @@
         </header>
 
         <div class="chu-main-canvas flex-grow-1">
+          {% if request.args.get('leave_err') == 'forbidden' %}
+          <div class="alert alert-warning py-2 mb-3" role="alert">You can’t leave that challenge from this account.</div>
+          {% elif request.args.get('leave_err') == 'schema' %}
+          <div class="alert alert-danger py-2 mb-3" role="alert">Could not update challenge membership. Try again later.</div>
+          {% endif %}
+
           <div class="row g-3 align-items-center justify-content-start mb-3 chu-toolbar-row">
             <div class="col-12 col-lg-auto"><h2 class="chu-section-title">Challenges You’re In</h2></div>
             <div class="col-12 col-md-7 col-lg-auto">
-              <div class="chu-search"><img src="../../Static/Images%202/CHUgroup0.svg" alt="" /><span>Search Challenge</span></div>
+              <label class="chu-search w-100 mb-0" for="chu-challenge-search">
+                <img src="../../Static/Images%202/CHUgroup0.svg" alt="" />
+                <input
+                  id="chu-challenge-search"
+                  class="chu-search-input"
+                  type="search"
+                  name="chu_challenge_q"
+                  list="chu-challenge-search-list"
+                  placeholder="Search Challenge"
+                  autocomplete="off"
+                />
+                <datalist id="chu-challenge-search-list"></datalist>
+              </label>
             </div>
           </div>
 
           <div class="row g-4 align-items-start">
             <div class="col-12 col-xl-5">
               <div class="chu-arrows-wrap mb-3"><img class="img-fluid" src="../../Static/Images%202/CHUarrows0.svg" alt="" /></div>
+              <p id="chu-filter-empty" class="chu-filter-empty mb-2" style="display:none;">No challenges match your search.</p>
               <div class="d-grid gap-3">
-                <article class="chu-card">
-                  <h3>Challenge Name</h3>
-                  <p class="chu-meta">Group Name</p>
-                  <div class="chu-progress"><span>5/10</span><span class="chu-status">Status</span></div>
-                  <div class="chu-actions"><button class="chu-btn chu-btn--primary" type="button">View Challenge</button><button class="chu-btn chu-btn--muted" type="button">Leave Challenge</button></div>
+                {% for ch in chu_joined_challenges %}
+                <article
+                  class="chu-card"
+                  data-chu-challenge-card
+                  data-challenge-id="{{ ch.challenge_id }}"
+                  data-challenge-title="{{ ch.challenge_title }}"
+                >
+                  <h3>{{ ch.challenge_title }}</h3>
+                  <p class="chu-meta">{{ ch.group_name }}</p>
+                  <div class="chu-progress">
+                    <span>{{ ch.my_progress_display }}</span>
+                    <span class="chu-status">{{ ch.challenge_status or '—' }}</span>
+                  </div>
+                  <p class="chu-meta mb-1">Goal: {{ ch.challenge_goal_display }}</p>
+                  <div class="chu-actions">
+                    <form method="get" action="CHU.html" class="m-0 d-inline">
+                      <input type="hidden" name="challenge_id" value="{{ ch.challenge_id }}" />
+                      <button type="submit" class="chu-btn chu-btn--primary border-0">View Challenge</button>
+                    </form>
+                    <form
+                      method="post"
+                      action="/actions/user/challenge/{{ ch.challenge_id }}/leave"
+                      class="m-0 d-inline"
+                      onsubmit="return confirm('Leave this challenge? You will stay in the group.');"
+                    >
+                      <button type="submit" class="chu-btn chu-btn--muted border-0">Leave Challenge</button>
+                    </form>
+                  </div>
                 </article>
+                {% else %}
                 <article class="chu-card">
-                  <h3>Challenge Name</h3>
-                  <p class="chu-meta">Group Name</p>
-                  <div class="chu-progress"><span>5/10</span><span class="chu-status">Status</span></div>
-                  <div class="chu-actions"><button class="chu-btn chu-btn--primary" type="button">View Challenge</button><button class="chu-btn chu-btn--muted" type="button">Leave Challenge</button></div>
+                  <h3>No challenges yet</h3>
+                  <p class="chu-meta">Join a group with an active challenge to see it here.</p>
                 </article>
-                <article class="chu-card">
-                  <h3>Challenge Name</h3>
-                  <p class="chu-meta">Group Name</p>
-                  <div class="chu-progress"><span>5/10</span><span class="chu-status">Status</span></div>
-                  <div class="chu-actions"><button class="chu-btn chu-btn--primary" type="button">View Challenge</button><button class="chu-btn chu-btn--muted" type="button">Leave Challenge</button></div>
-                </article>
+                {% endfor %}
               </div>
             </div>
 
             <div class="col-12 col-xl-7">
               <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
                 <h2 class="chu-subtitle m-0">Selected Challenge -</h2>
-                <div class="chu-pill">Challenge Name</div>
+                <div class="chu-pill">{{ selected_challenge_name or '—' }}</div>
               </div>
               <section class="chu-leaderboard">
                 <div class="chu-head"><span>Rank</span><span>Member Name</span><span>Goal</span></div>
-                <div class="chu-row"><span class="chu-rank">1</span><span>Member Name</span><span>8/10</span></div>
-                <div class="chu-row"><span class="chu-rank">2</span><span>Member Name</span><span>6/10</span></div>
-                <div class="chu-row"><span class="chu-rank">3</span><span>Member Name</span><span>4/10</span></div>
-                <div class="chu-row"><span class="chu-rank">4</span><span>Member Name</span><span>3/10</span></div>
-                <div class="chu-row"><span class="chu-rank">5</span><span>Member Name</span><span>3/10</span></div>
-                <div class="chu-row"><span class="chu-rank">6</span><span>Member Name</span><span>3/10</span></div>
-                <div class="chu-row"><span class="chu-rank">7</span><span>Member Name</span><span>3/10</span></div>
-                <div class="chu-row"><span class="chu-rank">8</span><span>Member Name</span><span>3/10</span></div>
+                {% for p in selected_challenge_participants %}
+                <div class="chu-row">
+                  <span class="chu-rank">{{ p.rank }}</span>
+                  <span>{{ p.member_name }}</span>
+                  <span>{{ p.goal_progress }}</span>
+                </div>
+                {% else %}
+                <div class="chu-row text-muted">
+                  <span class="chu-rank">—</span>
+                  <span>{% if chu_joined_challenges %}No participants to show.{% else %}Join a challenge to see the leaderboard here.{% endif %}</span>
+                  <span>—</span>
+                </div>
+                {% endfor %}
               </section>
             </div>
           </div>
@@ -94,5 +135,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/chu-search.js"></script>
 </body>
 </html>

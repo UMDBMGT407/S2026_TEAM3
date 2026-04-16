@@ -106,10 +106,22 @@
                         <button type="submit" class="view-btn">View</button>
                       </form>
                     </td>
-                    <td class="action-icons">
-                      <a class="icon-action-btn" href="ScheduleAed.html?id={{ c.challenge_id }}">
-                        <img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" />
-                      </a>
+                    <td class="text-end">
+                      <div class="action-icons">
+                        <a class="icon-action-btn" href="ScheduleAed.html?id={{ c.challenge_id }}">
+                          <img src="../../Static/Images%201/ScheduleAedit-button0.svg" alt="Edit" />
+                        </a>
+                        <form
+                          method="post"
+                          action="/actions/admin/challenge/{{ c.challenge_id }}/delete"
+                          class="m-0 d-inline"
+                          onsubmit="return confirm('Delete this challenge?');"
+                        >
+                          <button type="submit" class="icon-action-btn" aria-label="Delete challenge">
+                            <img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="Delete" />
+                          </button>
+                        </form>
+                      </div>
                     </td>
                   </tr>
                   {% else %}
@@ -153,14 +165,16 @@
                       <td>{{ p.member_name }}</td>
                       <td><span class="rank-badge">{{ p.rank }}</span></td>
                       <td>{{ p.goal_progress }}</td>
-                      <td class="action-icons">
-                        <form method="post" action="/actions/admin/challenge/remove-participant" class="m-0 d-inline">
-                          <input type="hidden" name="challenge_id" value="{{ selected_challenge_id }}" />
-                          <input type="hidden" name="user_id" value="{{ p.user_id }}" />
-                          <button type="submit" class="icon-action-btn" aria-label="Remove participant">
-                            <img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="" aria-hidden="true" />
-                          </button>
-                        </form>
+                      <td class="text-end">
+                        <div class="action-icons">
+                          <form method="post" action="/actions/admin/challenge/remove-participant" class="m-0 d-inline">
+                            <input type="hidden" name="challenge_id" value="{{ selected_challenge_id }}" />
+                            <input type="hidden" name="user_id" value="{{ p.user_id }}" />
+                            <button type="submit" class="icon-action-btn" aria-label="Remove participant">
+                              <img src="../../Static/Images%201/ScheudleAtrash-can-button0.svg" alt="" aria-hidden="true" />
+                            </button>
+                          </form>
+                        </div>
                       </td>
                     </tr>
                     {% else %}

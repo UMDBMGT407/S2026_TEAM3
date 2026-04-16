@@ -56,36 +56,28 @@
             </div>
 
             <div class="row g-4">
+              {% for g in ga_joined_groups %}
               <div class="col-12 col-lg-4">
                 <article class="gjga-group-tile">
-                  <h3>Group Name</h3>
-                  <p># of Members</p>
+                  <h3>{{ g.group_name }}</h3>
+                  <p>{{ g.member_count or 0 }} Members</p>
                   <div class="gjga-tile-actions">
-                    <button type="button" class="gjga-btn gjga-btn--primary">View Members</button>
+                    <form method="get" action="groups-joined-GA.html" class="m-0 d-inline">
+                      <input type="hidden" name="group_id" value="{{ g.group_id }}" />
+                      <button type="submit" class="gjga-btn gjga-btn--primary">View Members</button>
+                    </form>
                     <button type="button" class="gjga-btn gjga-btn--light">Leave Group</button>
                   </div>
                 </article>
               </div>
-              <div class="col-12 col-lg-4">
+              {% else %}
+              <div class="col-12">
                 <article class="gjga-group-tile">
-                  <h3>Group Name</h3>
-                  <p># of Members</p>
-                  <div class="gjga-tile-actions">
-                    <button type="button" class="gjga-btn gjga-btn--primary">View Members</button>
-                    <button type="button" class="gjga-btn gjga-btn--light">Leave Group</button>
-                  </div>
+                  <h3>No joined groups found.</h3>
+                  <p>This account is not currently a member of any groups.</p>
                 </article>
               </div>
-              <div class="col-12 col-lg-4">
-                <article class="gjga-group-tile">
-                  <h3>Group Name</h3>
-                  <p># of Members</p>
-                  <div class="gjga-tile-actions">
-                    <button type="button" class="gjga-btn gjga-btn--primary">View Members</button>
-                    <button type="button" class="gjga-btn gjga-btn--light">Leave Group</button>
-                  </div>
-                </article>
-              </div>
+              {% endfor %}
             </div>
           </section>
 
@@ -93,7 +85,7 @@
             <div class="gjga-card-head gjga-members-head">
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <h2 class="mb-0">Group Members -</h2>
-                <div class="gjga-group-pill">Group Name</div>
+                <div class="gjga-group-pill">{{ selected_group_name or "No Group Selected" }}</div>
               </div>
               <div class="gjga-search-pill"><img src="../../Static/images/GJGAgroup1.svg" alt="" /><span>Search Member</span></div>
             </div>
@@ -108,11 +100,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td><span class="gjga-member-avatar"></span>John Doe</td><td>Group Admin</td><td>user@gmail.com</td></tr>
-                  <tr><td><span class="gjga-member-avatar"></span>Member Name</td><td>Member</td><td>user@gmail.com</td></tr>
-                  <tr><td><span class="gjga-member-avatar"></span>Member Name</td><td>Member</td><td>user@gmail.com</td></tr>
-                  <tr><td><span class="gjga-member-avatar"></span>Member Name</td><td>Member</td><td>user@gmail.com</td></tr>
-                  <tr><td><span class="gjga-member-avatar"></span>Member Name</td><td>Member</td><td>user@gmail.com</td></tr>
+                  {% for m in selected_group_members %}
+                  <tr>
+                    <td><span class="gjga-member-avatar"></span>{{ m.member_name }}</td>
+                    <td>{{ m.member_role }}</td>
+                    <td>{{ m.member_email }}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="3" class="text-muted p-4">
+                      {% if ga_joined_groups %}
+                      No members found for the selected group.
+                      {% else %}
+                      Join a group to see member details here.
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

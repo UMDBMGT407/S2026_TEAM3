@@ -1,0 +1,270 @@
+Motiv — manual testing by page (buttons & what they do)
+========================================================
+
+Use this as a checklist of interactive controls on each HTML page. Paths are how the app serves them (e.g. /Admin/ADash.html). Sidebar links are navigation only unless noted.
+
+Many pages show “search” pills or decorative arrows with no wired behavior; those are omitted. If a control has no form/action/API call in the template or bundled script, it is called out as non-functional.
+
+----------------------------------------------------------------------
+GLOBAL (most authenticated layouts)
+----------------------------------------------------------------------
+- Sidebar: links to other sections (GET navigation).
+- Notifications icon (where present): opens notifications page for that role.
+- Profile image in header: decorative unless the page says otherwise.
+
+
+======================================================================
+PLATFORM ADMIN — /Admin/
+======================================================================
+
+/Admin/index.html (login)
+-------------------------
+- Login: submits email/password to /auth/login; optional hidden next= for redirect after login.
+- “Create Account Now” link: goes to CreateAccount.html (GET).
+
+/Admin/CreateAccount.html
+-------------------------
+- Create Account: submits registration to /auth/register.
+- Log in: GET link to index.html.
+
+/Admin/ADash.html
+-----------------
+- No submit/delete buttons; metric cards are read-only.
+- Sidebar navigates to Groups, Scheduling, Challenges, Posts, Profile (note: nav labels for Scheduling vs Challenges follow the template; URLs are ChallengeA.html vs ScheduleA.html).
+
+/Admin/GroupA.html
+-------------------
+- View (per row): GET reload with ?group_id= to show that group’s members.
+- Edit (pencil link): opens GroupAed.html?id=… for that group.
+- Remove member (trash, per app-user row): POST /actions/admin/remove-group-member after confirm; removes that user from the selected group.
+- “Search Group” style pill: display-only in this template.
+
+/Admin/GroupAed.html
+--------------------
+- Save: POST /actions/admin/group/<id>/edit with name/description fields.
+- Cancel: link back to GroupA.html (GET, no save).
+
+/Admin/ChallengeA.html (group workout scheduling list)
+-------------------------------------------------------
+- View Details: GET reload with query to inspect one scheduled session.
+- Edit: opens ChallengeAed.html?id=<group_workout_id>.
+- Delete (trash): POST /actions/admin/schedule/<group_workout_id>/delete after confirm; removes that scheduled workout.
+
+/Admin/ChallengeAed.html (edit a scheduled group workout)
+----------------------------------------------------------
+- Save: POST /actions/admin/schedule/<group_workout_id>/edit (session fields, group, date, time, location).
+- Cancel: link back to ChallengeA.html.
+
+/Admin/ScheduleA.html (challenges list + participants)
+-------------------------------------------------------
+- View: GET reload to select a challenge and load participant list.
+- Edit: opens ScheduleAed.html?id=<challenge_id>.
+- Delete challenge (trash): POST /actions/admin/challenge/<challenge_id>/delete after confirm.
+- Remove participant (trash on participant row): POST /actions/admin/challenge/remove-participant.
+
+/Admin/ScheduleAed.html (edit a challenge)
+--------------------------------------------
+- Save: POST /actions/admin/challenge/<challenge_id>/edit (name, dates, goal).
+- Cancel: link back to ScheduleA.html.
+
+/Admin/PostA.html
+-----------------
+- Delete (trash on each post): client-side confirm, then DELETE /api/posts/<id> with credentials; reloads on success (platform admin can remove any post shown).
+- No “add post” UI on this page.
+
+/Admin/AProfile.html
+--------------------
+- Edit profile photo (pencil): type=button only; no upload wired in this template.
+- Save: submits profile form via POST /actions/admin/profile (name, email, optional new password).
+- Log out: POST /auth/logout.
+
+
+======================================================================
+GROUP ADMIN — /GroupAdmin/
+======================================================================
+
+/GroupAdmin/GADash.html
+-----------------------
+- Read-only stats/cards; sidebar + notification link only.
+
+/GroupAdmin/created-groups-GA.html
+-----------------------------------
+- Tabs: “Created Groups” / “Joined Groups” (GET links).
+- Create New Group: GET to group-creation-GA.html.
+- View (per created group): GET with ?group_id= to load members + enable invite for that group.
+- Edit group: GET to edit-group-GA.html?id=….
+- Delete group (trash): POST /actions/group-admin/delete-group after confirm (large cascade: members, challenges, group workouts for that group).
+- Invite: email field + Send POST /actions/group-admin/invite-group-member (suggestions via /api/group-admin/user-email-search when implemented in JS); disabled until a group is selected.
+- Remove member (trash on app users): POST /actions/group-admin/remove-group-member after confirm.
+- Search pills in toolbar: display-only unless extended elsewhere.
+
+/GroupAdmin/groups-joined-GA.html
+---------------------------------
+- View Members: GET with ?group_id= to show member table for that joined group.
+- Leave Group: type=button with no form — currently does not submit anywhere (placeholder UI).
+
+/GroupAdmin/group-creation-GA.html
+----------------------------------
+- Edit group image: type=button only (no file picker wired).
+- Create: POST /actions/group-admin/group.
+- Cancel: GET back to created-groups-GA.html.
+
+/GroupAdmin/edit-group-GA.html
+-------------------------------
+- Save: POST /actions/group-admin/group/<id>/edit.
+- Cancel: GET to created-groups-GA.html.
+
+/GroupAdmin/scheduling-GA.html (created workouts tab)
+-----------------------------------------------------
+- Joined Workouts tab: GET schedule-joined-workouts-GA.html.
+- Schedule New Workout: GET create-schedule-GA.html.
+- View Details: GET with workout id to focus row/detail if applicable.
+- Edit: GET edit-schedule-GA.html?id=<group_workout_id>.
+- Delete scheduled workout (trash): POST /actions/group-admin/schedule/<id>/delete after confirm.
+
+/GroupAdmin/create-schedule-GA.html
+------------------------------------
+- Create: POST /actions/group-admin/schedule.
+- Cancel: GET scheduling-GA.html.
+
+/GroupAdmin/edit-schedule-GA.html
+----------------------------------
+- Save: POST /actions/group-admin/schedule/<id>/edit.
+- Cancel: GET scheduling-GA.html.
+
+/GroupAdmin/schedule-joined-workouts-GA.html
+----------------------------------------------
+- View Details: GET with ?workout_id= to load the detail panel.
+- “I'm Going” / “Can't Make It”: type=button only — not wired to RSVP endpoints (contrast User SU.html). No server effect from these buttons as implemented.
+
+/GroupAdmin/created-challenges-GA.html
+--------------------------------------
+- Create New Challenge: GET challenge-creation-GA.html.
+- Challenge search input + datalist: filters/highlight rows in the page (client-side).
+- View: GET with ?challenge_id= to load participation table.
+- Edit challenge: GET edit-challenge-GA.html?id=….
+- Delete challenge (trash): POST /actions/group-admin/challenge/<id>/delete after confirm.
+- Member search: filters participation rows (client-side).
+- Remove member from challenge (trash in participation table): only removes the row in the browser (created-challenges-GA-interactions.js); does not call the server — not a real exclusion yet.
+
+/GroupAdmin/challenge-creation-GA.html
+---------------------------------------
+- Create: POST /actions/group-admin/challenge.
+- Cancel: GET created-challenges-GA.html.
+
+/GroupAdmin/edit-challenge-GA.html
+----------------------------------
+- Save: POST /actions/group-admin/challenge/<id>/edit.
+- Cancel: GET created-challenges-GA.html.
+
+/GroupAdmin/joined-challenges-GA.html
+--------------------------------------
+- View Challenge: GET with ?challenge_id= to load leaderboard section.
+- Leave Challenge: type=button only — no POST (placeholder; unlike user CHU.html).
+
+/GroupAdmin/post-GA.html
+------------------------
+- + Add post: toggles compose panel.
+- Post / Cancel in panel: Post sends multipart POST /api/posts; Cancel clears fields and hides panel.
+- Delete (on own posts only in template): DELETE /api/posts/<id> after confirm.
+
+/GroupAdmin/notifications-GA.html
+---------------------------------
+- Accept / Reject (per invite): POST /actions/user/group-invite/respond with accept/reject (same endpoint family as user notifications).
+
+/GroupAdmin/profile-GA.html
+----------------------------
+- Photo edit button: type=button only (no upload in template).
+- Save: POST /actions/group-admin/profile.
+- Log out: POST /auth/logout.
+
+/GroupAdmin/workout-history-GA.html
+------------------------------------
+- Create New Workout: GET workout-logging-GA.html.
+- Edit (per row): GET workout-logging-GA.html?workout_id=… (loads log form for that workout).
+- No per-workout delete on this page.
+
+/GroupAdmin/workout-logging-GA.html
+-----------------------------------
+- Add exercise (+): duplicates exercise rows in the form (client-side).
+- Remove (per exercise row): removes that row from the DOM only until submit.
+- Save workout: POST /actions/group-admin/workout-log (creates/updates per server rules).
+- Cancel: GET workout-history-GA.html.
+
+/GroupAdmin/workout-details-GA.html
+-------------------------------------
+- Mostly static demo table in repo: “Add New Exercise” / “Save Workout” are plain links to workout-logging-GA.html and workout-history-GA.html (GET).
+- Edit / Delete icons in rows: Delete is type=button with no handler (non-functional); Edit links to edit-workout-logging-GA.html.
+
+/GroupAdmin/edit-workout-logging-GA.html
+----------------------------------------
+- “Performance Metrics” tab: inactive span (no switch).
+- Save / Cancel: anchor links to workout-details-GA.html only — form action is “#”; does not persist to API (mock / layout page).
+
+
+======================================================================
+APP USER — /User/
+======================================================================
+
+/User/UDash.html
+----------------
+- Read-only stats and leaderboard display; sidebar + notifications link.
+
+/User/NU.html (notifications)
+-----------------------------
+- Accept / Reject on group invites: POST /actions/user/group-invite/respond.
+
+/User/GJU.html (joined groups)
+------------------------------
+- View Members: GET ?group_id= to load members for that group.
+- Leave Group: type=button, no form (non-functional placeholder).
+
+/User/GCU.html (create group — become group admin)
+--------------------------------------------------
+- Edit group image: type=button only (non-functional).
+- Create group: POST /actions/user/create-group-become-ga (user becomes GA for new group; same credentials).
+- Cancel: GET GJU.html.
+
+/User/SU.html (scheduling / RSVP)
+---------------------------------
+- View Details: GET to select a workout for the detail panel.
+- I’m Going / Can’t Make It: POST /actions/user/schedule/<selected_workout_id>/rsvp (two forms, different intent values) when a workout is selected; otherwise disabled buttons with no action.
+
+/User/CHU.html (challenges)
+--------------------------
+- View Challenge: GET ?challenge_id= for leaderboard.
+- Leave Challenge: POST /actions/user/challenge/<id>/leave after confirm.
+
+/User/PU.html (posts)
+---------------------
+- Same pattern as GroupAdmin post-GA: + toggle, POST /api/posts, DELETE /api/posts/<id> for own posts only.
+
+/User/WLU.html (workout history — simple list)
+----------------------------------------------
+- Create New Workout: GET WLAU.html.
+- Edit: GET WLAU.html?workout_id=….
+- Delete workout (trash): POST /actions/user/workout/<id>/delete after confirm.
+
+/User/WLDU.html (workout history — detailed table)
+--------------------------------------------------
+- Create New Workout / Workout History: GET links to WLAU.html and WLU.html.
+- Edit: GET WLAU.html?workout_id=….
+- Delete: POST /actions/user/workout/<id>/delete after confirm.
+
+/User/WLAU.html (log workout — add)
+-----------------------------------
+- Add exercise / Remove row: client-side row management.
+- Save: POST /actions/user/workout-log.
+- Cancel: GET WLU.html.
+
+/User/WLEU.html (edit workout — special route: users and group_admins)
+-----------------------------------------------------------------------
+- Same template path for both roles; Save POSTs to /actions/user/workout/<id>/edit or /actions/group-admin/workout/<id>/edit depending on session_role.
+- Cancel: GET WLU.html for users, or GET /GroupAdmin/workout-history-GA.html for group_admin.
+- Note: app users hitting this URL with ?id= may be redirected to WLAU.html?workout_id=… (see app.py).
+
+/User/ProU.html (profile)
+-------------------------
+- Photo edit: type=button only (non-functional).
+- Save: POST /actions/user/profile.
+- Log out: POST /auth/logout.
