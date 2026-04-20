@@ -96,7 +96,15 @@
                         <button class="view-btn d-inline-block" type="submit">View</button>
                       </form>
                     </td>
-                    <td class="text-end action-icons"><a href="GroupAed.html?id={{ g.group_id }}"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a></td>
+                    <td class="text-end action-icons">
+                      <a href="GroupAed.html?id={{ g.group_id }}"><img src="../../Static/Images%201/GroupAedit-button0.svg" alt="Edit" /></a>
+                      <form method="post" action="/actions/admin/delete-group" class="d-inline" onsubmit="return confirm('Delete this group? This removes members, challenges, and group workouts for this group. User workout history will be kept but unlinked from group sessions.');">
+                        <input type="hidden" name="group_id" value="{{ g.group_id }}" />
+                        <button type="submit" class="border-0 bg-transparent p-0" aria-label="Delete group">
+                          <img src="../../Static/Images%201/GroupAtrash-can-button0.svg" alt="" aria-hidden="true" />
+                        </button>
+                      </form>
+                    </td>
                   </tr>
                   {% else %}
                   <tr><td colspan="5">No groups yet.</td></tr>

@@ -2769,6 +2769,62 @@ def ga_edit_group(group_id):
     return redirect("/GroupAdmin/created-groups-GA.html")
 
 
+def _delete_motiv_group_cascade(cur: Any, group_id: int, group_admin_id: int | None) -> None:
+    """Unlink workouts, remove group_workouts/challenges, then motiv_group.
+
+    When ``group_admin_id`` is set, only rows owned by that GA are touched (GA self-service).
+    When ``group_admin_id`` is None, the group is deleted by platform admin (any group).
+    """
+    if group_admin_id is None:
+        cur.execute(
+            """
+            UPDATE workout w
+            INNER JOIN group_workout gw ON w.group_workout_id = gw.group_workout_id
+            INNER JOIN motiv_group g ON gw.group_id = g.group_id
+            SET w.group_workout_id = NULL
+            WHERE g.group_id = %s
+            """,
+            (group_id,),
+        )
+        cur.execute(
+            """
+            DELETE gw FROM group_workout gw
+            INNER JOIN motiv_group g ON gw.group_id = g.group_id
+            WHERE g.group_id = %s
+            """,
+            (group_id,),
+        )
+        cur.execute("DELETE FROM challenge WHERE group_id = %s", (group_id,))
+        cur.execute("DELETE FROM motiv_group WHERE group_id = %s", (group_id,))
+    else:
+        cur.execute(
+            """
+            UPDATE workout w
+            INNER JOIN group_workout gw ON w.group_workout_id = gw.group_workout_id
+            INNER JOIN motiv_group g ON gw.group_id = g.group_id
+            SET w.group_workout_id = NULL
+            WHERE g.group_id = %s AND g.group_admin_id = %s
+            """,
+            (group_id, group_admin_id),
+        )
+        cur.execute(
+            """
+            DELETE gw FROM group_workout gw
+            INNER JOIN motiv_group g ON gw.group_id = g.group_id
+            WHERE g.group_id = %s AND g.group_admin_id = %s
+            """,
+            (group_id, group_admin_id),
+        )
+        cur.execute(
+            "DELETE FROM challenge WHERE group_id = %s AND group_admin_id = %s",
+            (group_id, group_admin_id),
+        )
+        cur.execute(
+            "DELETE FROM motiv_group WHERE group_id = %s AND group_admin_id = %s",
+            (group_id, group_admin_id),
+        )
+
+
 @app.post("/actions/group-admin/delete-group")
 def ga_delete_group():
     if session.get("role") != "group_admin":
@@ -2787,32 +2843,7 @@ def ga_delete_group():
         cur.close()
         return redirect("/GroupAdmin/created-groups-GA.html?err=1")
     try:
-        cur.execute(
-            """
-            UPDATE workout w
-            INNER JOIN group_workout gw ON w.group_workout_id = gw.group_workout_id
-            INNER JOIN motiv_group g ON gw.group_id = g.group_id
-            SET w.group_workout_id = NULL
-            WHERE g.group_id = %s AND g.group_admin_id = %s
-            """,
-            (gid, ga_id),
-        )
-        cur.execute(
-            """
-            DELETE gw FROM group_workout gw
-            INNER JOIN motiv_group g ON gw.group_id = g.group_id
-            WHERE g.group_id = %s AND g.group_admin_id = %s
-            """,
-            (gid, ga_id),
-        )
-        cur.execute(
-            "DELETE FROM challenge WHERE group_id = %s AND group_admin_id = %s",
-            (gid, ga_id),
-        )
-        cur.execute(
-            "DELETE FROM motiv_group WHERE group_id = %s AND group_admin_id = %s",
-            (gid, ga_id),
-        )
+        _delete_motiv_group_cascade(cur, gid, ga_id)
         mysql.connection.commit()
     except Exception:
         mysql.connection.rollback()
@@ -3828,6 +3859,29 @@ def admin_remove_group_member():
     mysql.connection.commit()
     cur.close()
     return redirect(f"/Admin/GroupA.html?group_id={gid}")
+
+
+@app.post("/actions/admin/delete-group")
+def admin_delete_group():
+    if session.get("role") != "admin":
+        return redirect("/Admin/GroupA.html")
+    gid = parse_int(request.form.get("group_id"))
+    if not gid:
+        return redirect("/Admin/GroupA.html?err=1")
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT 1 FROM motiv_group WHERE group_id = %s LIMIT 1", (gid,))
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/Admin/GroupA.html?err=1")
+    try:
+        _delete_motiv_group_cascade(cur, gid, None)
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        raise
+    cur.close()
+    return redirect("/Admin/GroupA.html")
 
 
 @app.post("/actions/admin/challenge/<int:cid>/edit")
