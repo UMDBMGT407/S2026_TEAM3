@@ -14,6 +14,7 @@ Setup (see BMGT407 Server-Side Guide):
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from decimal import Decimal
@@ -647,9 +648,410 @@ def _offline_page_context(base: dict) -> dict:
             "user_editor_duration_minutes": "",
             "user_editor_exercises": [],
             "user_editor_mode": "create",
+            "admin_graph_json": "{}",
         }
     )
     return base
+
+
+def _admin_chart_palette(n: int) -> list[str]:
+    base = [
+        "#1814f3",
+        "#16dbcc",
+        "#718ebf",
+        "#343c6a",
+        "#34a853",
+        "#fbbc04",
+        "#ea4335",
+        "#a855f7",
+    ]
+    return [base[i % len(base)] for i in range(n)]
+
+
+def _admin_graph_date_key(val: Any) -> str | None:
+    """Normalize MySQL DATE / DATETIME / str to YYYY-MM-DD for dict lookups."""
+    if val is None:
+        return None
+    if hasattr(val, "isoformat"):
+        return str(val.isoformat())[:10]
+    s = str(val).strip()
+    return s[:10] if s else None
+
+
+def _admin_chart_count_bar(cur: Any, sql: str, title: str, label: str) -> dict[str, Any]:
+    cur.execute(sql)
+    n = int((cur.fetchone() or {}).get("c") or 0)
+    return {
+        "chartType": "bar",
+        "title": title,
+        "labels": [label],
+        "datasets": [
+            {
+                "label": "Records",
+                "data": [n],
+                "backgroundColor": _admin_chart_palette(1),
+                "borderColor": "#1412c4",
+                "borderWidth": 1,
+            }
+        ],
+    }
+
+
+def _build_admin_dashboard_graph_charts(cur: Any) -> dict[str, Any]:
+    """Aggregates for Admin/ADash Chart.js (keys match data-graph slugs in ADash.html)."""
+    charts: dict[str, Any] = {}
+
+    try:
+        charts["admins"] = _admin_chart_count_bar(
+            cur,
+            "SELECT COUNT(*) AS c FROM admin",
+            "Platform administrators (count)",
+            "Admins",
+        )
+    except Exception:
+        charts["admins"] = {
+            "chartType": "bar",
+            "title": "Platform administrators",
+            "labels": ["No data"],
+            "datasets": [{"label": "Records", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    try:
+        charts["group_admins"] = _admin_chart_count_bar(
+            cur,
+            "SELECT COUNT(*) AS c FROM group_admin",
+            "Group administrators (count)",
+            "Group admins",
+        )
+    except Exception:
+        charts["group_admins"] = {
+            "chartType": "bar",
+            "title": "Group administrators",
+            "labels": ["No data"],
+            "datasets": [{"label": "Records", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    try:
+        cur.execute(
+            "SELECT is_active, COUNT(*) AS c FROM app_user GROUP BY is_active ORDER BY is_active DESC"
+        )
+        rows = cur.fetchall() or []
+        labels: list[str] = []
+        data: list[int] = []
+        for r in rows:
+            ia = r.get("is_active")
+            if ia == 1:
+                labels.append("Active")
+            elif ia == 0:
+                labels.append("Inactive")
+            else:
+                labels.append(f"Status {ia!s}")
+            data.append(int(r.get("c") or 0))
+        if not labels:
+            labels, data = ["Users"], [0]
+        charts["users"] = {
+            "chartType": "doughnut",
+            "title": "App users by active status",
+            "labels": labels,
+            "datasets": [
+                {
+                    "label": "Users",
+                    "data": data,
+                    "backgroundColor": _admin_chart_palette(len(labels)),
+                }
+            ],
+        }
+    except OperationalError as e:
+        if e.args[0] == 1054:
+            try:
+                charts["users"] = _admin_chart_count_bar(
+                    cur,
+                    "SELECT COUNT(*) AS c FROM app_user",
+                    "App users (count)",
+                    "Users",
+                )
+            except Exception:
+                charts["users"] = {
+                    "chartType": "bar",
+                    "title": "App users",
+                    "labels": ["No data"],
+                    "datasets": [{"label": "Records", "data": [0], "backgroundColor": ["#718ebf"]}],
+                }
+        else:
+            charts["users"] = {
+                "chartType": "doughnut",
+                "title": "App users",
+                "labels": ["No data"],
+                "datasets": [{"label": "Users", "data": [0], "backgroundColor": ["#718ebf"]}],
+            }
+    except Exception:
+        charts["users"] = {
+            "chartType": "doughnut",
+            "title": "App users",
+            "labels": ["No data"],
+            "datasets": [{"label": "Users", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT DATE(post_created) AS d, COUNT(*) AS c
+            FROM post
+            WHERE post_created >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
+            GROUP BY DATE(post_created)
+            ORDER BY d
+            """
+        )
+        raw: dict[str, int] = {}
+        for r in cur.fetchall() or []:
+            dk = _admin_graph_date_key(r.get("d"))
+            if dk:
+                raw[dk] = int(r.get("c") or 0)
+        end_d = date.today()
+        start_d = end_d - timedelta(days=13)
+        labels_p: list[str] = []
+        data_p: list[int] = []
+        dcur = start_d
+        while dcur <= end_d:
+            k = dcur.isoformat()
+            labels_p.append(k)
+            data_p.append(int(raw.get(k, 0)))
+            dcur += timedelta(days=1)
+        charts["posts"] = {
+            "chartType": "line",
+            "title": "Posts created (last 14 days)",
+            "labels": labels_p,
+            "datasets": [
+                {
+                    "label": "Posts",
+                    "data": data_p,
+                    "borderColor": "#1814f3",
+                    "backgroundColor": "rgba(24, 20, 243, 0.12)",
+                    "fill": True,
+                    "tension": 0.2,
+                }
+            ],
+        }
+    except Exception:
+        charts["posts"] = {
+            "chartType": "line",
+            "title": "Posts created (last 14 days)",
+            "labels": [],
+            "datasets": [
+                {
+                    "label": "Posts",
+                    "data": [],
+                    "borderColor": "#1814f3",
+                    "backgroundColor": "rgba(24, 20, 243, 0.12)",
+                    "fill": True,
+                }
+            ],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT DATE_FORMAT(group_date_created, '%Y-%m') AS ym, COUNT(*) AS c
+            FROM motiv_group
+            WHERE group_date_created >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+            GROUP BY ym
+            ORDER BY ym
+            """
+        )
+        rows_g = cur.fetchall() or []
+        charts["groups"] = {
+            "chartType": "bar",
+            "title": "New groups by month (last 6 months)",
+            "labels": [str(r["ym"]) for r in rows_g],
+            "datasets": [
+                {
+                    "label": "Groups",
+                    "data": [int(r.get("c") or 0) for r in rows_g],
+                    "backgroundColor": _admin_chart_palette(max(1, len(rows_g))),
+                }
+            ],
+        }
+        if not rows_g:
+            charts["groups"]["labels"] = ["No data in range"]
+            charts["groups"]["datasets"][0]["data"] = [0]
+    except Exception:
+        charts["groups"] = {
+            "chartType": "bar",
+            "title": "New groups by month",
+            "labels": ["No data"],
+            "datasets": [{"label": "Groups", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT WEEKDAY(workout_date) AS wd, COUNT(*) AS c
+            FROM workout
+            WHERE workout_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+              AND workout_date < DATE_ADD(
+                DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY),
+                INTERVAL 7 DAY
+              )
+            GROUP BY wd
+            ORDER BY wd
+            """
+        )
+        by_wd = {int(r["wd"]): int(r.get("c") or 0) for r in (cur.fetchall() or [])}
+        day_labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        charts["workouts"] = {
+            "chartType": "bar",
+            "title": "Workouts logged this week (by weekday)",
+            "labels": day_labels,
+            "datasets": [
+                {
+                    "label": "Workouts",
+                    "data": [by_wd.get(i, 0) for i in range(7)],
+                    "backgroundColor": _admin_chart_palette(7),
+                }
+            ],
+        }
+    except Exception:
+        charts["workouts"] = {
+            "chartType": "bar",
+            "title": "Workouts this week",
+            "labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            "datasets": [{"label": "Workouts", "data": [0] * 7, "backgroundColor": _admin_chart_palette(7)}],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT COALESCE(NULLIF(TRIM(exercise_muscle_group), ''), 'Unknown') AS mg,
+              COUNT(*) AS c
+            FROM exercise
+            GROUP BY mg
+            ORDER BY c DESC
+            """
+        )
+        rows_e = cur.fetchall() or []
+        top = rows_e[:8]
+        rest = rows_e[8:]
+        if rest:
+            other_c = sum(int(r.get("c") or 0) for r in rest)
+            top = list(top) + [{"mg": "Other", "c": other_c}]
+        labels_e = [str(r["mg"]) for r in top] or ["No data"]
+        data_e = [int(r.get("c") or 0) for r in top] or [0]
+        charts["exercises"] = {
+            "chartType": "doughnut",
+            "title": "Exercises by muscle group (top 8 + other)",
+            "labels": labels_e,
+            "datasets": [
+                {
+                    "label": "Exercises",
+                    "data": data_e,
+                    "backgroundColor": _admin_chart_palette(len(labels_e)),
+                }
+            ],
+        }
+    except Exception:
+        charts["exercises"] = {
+            "chartType": "doughnut",
+            "title": "Exercises by muscle group",
+            "labels": ["No data"],
+            "datasets": [{"label": "Exercises", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT w.workout_date AS d, COALESCE(SUM(wl.workout_num_sets), 0) AS c
+            FROM workout_log wl
+            JOIN workout w ON w.workout_id = wl.workout_id
+            WHERE w.workout_date >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
+            GROUP BY w.workout_date
+            ORDER BY d
+            """
+        )
+        raw_wl: dict[str, int] = {}
+        for r in cur.fetchall() or []:
+            dk = _admin_graph_date_key(r.get("d"))
+            if dk:
+                raw_wl[dk] = int(r.get("c") or 0)
+        end_w = date.today()
+        start_w = end_w - timedelta(days=13)
+        labels_w: list[str] = []
+        data_w: list[int] = []
+        dw = start_w
+        while dw <= end_w:
+            k = dw.isoformat()
+            labels_w.append(k)
+            data_w.append(int(raw_wl.get(k, 0)))
+            dw += timedelta(days=1)
+        charts["workout_logs"] = {
+            "chartType": "line",
+            "title": "Total sets logged (last 14 days)",
+            "labels": labels_w,
+            "datasets": [
+                {
+                    "label": "Sets",
+                    "data": data_w,
+                    "borderColor": "#16dbcc",
+                    "backgroundColor": "rgba(22, 219, 204, 0.15)",
+                    "fill": True,
+                    "tension": 0.2,
+                }
+            ],
+        }
+    except Exception:
+        charts["workout_logs"] = {
+            "chartType": "line",
+            "title": "Total sets logged (last 14 days)",
+            "labels": [],
+            "datasets": [
+                {
+                    "label": "Sets",
+                    "data": [],
+                    "borderColor": "#16dbcc",
+                    "backgroundColor": "rgba(22, 219, 204, 0.15)",
+                    "fill": True,
+                }
+            ],
+        }
+
+    try:
+        cur.execute(
+            """
+            SELECT COALESCE(NULLIF(TRIM(challenge_status), ''), 'Unknown') AS st, COUNT(*) AS c
+            FROM challenge
+            GROUP BY st
+            ORDER BY c DESC
+            """
+        )
+        rows_c = cur.fetchall() or []
+        if not rows_c:
+            charts["challenges"] = {
+                "chartType": "pie",
+                "title": "Challenges by status",
+                "labels": ["No data"],
+                "datasets": [{"label": "Challenges", "data": [0], "backgroundColor": ["#718ebf"]}],
+            }
+        else:
+            charts["challenges"] = {
+                "chartType": "pie",
+                "title": "Challenges by status",
+                "labels": [str(r["st"]) for r in rows_c],
+                "datasets": [
+                    {
+                        "label": "Challenges",
+                        "data": [int(r.get("c") or 0) for r in rows_c],
+                        "backgroundColor": _admin_chart_palette(len(rows_c)),
+                    }
+                ],
+            }
+    except Exception:
+        charts["challenges"] = {
+            "chartType": "pie",
+            "title": "Challenges by status",
+            "labels": ["No data"],
+            "datasets": [{"label": "Challenges", "data": [0], "backgroundColor": ["#718ebf"]}],
+        }
+
+    return charts
 
 
 def _lb_int(val: Any) -> int:
@@ -1056,6 +1458,14 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 ctx["admin_avg_challenge_days"] = (row or {}).get("c", 0)
             except Exception:
                 pass
+            try:
+                ctx["admin_graph_json"] = json.dumps(
+                    _build_admin_dashboard_graph_charts(cur),
+                    default=str,
+                )
+            except Exception:
+                app.logger.exception("admin dashboard graph payload failed")
+                ctx["admin_graph_json"] = "{}"
         elif path == "Admin/GroupA.html":
             ctx["selected_group_id"] = None
             ctx["selected_group_name"] = None

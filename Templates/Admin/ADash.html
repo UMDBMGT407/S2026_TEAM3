@@ -134,26 +134,27 @@
             <div class="col-12 col-lg-6 col-xl-4">
               <div class="panel-card">
                 <h3>Select Data Type For Graph</h3>
-                <ul class="data-list">
-                  <li>Admin Data</li><li>Group Admin Data</li><li>User Data</li><li>Post Data</li><li>Group Data</li>
-                  <li>Workout Data</li><li>Exercise Data</li><li>Workout Log Data</li><li>Challenge Data</li>
+                <ul class="data-list data-list--graph-select">
+                  <li><button type="button" class="graph-type-btn is-active" data-graph="admins" aria-pressed="true">Admin Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="group_admins" aria-pressed="false">Group Admin Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="users" aria-pressed="false">User Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="posts" aria-pressed="false">Post Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="groups" aria-pressed="false">Group Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="workouts" aria-pressed="false">Workout Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="exercises" aria-pressed="false">Exercise Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="workout_logs" aria-pressed="false">Workout Log Data</button></li>
+                  <li><button type="button" class="graph-type-btn" data-graph="challenges" aria-pressed="false">Challenge Data</button></li>
                 </ul>
               </div>
             </div>
             <div class="col-12 col-xl-4">
               <div class="panel-card">
                 <h3>Selected Data Graph</h3>
-                <div class="graph-wrap">
-                  <div class="graph-bars">
-                    <span style="--h1:178px;--h2:91px;"></span>
-                    <span style="--h1:130px;--h2:49px;"></span>
-                    <span style="--h1:122px;--h2:98px;"></span>
-                    <span style="--h1:178px;--h2:138px;"></span>
-                    <span style="--h1:57px;--h2:91px;"></span>
-                    <span style="--h1:145px;--h2:91px;"></span>
-                    <span style="--h1:147px;--h2:126px;"></span>
+                <p class="graph-chart-title" id="adminDashChartTitle"></p>
+                <div class="graph-wrap graph-wrap--chartjs">
+                  <div class="graph-chart-shell">
+                    <canvas id="adminDashChart" aria-label="Selected data graph"></canvas>
                   </div>
-                  <div class="graph-days"><span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
                 </div>
               </div>
             </div>
@@ -162,5 +163,8 @@
       </main>
     </div>
   </div>
+  <script type="application/json" id="admin-graph-payload">{{ admin_graph_json|safe }}</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='JS/admin-dash-chart.js') }}"></script>
 </body>
 </html>
