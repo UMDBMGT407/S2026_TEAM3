@@ -66,9 +66,10 @@
         <section class="content-section">
           <div class="section-header-wrap">
             <h2 class="section-title">Group Management</h2>
-            <div class="search-pill">
+            <div class="search-pill search-pill--input">
               <img src="../../Static/Images%201/GroupAgroup0.svg" alt="" />
-              <span>Search Group</span>
+              <label for="adminGroupSearch" class="visually-hidden">Search groups</label>
+              <input type="search" id="adminGroupSearch" class="search-pill-input" placeholder="Search groups…" autocomplete="off" />
             </div>
           </div>
 
@@ -84,9 +85,9 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="admin-groups-tbody">
                   {% for g in admin_groups %}
-                  <tr>
+                  <tr class="js-admin-group-row" data-group-search="{{ ('#' ~ (g.group_id|string) ~ ' ' ~ g.group_name ~ ' ' ~ g.ga_name)|e }}">
                     <td>#{{ g.group_id }}</td>
                     <td>{{ g.group_name }}</td>
                     <td>{{ g.ga_name }}</td>
@@ -107,8 +108,9 @@
                     </td>
                   </tr>
                   {% else %}
-                  <tr><td colspan="5">No groups yet.</td></tr>
+                  <tr id="admin-groups-empty-msg"><td colspan="5">No groups yet.</td></tr>
                   {% endfor %}
+                  <tr id="admin-groups-no-match" class="d-none"><td colspan="5" class="text-muted">No groups match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -175,5 +177,31 @@
       </main>
     </div>
   </div>
+  <script>
+    (function () {
+      var input = document.getElementById("adminGroupSearch");
+      var tbody = document.getElementById("admin-groups-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-admin-group-row");
+      var noMatch = document.getElementById("admin-groups-no-match");
+      function filterRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-group-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterRows);
+    })();
+  </script>
 </body>
 </html>
