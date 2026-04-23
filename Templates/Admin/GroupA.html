@@ -123,9 +123,10 @@
               <h2 class="section-title">Group Members -</h2>
               <span class="group-pill">{% if selected_group_id %}#G{{ selected_group_id }}{% else %}—{% endif %}</span>
             </div>
-            <div class="search-pill">
+            <div class="search-pill search-pill--input">
               <img src="../../Static/Images%201/GroupAgroup0.svg" alt="" />
-              <span>Search Member</span>
+              <label for="adminMemberSearch" class="visually-hidden">Search members</label>
+              <input type="search" id="adminMemberSearch" class="search-pill-input" placeholder="Search members…" autocomplete="off" />
             </div>
           </div>
 
@@ -141,10 +142,10 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="admin-members-tbody">
                   {% if selected_group_id %}
                     {% for m in selected_group_members %}
-                    <tr>
+                    <tr class="js-admin-member-row" data-member-search="{{ (m.member_id_label ~ ' ' ~ m.member_name ~ ' ' ~ m.member_role ~ ' ' ~ m.member_email)|e }}">
                       <td>{{ m.member_id_label }}</td>
                       <td>{{ m.member_name }}</td>
                       <td>{{ m.member_role }}</td>
@@ -169,6 +170,7 @@
                   {% else %}
                   <tr><td colspan="5" class="text-muted">Select a group using View to load member details.</td></tr>
                   {% endif %}
+                  <tr id="admin-members-no-match" class="d-none"><td colspan="5" class="text-muted">No members match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -201,6 +203,30 @@
         }
       }
       input.addEventListener("input", filterRows);
+    })();
+    (function () {
+      var input = document.getElementById("adminMemberSearch");
+      var tbody = document.getElementById("admin-members-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-admin-member-row");
+      var noMatch = document.getElementById("admin-members-no-match");
+      function filterMemberRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-member-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterMemberRows);
     })();
   </script>
 </body>

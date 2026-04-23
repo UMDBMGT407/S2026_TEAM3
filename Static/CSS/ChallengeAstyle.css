@@ -153,6 +153,29 @@ body {
 .search-pill img {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
+}
+
+.search-pill--input {
+  min-width: 280px;
+  flex: 1;
+  max-width: 420px;
+}
+
+.search-pill-input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #343c6a;
+  background: transparent;
+  outline: none;
+}
+
+.search-pill-input::placeholder {
+  color: #8ba3cb;
 }
 
 .table-card,

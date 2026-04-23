@@ -66,9 +66,10 @@
         <section class="content-section">
           <div class="section-header-wrap">
             <h2 class="section-title">Scheduled Workouts Management</h2>
-            <div class="search-pill">
+            <div class="search-pill search-pill--input">
               <img src="../../Static/Images%201/ChallengeAgroup1.svg" alt="" />
-              <span>Search Session</span>
+              <label for="challengeSessionSearch" class="visually-hidden">Search sessions</label>
+              <input type="search" id="challengeSessionSearch" class="search-pill-input" placeholder="Search sessions…" autocomplete="off" />
             </div>
           </div>
 
@@ -84,9 +85,9 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="challenge-sessions-tbody">
                   {% for s in admin_sessions %}
-                  <tr>
+                  <tr class="js-challenge-session-row" data-session-search="{{ ('#' ~ (s.group_id|string) ~ ' ' ~ s.group_name ~ ' ' ~ s.group_workout_title ~ ' #' ~ (s.group_workout_id|string))|e }}">
                     <td>#{{ s.group_id }}</td>
                     <td>{{ s.group_workout_title }}</td>
                     <td>#{{ s.group_workout_id }}</td>
@@ -111,8 +112,9 @@
                     </td>
                   </tr>
                   {% else %}
-                  <tr><td colspan="5">No scheduled sessions.</td></tr>
+                  <tr id="challenge-sessions-empty-msg"><td colspan="5">No scheduled sessions.</td></tr>
                   {% endfor %}
+                  <tr id="challenge-sessions-no-match" class="d-none"><td colspan="5" class="text-muted">No sessions match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -196,5 +198,31 @@
       </main>
     </div>
   </div>
+  <script>
+    (function () {
+      var input = document.getElementById("challengeSessionSearch");
+      var tbody = document.getElementById("challenge-sessions-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-challenge-session-row");
+      var noMatch = document.getElementById("challenge-sessions-no-match");
+      function filterRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-session-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterRows);
+    })();
+  </script>
 </body>
 </html>
