@@ -193,6 +193,16 @@ body {
   font-size: 16px;
 }
 
+.data-list--downloads a {
+  color: #1814f3;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.data-list--downloads a:hover {
+  text-decoration: underline;
+}
+
 .graph-wrap {
   border-radius: 20px;
   background: #ffffff;

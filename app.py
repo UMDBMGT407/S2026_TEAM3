@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import os
 import re
+from decimal import Decimal
+from io import BytesIO
 from datetime import date, datetime, time, timedelta
 from functools import wraps
 from pathlib import Path
@@ -31,7 +33,16 @@ try:
 except ImportError:
     pass
 
-from flask import Flask, abort, jsonify, redirect, render_template, request, session
+from flask import (
+    Flask,
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    session,
+)
 from flask_mysqldb import MySQL
 from MySQLdb import OperationalError, ProgrammingError
 from MySQLdb.cursors import DictCursor
@@ -3786,6 +3797,237 @@ def user_workout_delete(wid):
 
 
 # --- Admin actions ---
+
+
+def _admin_export_cell_value(val: Any) -> Any:
+    if val is None:
+        return None
+    if isinstance(val, Decimal):
+        f = float(val)
+        if f.is_integer():
+            return int(f)
+        return f
+    return val
+
+
+def _admin_build_xlsx_bytes(rows: list[dict[str, Any]], columns: list[str]) -> BytesIO:
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Data"
+    ws.append(columns)
+    for row in rows:
+        ws.append([_admin_export_cell_value(row.get(c)) for c in columns])
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return buf
+
+
+def _admin_fetch_app_user_export(cur) -> tuple[list[dict[str, Any]], list[str]]:
+    cols_with = [
+        "user_id",
+        "user_name",
+        "user_first_name",
+        "user_last_name",
+        "user_email",
+        "is_active",
+    ]
+    try:
+        cur.execute(
+            """
+            SELECT user_id, user_name, user_first_name, user_last_name, user_email, is_active
+            FROM app_user ORDER BY user_id
+            """
+        )
+        return cur.fetchall(), cols_with
+    except OperationalError as e:
+        if e.args[0] != 1054:
+            raise
+        cols = [
+            "user_id",
+            "user_name",
+            "user_first_name",
+            "user_last_name",
+            "user_email",
+        ]
+        cur.execute(
+            """
+            SELECT user_id, user_name, user_first_name, user_last_name, user_email
+            FROM app_user ORDER BY user_id
+            """
+        )
+        return cur.fetchall(), cols
+
+
+# Whitelisted admin SQL exports (never include password_hash).
+_ADMIN_EXPORT_SPECS: dict[str, tuple[str, list[str]]] = {
+    "admins": (
+        """
+        SELECT admin_id, admin_name, admin_first_name, admin_last_name, admin_email
+        FROM admin ORDER BY admin_id
+        """,
+        [
+            "admin_id",
+            "admin_name",
+            "admin_first_name",
+            "admin_last_name",
+            "admin_email",
+        ],
+    ),
+    "group_admins": (
+        """
+        SELECT group_admin_id, group_admin_name, group_admin_first_name, group_admin_last_name,
+          group_admin_email
+        FROM group_admin ORDER BY group_admin_id
+        """,
+        [
+            "group_admin_id",
+            "group_admin_name",
+            "group_admin_first_name",
+            "group_admin_last_name",
+            "group_admin_email",
+        ],
+    ),
+    "posts": (
+        """
+        SELECT post_id, post_content, post_photo_path, post_created, post_time, post_date, admin_id, user_id
+        FROM post ORDER BY post_id
+        """,
+        [
+            "post_id",
+            "post_content",
+            "post_photo_path",
+            "post_created",
+            "post_time",
+            "post_date",
+            "admin_id",
+            "user_id",
+        ],
+    ),
+    "groups": (
+        """
+        SELECT group_id, group_name, group_description, group_date_created, admin_id, group_admin_id
+        FROM motiv_group ORDER BY group_id
+        """,
+        [
+            "group_id",
+            "group_name",
+            "group_description",
+            "group_date_created",
+            "admin_id",
+            "group_admin_id",
+        ],
+    ),
+    "workouts": (
+        """
+        SELECT workout_id, workout_date, workout_duration_minutes, user_id, group_workout_id
+        FROM workout ORDER BY workout_id
+        """,
+        [
+            "workout_id",
+            "workout_date",
+            "workout_duration_minutes",
+            "user_id",
+            "group_workout_id",
+        ],
+    ),
+    "exercises": (
+        """
+        SELECT exercise_id, exercise_name, exercise_muscle_group, exercise_difficulty_level
+        FROM exercise ORDER BY exercise_id
+        """,
+        [
+            "exercise_id",
+            "exercise_name",
+            "exercise_muscle_group",
+            "exercise_difficulty_level",
+        ],
+    ),
+    "workout_logs": (
+        """
+        SELECT workout_log_id, workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id
+        FROM workout_log ORDER BY workout_log_id
+        """,
+        [
+            "workout_log_id",
+            "workout_num_sets",
+            "workout_num_reps",
+            "workout_num_weight",
+            "workout_id",
+            "exercise_id",
+        ],
+    ),
+    "challenges": (
+        """
+        SELECT challenge_id, challenge_title, challenge_date, challenge_start_date, challenge_end_date,
+          challenge_status, challenge_goal, group_admin_id, group_id
+        FROM challenge ORDER BY challenge_id
+        """,
+        [
+            "challenge_id",
+            "challenge_title",
+            "challenge_date",
+            "challenge_start_date",
+            "challenge_end_date",
+            "challenge_status",
+            "challenge_goal",
+            "group_admin_id",
+            "group_id",
+        ],
+    ),
+}
+
+_ADMIN_EXPORT_KINDS = frozenset(_ADMIN_EXPORT_SPECS) | {"users"}
+
+
+@app.get("/actions/admin/export-data/<string:kind>")
+@require_roles("admin")
+def admin_export_data(kind: str):
+    if kind not in _ADMIN_EXPORT_KINDS:
+        abort(404)
+    try:
+        import openpyxl  # noqa: F401
+    except ImportError:
+        return (
+            "Excel export requires the openpyxl package. From the project root run:\n"
+            "  python3 -m pip install -r requirements.txt\n"
+            "or:\n"
+            "  python3 -m pip install 'openpyxl>=3.1.0,<4'\n"
+            "Then restart the Flask server.",
+            503,
+            {"Content-Type": "text/plain; charset=utf-8"},
+        )
+    if kind == "users":
+        cur = dict_cursor()
+        try:
+            rows, columns = _admin_fetch_app_user_export(cur)
+        except Exception:
+            app.logger.exception("admin export users failed")
+            cur.close()
+            return "Export failed", 500
+        cur.close()
+    else:
+        sql, columns = _ADMIN_EXPORT_SPECS[kind]
+        cur = dict_cursor()
+        try:
+            cur.execute(sql)
+            rows = cur.fetchall()
+        except Exception:
+            app.logger.exception("admin export %s failed", kind)
+            cur.close()
+            return "Export failed", 500
+        cur.close()
+
+    buf = _admin_build_xlsx_bytes(rows, columns)
+    fname = f"motiv_{kind}_{date.today().isoformat()}.xlsx"
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name=fname,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 
 @app.post("/actions/admin/profile")
