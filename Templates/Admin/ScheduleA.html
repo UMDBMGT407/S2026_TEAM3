@@ -66,9 +66,10 @@
         <section class="content-section">
           <div class="section-header-wrap">
             <h2 class="section-title">Challenge Management</h2>
-            <div class="search-pill">
+            <div class="search-pill search-pill--input">
               <img src="../../Static/Images%201/ScheduleAgroup0.svg" alt="" />
-              <span>Search Challenge</span>
+              <label for="scheduleChallengeSearch" class="visually-hidden">Search challenges</label>
+              <input type="search" id="scheduleChallengeSearch" class="search-pill-input" placeholder="Search challenges…" autocomplete="off" />
             </div>
           </div>
 
@@ -89,9 +90,9 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="schedule-challenges-tbody">
                   {% for c in admin_challenges %}
-                  <tr>
+                  <tr class="js-schedule-challenge-row" data-challenge-search="{{ ('#' ~ (c.group_id|string) ~ ' ' ~ (c.group_name or '') ~ ' ' ~ (c.challenge_title or '') ~ ' ' ~ ((c.challenge_start_date|string) if c.challenge_start_date else '—') ~ ' ' ~ ((c.challenge_end_date|string) if c.challenge_end_date else '—') ~ ' #' ~ (c.challenge_id|string) ~ ' ' ~ (c.challenge_status or '—') ~ ' ' ~ (c.challenge_goal_display or ''))|e }}">
                     <td>#{{ c.group_id }}</td>
                     <td>{{ c.challenge_title }}</td>
                     <td>{{ c.challenge_start_date or '—' }}</td>
@@ -125,8 +126,9 @@
                     </td>
                   </tr>
                   {% else %}
-                  <tr><td colspan="10">No challenges yet.</td></tr>
+                  <tr id="schedule-challenges-empty-msg"><td colspan="10">No challenges yet.</td></tr>
                   {% endfor %}
+                  <tr id="schedule-challenges-no-match" class="d-none"><td colspan="10" class="text-muted">No challenges match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -139,9 +141,10 @@
               <h2 class="section-title">Participation -</h2>
               <span class="group-pill">{% if selected_challenge_id %}#CH{{ selected_challenge_id }}{% else %}—{% endif %}</span>
             </div>
-            <div class="search-pill">
+            <div class="search-pill search-pill--input">
               <img src="../../Static/Images%201/ScheduleAgroup0.svg" alt="" />
-              <span>Search Member</span>
+              <label for="scheduleParticipantSearch" class="visually-hidden">Search members</label>
+              <input type="search" id="scheduleParticipantSearch" class="search-pill-input" placeholder="Search members…" autocomplete="off" />
             </div>
           </div>
 
@@ -157,10 +160,10 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="schedule-participants-tbody">
                   {% if selected_challenge_id %}
                     {% for p in selected_challenge_participants %}
-                    <tr>
+                    <tr class="js-schedule-participant-row" data-participant-search="{{ (p.member_id_label ~ ' ' ~ p.member_name ~ ' ' ~ (p.rank|string) ~ ' ' ~ p.goal_progress)|e }}">
                       <td>{{ p.member_id_label }}</td>
                       <td>{{ p.member_name }}</td>
                       <td><span class="rank-badge">{{ p.rank }}</span></td>
@@ -183,6 +186,7 @@
                   {% else %}
                   <tr><td colspan="5" class="text-muted">Select a challenge using View to load participation details.</td></tr>
                   {% endif %}
+                  <tr id="schedule-participants-no-match" class="d-none"><td colspan="5" class="text-muted">No members match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -191,5 +195,55 @@
       </main>
     </div>
   </div>
+  <script>
+    (function () {
+      var input = document.getElementById("scheduleChallengeSearch");
+      var tbody = document.getElementById("schedule-challenges-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-schedule-challenge-row");
+      var noMatch = document.getElementById("schedule-challenges-no-match");
+      function filterRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-challenge-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterRows);
+    })();
+    (function () {
+      var input = document.getElementById("scheduleParticipantSearch");
+      var tbody = document.getElementById("schedule-participants-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-schedule-participant-row");
+      var noMatch = document.getElementById("schedule-participants-no-match");
+      function filterParticipantRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-participant-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterParticipantRows);
+    })();
+  </script>
 </body>
 </html>
