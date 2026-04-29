@@ -45,19 +45,21 @@
             <a href="groups-joined-GA.html" class="gjga-tab gjga-tab--active">Joined Groups</a>
           </div>
 
-          <div class="gjga-arrows-wrap">
-            <img src="../../Static/images/GJGAarrows0.svg" alt="Navigation arrows" />
+          <div class="gjga-arrows-wrap" aria-label="Joined groups pagination controls">
+            <button type="button" class="gjga-arrow-btn" id="gjgaPrevGroups" aria-label="Previous groups page">&#8592;</button>
+            <span class="gjga-page-indicator" id="gjgaGroupsPageIndicator">Page 1 of 1</span>
+            <button type="button" class="gjga-arrow-btn" id="gjgaNextGroups" aria-label="Next groups page">&#8594;</button>
           </div>
 
           <section class="gjga-card mb-4">
             <div class="gjga-card-head">
               <h2>Joined Groups</h2>
-              <div class="gjga-search-pill"><img src="../../Static/images/GJGAgroup0.svg" alt="" /><span>Search Groups</span></div>
+              <div class="gjga-search-pill gjga-search-pill--input"><img src="../../Static/images/GJGAgroup0.svg" alt="" /><label class="visually-hidden" for="gjgaGroupSearch">Search groups</label><input type="search" id="gjgaGroupSearch" class="gjga-search-pill-input" placeholder="Search Groups" autocomplete="off" /></div>
             </div>
 
-            <div class="row g-4">
+            <div class="row g-4" id="gjga-joined-groups-grid">
               {% for g in ga_joined_groups %}
-              <div class="col-12 col-lg-4">
+              <div class="col-12 col-lg-4 js-gjga-group-tile" data-group-search="{{ ('#' ~ (g.group_id|string) ~ ' ' ~ g.group_name ~ ' ' ~ (g.member_count|string))|e }}">
                 <article class="gjga-group-tile">
                   <h3>{{ g.group_name }}</h3>
                   <p>{{ g.member_count or 0 }} Members</p>
@@ -71,13 +73,19 @@
                 </article>
               </div>
               {% else %}
-              <div class="col-12">
+              <div class="col-12" id="gjga-no-groups-empty">
                 <article class="gjga-group-tile">
                   <h3>No joined groups found.</h3>
                   <p>This account is not currently a member of any groups.</p>
                 </article>
               </div>
               {% endfor %}
+              <div class="col-12 d-none" id="gjga-no-groups-match">
+                <article class="gjga-group-tile">
+                  <h3>No groups match your search.</h3>
+                  <p>Try a different group name or ID.</p>
+                </article>
+              </div>
             </div>
           </section>
 
@@ -87,7 +95,7 @@
                 <h2 class="mb-0">Group Members -</h2>
                 <div class="gjga-group-pill">{{ selected_group_name or "No Group Selected" }}</div>
               </div>
-              <div class="gjga-search-pill"><img src="../../Static/images/GJGAgroup1.svg" alt="" /><span>Search Member</span></div>
+              <div class="gjga-search-pill gjga-search-pill--input"><img src="../../Static/images/GJGAgroup1.svg" alt="" /><label class="visually-hidden" for="gjgaMemberSearch">Search members</label><input type="search" id="gjgaMemberSearch" class="gjga-search-pill-input" placeholder="Search Member" autocomplete="off" /></div>
             </div>
 
             <div class="table-responsive">
@@ -99,9 +107,9 @@
                     <th>Email</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="gjga-members-tbody">
                   {% for m in selected_group_members %}
-                  <tr>
+                  <tr class="js-gjga-member-row" data-member-search="{{ (m.member_name ~ ' ' ~ m.member_role ~ ' ' ~ m.member_email)|e }}">
                     <td><span class="gjga-member-avatar"></span>{{ m.member_name }}</td>
                     <td>{{ m.member_role }}</td>
                     <td>{{ m.member_email }}</td>
@@ -117,6 +125,9 @@
                     </td>
                   </tr>
                   {% endfor %}
+                  <tr id="gjga-no-members-match" class="d-none">
+                    <td colspan="3" class="text-muted p-4">No members match your search.</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -125,5 +136,95 @@
       </div>
     </div>
   </div>
+  <script>
+    (function () {
+      var pageSize = 3;
+      var groupInput = document.getElementById("gjgaGroupSearch");
+      var groupTiles = Array.prototype.slice.call(document.querySelectorAll(".js-gjga-group-tile"));
+      var prevBtn = document.getElementById("gjgaPrevGroups");
+      var nextBtn = document.getElementById("gjgaNextGroups");
+      var pageIndicator = document.getElementById("gjgaGroupsPageIndicator");
+      var noGroupMatch = document.getElementById("gjga-no-groups-match");
+      var currentPage = 1;
+      var filteredTiles = groupTiles.slice();
+
+      function updateGroupsView() {
+        var totalPages = Math.max(1, Math.ceil(filteredTiles.length / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        var start = (currentPage - 1) * pageSize;
+        var end = start + pageSize;
+
+        for (var i = 0; i < groupTiles.length; i++) {
+          var tile = groupTiles[i];
+          var idx = filteredTiles.indexOf(tile);
+          var visible = idx >= start && idx < end;
+          tile.style.display = visible ? "" : "none";
+        }
+
+        if (pageIndicator) {
+          pageIndicator.textContent = "Page " + currentPage + " of " + totalPages;
+        }
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+
+        if (noGroupMatch) {
+          if (groupInput && groupInput.value.trim() && filteredTiles.length === 0) {
+            noGroupMatch.classList.remove("d-none");
+          } else {
+            noGroupMatch.classList.add("d-none");
+          }
+        }
+      }
+
+      function applyGroupSearch() {
+        var q = (groupInput && groupInput.value ? groupInput.value : "").trim().toLowerCase();
+        filteredTiles = groupTiles.filter(function (tile) {
+          var hay = (tile.getAttribute("data-group-search") || "").toLowerCase();
+          return !q || hay.indexOf(q) !== -1;
+        });
+        currentPage = 1;
+        updateGroupsView();
+      }
+
+      if (groupInput) groupInput.addEventListener("input", applyGroupSearch);
+      if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+          currentPage = Math.max(1, currentPage - 1);
+          updateGroupsView();
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+          var totalPages = Math.max(1, Math.ceil(filteredTiles.length / pageSize));
+          currentPage = Math.min(totalPages, currentPage + 1);
+          updateGroupsView();
+        });
+      }
+      updateGroupsView();
+
+      var memberInput = document.getElementById("gjgaMemberSearch");
+      var memberRows = Array.prototype.slice.call(document.querySelectorAll(".js-gjga-member-row"));
+      var noMemberMatch = document.getElementById("gjga-no-members-match");
+
+      function applyMemberSearch() {
+        if (!memberRows.length) return;
+        var q = (memberInput && memberInput.value ? memberInput.value : "").trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < memberRows.length; i++) {
+          var row = memberRows[i];
+          var hay = (row.getAttribute("data-member-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible += 1;
+        }
+        if (noMemberMatch) {
+          if (q && visible === 0) noMemberMatch.classList.remove("d-none");
+          else noMemberMatch.classList.add("d-none");
+        }
+      }
+
+      if (memberInput) memberInput.addEventListener("input", applyMemberSearch);
+    })();
+  </script>
 </body>
 </html>

@@ -217,6 +217,30 @@ body {
 .cgga-search-pill img {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+}
+
+.cgga-search-pill--input {
+  min-width: 280px;
+  flex: 1;
+  max-width: 420px;
+}
+
+.cgga-search-pill-input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #343c6a;
+  outline: none;
+}
+
+.cgga-search-pill-input::placeholder {
+  color: #8ba3cb;
 }
 
 .cgga-id-pill {

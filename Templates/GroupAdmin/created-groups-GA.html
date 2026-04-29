@@ -51,9 +51,10 @@
           <section class="cgga-card mb-4">
             <div class="cgga-card-toolbar">
               <h2>Group Management</h2>
-              <div class="cgga-search-pill">
+              <div class="cgga-search-pill cgga-search-pill--input">
                 <img src="../../Static/images/CGGAgroup1.svg" alt="" />
-                <span>Search Group</span>
+                <label for="cggaGroupSearch" class="visually-hidden">Search groups</label>
+                <input type="search" id="cggaGroupSearch" class="cgga-search-pill-input" placeholder="Search groups…" autocomplete="off" />
               </div>
             </div>
 
@@ -67,9 +68,9 @@
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="cgga-created-groups-tbody">
                   {% for g in ga_created_groups %}
-                  <tr>
+                  <tr class="js-cgga-group-row" data-group-search="{{ ('#' ~ (g.group_id|string) ~ ' ' ~ g.group_name ~ ' ' ~ (g.member_count|string))|e }}">
                     <td>#{{ g.group_id }}</td>
                     <td>{{ g.group_name }}</td>
                     <td>
@@ -89,10 +90,11 @@
                     </td>
                   </tr>
                   {% else %}
-                  <tr>
+                  <tr id="cgga-created-groups-empty">
                     <td colspan="4" class="text-muted p-4">No groups yet. <a href="group-creation-GA.html">Create a group</a>.</td>
                   </tr>
                   {% endfor %}
+                  <tr id="cgga-created-groups-no-match" class="d-none"><td colspan="4" class="text-muted p-4">No groups match your search.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -252,5 +254,31 @@
     </div>
   </div>
   <script src="../../Static/JS/created-groups-GA-invite.js"></script>
+  <script>
+    (function () {
+      var input = document.getElementById("cggaGroupSearch");
+      var tbody = document.getElementById("cgga-created-groups-tbody");
+      if (!input || !tbody) return;
+      var dataRows = tbody.querySelectorAll("tr.js-cgga-group-row");
+      var noMatch = document.getElementById("cgga-created-groups-no-match");
+      function filterRows() {
+        if (!dataRows.length) return;
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        for (var i = 0; i < dataRows.length; i++) {
+          var row = dataRows[i];
+          var hay = (row.getAttribute("data-group-search") || "").toLowerCase();
+          var show = !q || hay.indexOf(q) !== -1;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (noMatch) {
+          if (q && visible === 0) noMatch.classList.remove("d-none");
+          else noMatch.classList.add("d-none");
+        }
+      }
+      input.addEventListener("input", filterRows);
+    })();
+  </script>
 </body>
 </html>
