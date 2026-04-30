@@ -53,10 +53,6 @@ body {
   transition: color 0.2s ease;
 }
 
-.nav-item-link:hover {
-  color: #8f8f8f;
-}
-
 .nav-item-link.active {
   color: #b1b1b1;
 }

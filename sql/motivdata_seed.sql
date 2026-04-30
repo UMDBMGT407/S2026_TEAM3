@@ -51,8 +51,8 @@ INSERT INTO user_group (user_id, group_id) VALUES
 (1, 1), (1, 2), (2, 1), (3, 2), (3, 3);
 
 INSERT INTO challenge (challenge_title, challenge_date, challenge_start_date, challenge_end_date, challenge_status, challenge_goal, group_admin_id, group_id) VALUES
-('Spring Step Count', '2026-03-01', '2026-03-01', '2026-03-31', 'active', 'Walk 10k steps daily', 1, 1),
-('April Strength', '2026-04-01', '2026-04-01', '2026-04-30', 'active', '12 workouts this month', 1, 2);
+('Spring Step Count', '2026-03-01', '2026-03-01', '2026-03-31', 'active', '30', 1, 1),
+('April Strength', '2026-04-01', '2026-04-01', '2026-04-30', 'active', '12', 1, 2);
 
 INSERT INTO group_workout (group_workout_title, group_workout_description, group_workout_scheduled_date, group_workout_start_date, group_workout_end_date, group_workout_location, group_id, group_admin_id) VALUES
 ('Leg Day', 'Squats and accessories', '2026-04-07', '2026-04-07', '2026-04-07', 'Eppley Rec Center', 1, 1),
@@ -66,11 +66,11 @@ INSERT INTO exercise (exercise_name, exercise_muscle_group, exercise_difficulty_
 ('Deadlift', 'Back', 'advanced'),
 ('Treadmill Run', 'Cardio', 'beginner');
 
-INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id) VALUES
-('2026-03-27', 40, 1, 1),
-('2026-03-27', 36, 1, NULL),
-('2026-03-26', 25, 2, NULL),
-('2026-03-25', 15, 3, 2);
+INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id, challenge_id) VALUES
+('2026-03-27', 40, 1, 1, NULL),
+('2026-03-27', 36, 1, NULL, NULL),
+('2026-03-26', 25, 2, NULL, NULL),
+('2026-03-25', 15, 3, 2, NULL);
 
 INSERT INTO workout_log (workout_num_sets, workout_num_reps, workout_num_weight, workout_id, exercise_id) VALUES
 (3, 10, 135.00, 1, 1),

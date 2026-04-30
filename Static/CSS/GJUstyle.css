@@ -240,15 +240,41 @@ body {
 }
 
 .gju-arrows-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 6px 0 14px;
   width: 100%;
-  overflow-x: auto;
 }
 
-.gju-arrows {
-  display: block;
-  width: 100%;
-  max-width: 1038px;
-  height: auto;
+.gju-arrow-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #8ba3cb;
+  color: #1a57a8;
+  background: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.gju-arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.gju-page-indicator {
+  color: #718ebf;
+  font-size: 14px;
+}
+
+.gju-member-row--no-match .gju-member-cell {
+  grid-column: 1 / -1;
 }
 
 .gju-group-card {

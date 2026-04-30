@@ -34,6 +34,7 @@
       padding: 0;
     }
   </style>
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
   <title>Groups</title>
 </head>
 <body>
@@ -88,6 +89,11 @@
         </header>
 
         <div class="gju-main-canvas flex-grow-1">
+          {% if request.args.get('leave_err') == 'forbidden' %}
+          <div class="alert alert-warning py-2 mb-3" role="alert">You can’t leave that group from this account.</div>
+          {% elif request.args.get('leave_err') == 'schema' %}
+          <div class="alert alert-danger py-2 mb-3" role="alert">Could not update membership. Try again later.</div>
+          {% endif %}
           <div class="row g-3 align-items-center mb-3 gju-toolbar">
             <div class="col-12 col-lg-auto">
               <h2 class="gju-toolbar-title">Joined Groups</h2>
@@ -95,16 +101,15 @@
             <div class="col-12 col-md-6 col-lg">
               <div class="gju-search" role="search">
                 <img class="gju-search-icon" src="../../Static/Images%202/GJUgroup0.svg" alt="" />
+                <label class="visually-hidden" for="gju-group-search">Search groups</label>
                 <input
                   id="gju-group-search"
                   class="gju-search-input"
-                  type="text"
-                  list="gju-group-search-list"
+                  type="search"
                   placeholder="Search Groups"
                   autocomplete="off"
                   aria-label="Search groups"
                 />
-                <datalist id="gju-group-search-list"></datalist>
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-auto ms-lg-auto text-lg-end">
@@ -112,13 +117,15 @@
             </div>
           </div>
 
-          <div class="gju-arrows-wrap mb-4">
-            <img class="gju-arrows img-fluid" src="../../Static/Images%202/GJUarrows0.svg" alt="" />
+          <div class="gju-arrows-wrap mb-4" aria-label="Joined groups pagination controls">
+            <button type="button" class="gju-arrow-btn" id="gjuPrevGroups" aria-label="Previous groups page">&#8592;</button>
+            <span class="gju-page-indicator" id="gjuGroupsPageIndicator">Page 1 of 1</span>
+            <button type="button" class="gju-arrow-btn" id="gjuNextGroups" aria-label="Next groups page">&#8594;</button>
           </div>
 
           <div class="row g-4 gju-cards-row mb-5" id="gju-group-cards">
             {% for g in user_joined_groups %}
-            <div class="col-12 col-md-6 col-xl-4" data-group-card data-group-name="{{ g.group_name or '' }}">
+            <div class="col-12 col-md-6 col-xl-4 js-gju-group-tile" data-group-search="{{ ('#' ~ (g.group_id|string) ~ ' ' ~ g.group_name ~ ' ' ~ (g.member_count|string))|e }}">
               <article class="gju-group-card">
                 <div class="gju-card-titles">
                   <p class="gju-card-kicker">{{ g.member_count or 0 }} Members</p>
@@ -129,7 +136,14 @@
                     <input type="hidden" name="group_id" value="{{ g.group_id }}">
                     <button type="submit" class="gju-btn gju-btn--primary">View Members</button>
                   </form>
-                  <button type="button" class="gju-btn gju-btn--muted">Leave Group</button>
+                  <form
+                    method="post"
+                    action="/actions/user/group/{{ g.group_id }}/leave"
+                    class="gju-inline-form"
+                    onsubmit="return confirm('Leave this group? You will lose access to its workouts, challenges, and posts until you join again.');"
+                  >
+                    <button type="submit" class="gju-btn gju-btn--muted border-0">Leave Group</button>
+                  </form>
                 </div>
               </article>
             </div>
@@ -142,6 +156,14 @@
               </article>
             </div>
             {% endfor %}
+            <div class="col-12 d-none" id="gju-no-groups-match">
+              <article class="gju-group-card gju-group-card--empty">
+                <div class="gju-card-titles">
+                  <p class="gju-card-name">No groups match your search.</p>
+                  <p class="gju-card-kicker">Try a different group name or ID.</p>
+                </div>
+              </article>
+            </div>
           </div>
 
           <div class="row g-3 align-items-center mb-3 gju-members-toolbar flex-wrap">
@@ -154,16 +176,15 @@
             <div class="col-12 col-md">
               <div class="gju-search" role="search">
                 <img class="gju-search-icon" src="../../Static/Images%202/GJUgroup1.svg" alt="" />
+                <label class="visually-hidden" for="gju-member-search">Search members</label>
                 <input
                   id="gju-member-search"
                   class="gju-search-input"
-                  type="text"
-                  list="gju-member-search-list"
+                  type="search"
                   placeholder="Search Member"
                   autocomplete="off"
                   aria-label="Search members"
                 />
-                <datalist id="gju-member-search-list"></datalist>
               </div>
             </div>
           </div>
@@ -176,7 +197,7 @@
             </div>
             <div class="gju-member-divider gju-member-divider--strong"></div>
             {% for m in selected_group_members %}
-            <div class="gju-member-grid gju-member-row" data-member-row data-member-name="{{ m.member_name }}" data-member-email="{{ m.member_email }}">
+            <div class="gju-member-grid gju-member-row js-gju-member-row" data-member-search="{{ (m.member_name ~ ' ' ~ m.member_role ~ ' ' ~ m.member_email)|e }}">
               <div class="gju-member-cell gju-member-cell--name">
                 <span class="gju-member-avatar" aria-hidden="true"></span>
                 <span>{{ m.member_name }}</span>
@@ -197,6 +218,11 @@
               <div class="gju-member-cell">-</div>
             </div>
             {% endfor %}
+            <div class="gju-member-grid gju-member-row gju-member-row--no-match d-none" id="gju-no-members-match" role="status">
+              <div class="gju-member-cell gju-member-cell--name">
+                <span class="text-muted">No members match your search.</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

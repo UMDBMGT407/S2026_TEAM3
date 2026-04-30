@@ -184,15 +184,61 @@ body {
 .sjwga-search-pill img {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+}
+
+.sjwga-search-pill--input {
+  min-width: 260px;
+  flex: 1;
+  max-width: 380px;
+}
+
+.sjwga-search-pill-input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: #343c6a;
+  outline: none;
+}
+
+.sjwga-search-pill-input::placeholder {
+  color: #8ba3cb;
 }
 
 .sjwga-arrows-wrap {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 6px 0 14px;
 }
 
-.sjwga-arrows-wrap img {
-  max-width: 100%;
+.sjwga-arrow-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #8ba3cb;
+  color: #1a57a8;
+  background: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sjwga-arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sjwga-page-indicator {
+  color: #718ebf;
+  font-size: 14px;
 }
 
 .sjwga-workout-card {

@@ -1,16 +1,10 @@
 body {
-  background: #f5f7fa;
   font-family: "Inter", "Inter-Regular", sans-serif;
 }
 
 .du-layout,
 .du-layout * {
   box-sizing: border-box;
-}
-
-.du-sidebar {
-  background: #ffffff;
-  border-right: 1px solid #e6eff5;
 }
 
 .du-sidebar-inner {
@@ -62,7 +56,7 @@ body {
   width: 5px;
   height: 52px;
   border-radius: 999px;
-  background: #1814f3;
+  background: var(--portal-accent, #1814f3);
 }
 
 .du-nav-icon {
@@ -139,25 +133,58 @@ body {
 }
 
 .du-workouts-overview .row {
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 .du-stat-card {
-  background: #ffffff;
-  border-radius: 25px;
-  box-shadow: 4px 4px 18px -5px rgba(218, 221, 232, 0.8);
-  padding: 22px 20px;
-  min-height: 120px;
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(155deg, #ffffff 0%, #f4f8ff 68%, #eff4ff 100%);
+  border: 1px solid #dde7fb;
+  border-radius: 24px;
+  box-shadow: 0 16px 30px -24px rgb(var(--portal-accent-rgb, 43 68 255) / 46%),
+    0 8px 18px -14px rgba(42, 57, 95, 0.28);
+  padding: 20px 18px;
+  min-height: 122px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
+  overflow: hidden;
+  transition: transform 0.24s ease, box-shadow 0.24s ease,
+    border-color 0.24s ease;
+}
+
+.du-stat-card::before {
+  content: "";
+  position: absolute;
+  right: -58px;
+  top: -56px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--portal-accent-rgb, 43 68 255) / 20%) 0%,
+    rgb(var(--portal-accent-rgb, 43 68 255) / 0%) 72%
+  );
+  z-index: -1;
+}
+
+.du-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #c9d7f8;
+  box-shadow: 0 20px 34px -22px rgb(var(--portal-accent-rgb, 43 68 255) / 50%),
+    0 10px 18px -14px rgba(42, 57, 95, 0.28);
 }
 
 .du-stat-icon-wrap {
-  width: 70px;
-  height: 70px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: #e7edff;
+  border: 1px solid #d7e1f9;
+  background: linear-gradient(180deg, #f8faff 0%, #e9efff 100%);
+  box-shadow: inset 0 2px 7px rgba(255, 255, 255, 0.85),
+    0 7px 16px -11px rgb(var(--portal-accent-rgb, 43 68 255) / 60%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,64 +204,107 @@ body {
 
 .du-stat-label {
   margin: 0;
-  color: #718ebf;
-  font-size: 16px;
+  color: #6f80ac;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .du-stat-value {
-  margin: 4px 0 0;
-  color: #232323;
-  font-size: 25px;
-  font-weight: 600;
+  margin: 6px 0 0;
+  color: #1f2e60;
+  font-size: 28px;
+  font-weight: 700;
   line-height: 1.1;
 }
 
 .du-stat-value span {
   display: block;
-  font-size: 12px;
+  margin-top: 3px;
+  color: #7082b2;
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .du-leaderboard-card {
+  position: relative;
   background: #ffffff;
-  border-radius: 25px;
+  border: 1px solid #e8ecf6;
+  border-radius: 28px;
+  box-shadow: 0 16px 34px -24px rgb(var(--portal-accent-rgb, 43 68 255) / 35%),
+    0 8px 18px -14px rgba(26, 32, 68, 0.24);
   padding: 24px;
+  overflow: hidden;
+}
+
+.du-leaderboard-card::before {
+  content: "";
+  position: absolute;
+  left: -80px;
+  top: -120px;
+  width: 320px;
+  height: 220px;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--portal-accent-rgb, 43 68 255) / 9%) 0%,
+    rgb(var(--portal-accent-rgb, 43 68 255) / 0%) 72%
+  );
+  pointer-events: none;
 }
 
 .du-leaderboard-top {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .du-section-subtitle {
-  margin: 3px 0 0;
-  color: #232323;
-  font-size: 14px;
+  margin: 5px 0 0;
+  color: #6c7da8;
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .du-rank-filter label {
   display: block;
-  color: #718ebf;
+  color: #5f75a8;
   font-size: 12px;
-  margin-bottom: 4px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
 }
 
 .du-rank-filter select,
 .du-challenge-filter select {
   min-width: 132px;
   max-width: min(280px, 100%);
-  height: 30px;
-  border: 1px solid #1814f3;
-  border-radius: 5px;
-  background: #ffffff;
-  font-size: 12px;
-  padding: 0 10px;
+  height: 38px;
+  border: 1px solid #cfd8ee;
+  border-radius: 12px;
+  background: #f8faff;
+  font-size: 13px;
+  color: #2e3b69;
+  font-weight: 500;
+  padding: 0 12px;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.du-rank-filter select:focus,
+.du-challenge-filter select:focus {
+  outline: none;
+  border-color: var(--portal-accent, #1814f3);
+  box-shadow: 0 0 0 3px rgb(var(--portal-accent-rgb, 43 68 255) / 14%);
+  background: #ffffff;
 }
 
 .du-challenge-filter {
@@ -249,31 +319,173 @@ body {
 }
 
 .du-table thead th {
-  color: #718ebf;
-  font-size: 16px;
-  font-weight: 500;
-  border-bottom: 1px solid #f4f5f7;
+  color: #5f75a8;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #e8ecf6;
+  background: #f8faff;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 .du-table tbody td {
-  color: #232323;
-  font-size: 16px;
-  border-color: #f4f5f7;
+  color: #2a355c;
+  font-size: 15px;
+  border-color: #edf1f8;
   vertical-align: middle;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.du-table tbody tr:nth-child(even) {
+  background: #fbfcff;
+}
+
+.du-table tbody tr:hover {
+  background: #f3f6ff;
 }
 
 .du-rank-badge {
-  width: 30px;
-  height: 35px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
-  background: rgba(231, 228, 232, 0.8);
+  border: 1px solid #d8e0f2;
+  background: #f5f8ff;
+  color: #445a88;
+  font-size: 13px;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .du-table tbody tr:first-child .du-rank-badge {
-  background: #fff5d9;
+  border-color: #f7dfa5;
+  background: #fff2cf;
+  color: #8a6116;
+}
+
+.du-table tbody tr:nth-child(2) .du-rank-badge {
+  border-color: #d8dfea;
+  background: #eef3f9;
+  color: #5a687f;
+}
+
+.du-table tbody tr:nth-child(3) .du-rank-badge {
+  border-color: #e2c9b7;
+  background: #f6e7dc;
+  color: #8a5a36;
+}
+
+/* Reference-inspired leaderboard visuals (blue/white only) */
+.du-leaderboard-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+}
+
+.du-leaderboard-top {
+  margin-bottom: 18px;
+}
+
+.du-podium-shell {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.du-podium-card {
+  border-radius: 18px;
+  border: 1px solid #dce5fb;
+  background: #f6f9ff;
+  padding: 12px 10px;
+  text-align: center;
+  box-shadow: 0 8px 18px -16px rgb(var(--portal-accent-rgb, 43 68 255) / 55%);
+}
+
+.du-podium-card--1 {
+  background: linear-gradient(
+    180deg,
+    var(--portal-accent, #2f43ff) 0%,
+    #1f2ce0 100%
+  );
+  border-color: #1f2ce0;
+  transform: translateY(-4px);
+}
+
+.du-podium-card--2,
+.du-podium-card--3 {
+  background: linear-gradient(180deg, #eef3ff 0%, #e7eeff 100%);
+}
+
+.du-podium-rank {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  color: #1c2e72;
+}
+
+.du-podium-card--1 .du-podium-rank {
+  color: #ffffff;
+}
+
+.du-podium-label {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #5f75a8;
+}
+
+.du-podium-card--1 .du-podium-label {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.du-table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.du-table thead th {
+  background: transparent;
+  border-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 6px;
+}
+
+.du-table tbody td {
+  background: #f7f9ff;
+  border-top: 1px solid #e2e9fb;
+  border-bottom: 1px solid #e2e9fb;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.du-table tbody tr:nth-child(even) td {
+  background: #f2f6ff;
+}
+
+.du-table tbody tr:hover td {
+  background: #eaf0ff;
+}
+
+.du-table tbody td:first-child {
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  border-left: 1px solid #e2e9fb;
+}
+
+.du-table tbody td:last-child {
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border-right: 1px solid #e2e9fb;
+}
+
+.du-table tbody td + td {
+  border-left: 0;
 }
 
 .du-challenge-banner {
@@ -334,8 +546,50 @@ body {
     font-size: 24px;
   }
 
+  .du-workouts-overview .row {
+    margin-top: 4px;
+  }
+
+  .du-stat-card {
+    min-height: 110px;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .du-stat-icon-wrap {
+    width: 56px;
+    height: 56px;
+  }
+
+  .du-stat-icon-wrap img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .du-stat-icon--minutes {
+    width: 40px;
+    height: 40px;
+  }
+
+  .du-stat-value {
+    font-size: 24px;
+  }
+
   .du-leaderboard-top {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .du-podium-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .du-rank-filter {
+    width: 100%;
+  }
+
+  .du-rank-filter select {
+    width: 100%;
   }
 
   .du-challenge-banner {

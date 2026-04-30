@@ -1,26 +1,34 @@
 (function () {
   "use strict";
 
-  var pageSize = 3;
-  var groupInput = document.getElementById("gju-group-search");
-  var groupTiles = Array.prototype.slice.call(
-    document.querySelectorAll(".js-gju-group-tile")
+  var pageSize = 2;
+  var workoutInput = document.getElementById("su-workout-search");
+  var workoutTiles = Array.prototype.slice.call(
+    document.querySelectorAll(".js-su-workout-tile")
   );
-  var prevBtn = document.getElementById("gjuPrevGroups");
-  var nextBtn = document.getElementById("gjuNextGroups");
-  var pageIndicator = document.getElementById("gjuGroupsPageIndicator");
-  var noGroupMatch = document.getElementById("gju-no-groups-match");
+  var prevBtn = document.getElementById("suPrevWorkouts");
+  var nextBtn = document.getElementById("suNextWorkouts");
+  var pageIndicator = document.getElementById("suWorkoutsPageIndicator");
+  var noWorkoutMatch = document.getElementById("su-no-workouts-match");
   var currentPage = 1;
-  var filteredTiles = groupTiles.slice();
+  var filteredTiles = workoutTiles.slice();
 
-  function updateGroupsView() {
+  function updateWorkoutsView() {
+    if (!workoutTiles.length) {
+      if (pageIndicator) pageIndicator.textContent = "Page 1 of 1";
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+      if (noWorkoutMatch) noWorkoutMatch.classList.add("d-none");
+      return;
+    }
+
     var totalPages = Math.max(1, Math.ceil(filteredTiles.length / pageSize));
     if (currentPage > totalPages) currentPage = totalPages;
     var start = (currentPage - 1) * pageSize;
     var end = start + pageSize;
 
-    for (var i = 0; i < groupTiles.length; i++) {
-      var tile = groupTiles[i];
+    for (var i = 0; i < workoutTiles.length; i++) {
+      var tile = workoutTiles[i];
       var idx = filteredTiles.indexOf(tile);
       var visible = idx >= start && idx < end;
       tile.style.display = visible ? "" : "none";
@@ -32,32 +40,34 @@
     if (prevBtn) prevBtn.disabled = currentPage <= 1;
     if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
 
-    if (noGroupMatch) {
-      if (groupInput && groupInput.value.trim() && filteredTiles.length === 0) {
-        noGroupMatch.classList.remove("d-none");
+    if (noWorkoutMatch) {
+      var q = (workoutInput && workoutInput.value ? workoutInput.value : "").trim();
+      if (q && filteredTiles.length === 0) {
+        noWorkoutMatch.classList.remove("d-none");
       } else {
-        noGroupMatch.classList.add("d-none");
+        noWorkoutMatch.classList.add("d-none");
       }
     }
   }
 
-  function applyGroupSearch() {
-    var q = (groupInput && groupInput.value ? groupInput.value : "")
+  function applyWorkoutSearch() {
+    if (!workoutTiles.length) return;
+    var q = (workoutInput && workoutInput.value ? workoutInput.value : "")
       .trim()
       .toLowerCase();
-    filteredTiles = groupTiles.filter(function (tile) {
-      var hay = (tile.getAttribute("data-group-search") || "").toLowerCase();
+    filteredTiles = workoutTiles.filter(function (tile) {
+      var hay = (tile.getAttribute("data-workout-search") || "").toLowerCase();
       return !q || hay.indexOf(q) !== -1;
     });
     currentPage = 1;
-    updateGroupsView();
+    updateWorkoutsView();
   }
 
-  if (groupInput) groupInput.addEventListener("input", applyGroupSearch);
+  if (workoutInput) workoutInput.addEventListener("input", applyWorkoutSearch);
   if (prevBtn) {
     prevBtn.addEventListener("click", function () {
       currentPage = Math.max(1, currentPage - 1);
-      updateGroupsView();
+      updateWorkoutsView();
     });
   }
   if (nextBtn) {
@@ -67,23 +77,16 @@
         Math.ceil(filteredTiles.length / pageSize)
       );
       currentPage = Math.min(totalPages, currentPage + 1);
-      updateGroupsView();
+      updateWorkoutsView();
     });
   }
-  updateGroupsView();
+  updateWorkoutsView();
 
-  var memberInput = document.getElementById("gju-member-search");
+  var memberInput = document.getElementById("su-member-search");
   var memberRows = Array.prototype.slice.call(
-    document.querySelectorAll(".js-gju-member-row")
+    document.querySelectorAll(".js-su-attendance-row")
   );
-  var noMemberMatch = document.getElementById("gju-no-members-match");
-
-  function setRowDividerVisibility(row, show) {
-    var next = row.nextElementSibling;
-    if (next && next.classList && next.classList.contains("gju-member-divider")) {
-      next.style.display = show ? "" : "none";
-    }
-  }
+  var noMemberMatch = document.getElementById("su-no-members-match");
 
   function applyMemberSearch() {
     if (!memberRows.length) {
@@ -94,12 +97,11 @@
       .trim()
       .toLowerCase();
     var visible = 0;
-    for (var i = 0; i < memberRows.length; i++) {
-      var row = memberRows[i];
+    for (var j = 0; j < memberRows.length; j++) {
+      var row = memberRows[j];
       var hay = (row.getAttribute("data-member-search") || "").toLowerCase();
       var show = !q || hay.indexOf(q) !== -1;
       row.style.display = show ? "" : "none";
-      setRowDividerVisibility(row, show);
       if (show) visible += 1;
     }
     if (noMemberMatch) {

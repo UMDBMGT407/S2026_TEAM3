@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/edit-workout-logging-GA.css">
-  <title>Edit Workout Exercise</title>
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
+  <title>Edit workout — Motiv</title>
 </head>
 <body>
   <div class="ewlga-layout container-fluid p-0">
@@ -41,62 +41,14 @@
 
         <div class="ewlga-main-canvas flex-grow-1">
           <section class="ewlga-card">
-            <div class="ewlga-tabs">
-              <span class="ewlga-tab active">Workout Details</span>
-              <span class="ewlga-tab">Performance Metrics</span>
+            <h2 class="h5 mb-3">Edit your workout</h2>
+            <p class="text-muted mb-3">
+              Workouts are edited from <strong>Workout history</strong> (pick a row and use <strong>Edit</strong>) or by creating a new entry on <strong>Log workout</strong>.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="workout-history-GA.html" class="ewlga-btn ewlga-btn--primary">Open workout history</a>
+              <a href="workout-logging-GA.html" class="ewlga-btn ewlga-btn--secondary">Log a new workout</a>
             </div>
-
-            <form class="ewlga-form" action="#" method="post">
-              <div class="row g-4">
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-date">Date</label>
-                  <input id="ewlga-date" class="ewlga-input" type="text" value="25 January 1990" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-sets">Sets</label>
-                  <input id="ewlga-sets" class="ewlga-input" type="text" value="3" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-exercise">Exercise Name</label>
-                  <input id="ewlga-exercise" class="ewlga-input" type="text" value="Sit-ups" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-reps">Reps</label>
-                  <input id="ewlga-reps" class="ewlga-input" type="text" value="10" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-duration">Duration (minutes)</label>
-                  <input id="ewlga-duration" class="ewlga-input" type="text" value="30" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-weight">Weights</label>
-                  <input id="ewlga-weight" class="ewlga-input" type="text" value="5" />
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-difficulty">Difficulty Level</label>
-                  <input id="ewlga-difficulty" class="ewlga-input" type="text" value="Medium" />
-                </div>
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-challenge">Add to Challenge (optional)</label>
-                  <select id="ewlga-challenge" class="ewlga-input ewlga-select">
-                    <option selected>Challenge Name</option>
-                  </select>
-                </div>
-
-                <div class="col-12 col-xl-6">
-                  <label class="ewlga-label" for="ewlga-muscle">Muscle Group</label>
-                  <input id="ewlga-muscle" class="ewlga-input" type="text" value="Abs" />
-                </div>
-              </div>
-
-              <div class="ewlga-actions">
-                <a href="workout-details-GA.html" class="ewlga-btn ewlga-btn--primary">Save</a>
-                <a href="workout-details-GA.html" class="ewlga-btn ewlga-btn--secondary">Cancel</a>
-              </div>
-            </form>
           </section>
         </div>
       </div>

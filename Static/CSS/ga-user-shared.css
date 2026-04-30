@@ -1,0 +1,719 @@
+/**
+ * Group Admin + User shell polish — load after Bootstrap and page CSS.
+ * Uses tokens from vars.css. Scoped to portal layout roots only (not Admin).
+ *
+ * Layout roots — add new pages here:
+ * GA: ga, gjga, whga, jcga, sjwga, cgga, csga, wdga, egga, esga, ewlga, pga,
+ *     wlga, gcga, ccga, cc2ga, nga, sga, ecga, pga-profile
+ * User: gju, prou, wldu, chu, gcu, wlu, nu, wleu, du, su, pu, wlau
+ */
+
+:root {
+  --admin-shell-bg: linear-gradient(
+    165deg,
+    var(--portal-page-tint, #eef3f9) 0%,
+    #f5f7fa 42%,
+    #f8fafc 100%
+  );
+}
+
+/* Portal layout roots (Group Admin + User dashboards) */
+body:has(
+    :is(
+      .ga-layout,
+      .gjga-layout,
+      .whga-layout,
+      .jcga-layout,
+      .sjwga-layout,
+      .cgga-layout,
+      .csga-layout,
+      .wdga-layout,
+      .egga-layout,
+      .esga-layout,
+      .ewlga-layout,
+      .pga-layout,
+      .wlga-layout,
+      .gcga-layout,
+      .ccga-layout,
+      .cc2ga-layout,
+      .nga-layout,
+      .sga-layout,
+      .ecga-layout,
+      .pga-profile-layout,
+      .gju-layout,
+      .prou-layout,
+      .wldu-layout,
+      .chu-layout,
+      .gcu-layout,
+      .wlu-layout,
+      .nu-layout,
+      .wleu-layout,
+      .du-layout,
+      .su-layout,
+      .pu-layout,
+      .wlau-layout
+    )
+  ) {
+  background: var(--admin-shell-bg, #f5f7fa);
+  -webkit-font-smoothing: antialiased;
+  /* Reduce full-page horizontal scroll; wide tables may still scroll inside .table-responsive */
+  overflow-x: hidden;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  aside[class*="-sidebar"] {
+  background: var(--admin-surface, #ffffff);
+  border-right: 1px solid var(--admin-border, #e6eff5);
+  box-shadow: var(--admin-shadow-sidebar, 2px 0 24px -8px rgba(52, 60, 106, 0.06));
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  header[class*="-topbar"] {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--admin-border, #e6eff5);
+  box-shadow: var(
+    --admin-shadow-topbar,
+    0 1px 0 rgba(230, 239, 245, 0.9),
+    0 8px 24px -12px rgba(52, 60, 106, 0.08)
+  );
+  backdrop-filter: blur(10px);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  :is(
+      .ga-layout,
+      .gjga-layout,
+      .whga-layout,
+      .jcga-layout,
+      .sjwga-layout,
+      .cgga-layout,
+      .csga-layout,
+      .wdga-layout,
+      .egga-layout,
+      .esga-layout,
+      .ewlga-layout,
+      .pga-layout,
+      .wlga-layout,
+      .gcga-layout,
+      .ccga-layout,
+      .cc2ga-layout,
+      .nga-layout,
+      .sga-layout,
+      .ecga-layout,
+      .pga-profile-layout,
+      .gju-layout,
+      .prou-layout,
+      .wldu-layout,
+      .chu-layout,
+      .gcu-layout,
+      .wlu-layout,
+      .nu-layout,
+      .wleu-layout,
+      .du-layout,
+      .su-layout,
+      .pu-layout,
+      .wlau-layout
+    )
+    header[class*="-topbar"] {
+    background: var(--admin-surface, #ffffff);
+  }
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  nav
+  a[class*="-nav-link"] {
+  border-radius: var(--admin-radius-sm, 10px);
+  padding: 6px 10px;
+  margin-left: -2px;
+  margin-right: -2px;
+  transition: color var(--admin-transition, 0.2s ease),
+    background-color var(--admin-transition, 0.2s ease);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  nav
+  a[class*="-nav-link"]:not(.active):hover {
+  background: #f4f6fb;
+  color: var(--admin-text, #343c6a);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  nav
+  a[class*="-nav-link"]:focus-visible {
+  outline: 2px solid var(--portal-accent, var(--admin-accent, #1814f3));
+  outline-offset: 2px;
+}
+
+/* Airy portal: main canvas wash, nav bar accent, forms, generic cards/tables */
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  [class*="-main-canvas"] {
+  background: linear-gradient(
+    180deg,
+    var(--portal-page-tint, #f8faff) 0%,
+    transparent 28%
+  );
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  nav
+  a[class*="-nav-link"].active::before {
+  background: var(--portal-accent, #2b44ff) !important;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  .btn-primary {
+  --bs-btn-bg: var(--portal-accent, #2b44ff);
+  --bs-btn-border-color: var(--portal-accent, #2b44ff);
+  --bs-btn-hover-bg: #2447e6;
+  --bs-btn-hover-border-color: #2447e6;
+  --bs-btn-active-bg: #1f3dcc;
+  --bs-btn-active-border-color: #1f3dcc;
+  background-color: var(--portal-accent, #2b44ff);
+  border-color: var(--portal-accent, #2b44ff);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  .btn-primary:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgb(var(--portal-accent-rgb, 43 68 255) / 32%);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  .form-control:focus,
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  .form-select:focus {
+  border-color: var(--portal-accent, #2b44ff);
+  box-shadow: 0 0 0 0.2rem rgb(var(--portal-accent-rgb, 43 68 255) / 22%);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  [class*="-main-canvas"]
+  [class*="-card"]:not([class*="stat-card"]):not([class*="leaderboard-card"]):not(
+    [class*="podium"]
+  ):not([class*="notify"]) {
+  border-radius: var(--portal-radius-card, 24px);
+  box-shadow: var(
+    --portal-shadow-soft,
+    0 12px 28px -18px rgba(43, 68, 255, 0.12)
+  );
+  border-color: #e2e9fb;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  [class*="-main-canvas"]
+  .table:not([class*="-table"]) {
+  --bs-table-bg: transparent;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  [class*="-main-canvas"]
+  .table
+  thead
+  th {
+  color: #5f75a8;
+  font-weight: 600;
+  border-bottom-color: #e8ecf6;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  [class*="-main-canvas"]
+  .table-striped
+  > tbody
+  > tr:nth-of-type(odd)
+  > * {
+  --bs-table-bg: rgba(248, 250, 255, 0.65);
+}

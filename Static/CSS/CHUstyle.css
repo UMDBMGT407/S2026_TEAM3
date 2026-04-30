@@ -186,20 +186,38 @@ body {
   color: #8ba3cb;
 }
 
-.chu-filter-empty {
-  font-size: 13px;
-  color: #718ebf;
-}
-
 .chu-arrows-wrap {
   display: flex;
   justify-content: center;
-  overflow-x: auto;
-  margin-bottom: 8px !important;
+  align-items: center;
+  gap: 16px;
+  margin: 6px 0 14px;
+  width: 100%;
 }
 
-.chu-arrows-wrap img {
-  max-width: 360px;
+.chu-arrow-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #8ba3cb;
+  color: #1a57a8;
+  background: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.chu-arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.chu-page-indicator {
+  color: #718ebf;
+  font-size: 14px;
 }
 
 .chu-card {

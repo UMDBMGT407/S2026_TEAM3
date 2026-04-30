@@ -38,6 +38,7 @@
        padding: 0;
    }
    </style>
+  <link rel="stylesheet" href="../../Static/CSS/admin-shared.css" />
   <title>Document</title>
 </head>
 <body>
@@ -98,7 +99,7 @@
                     <td>{{ c.challenge_start_date or '—' }}</td>
                     <td>{{ c.challenge_end_date or '—' }}</td>
                     <td>#{{ c.challenge_id }}</td>
-                    <td><span class="status-pill status-active">{{ c.challenge_status or '—' }}</span></td>
+                    <td><span class="status-pill status-active">{% if c.challenge_status %}{{ c.challenge_status|title }}{% else %}—{% endif %}</span></td>
                     <td>—</td>
                     <td>{{ c.challenge_goal_display }}</td>
                     <td>

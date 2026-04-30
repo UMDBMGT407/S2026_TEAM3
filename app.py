@@ -7,6 +7,7 @@ Setup (see BMGT407 Server-Side Guide):
   pip install -r requirements.txt
   On macOS if mysqlclient fails: brew install mysql pkg-config
   Copy .env.example to .env and set MYSQL_PASSWORD (and optional SECRET_KEY).
+  Optional: GEMINI_API_KEY for the workout-history Gemini coach (see Static/knowledge/README_GEMINI_SETUP.txt).
   In MySQL Workbench, run sql/motivdata_schema.sql then sql/motivdata_seed.sql
   (seed password for all demo accounts: password123).
   For user→group-admin promotion, run sql/migration_app_user_is_active.sql once on existing DBs.
@@ -30,7 +31,8 @@ try:
     from dotenv import load_dotenv
 
     # Load from project root (folder containing app.py), not only the shell cwd.
-    load_dotenv(Path(__file__).resolve().parent / ".env")
+    # override=True so values in .env replace empty shell placeholders (e.g. IDE env GEMINI_API_KEY="").
+    load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
 except ImportError:
     pass
 
@@ -236,30 +238,21 @@ def parse_int(s: Any, default: int | None = None):
         return default
 
 
-def parse_workout_goal_count(s: Any, default: int | None = None) -> int | None:
+def parse_challenge_workout_goal(s: Any) -> int | None:
+    """Strict challenge target: whole value must be a positive integer string (e.g. '10')."""
     if s is None:
-        return default
+        return None
     raw = str(s).strip()
-    if not raw:
-        return default
-    if raw.isdigit():
-        n = int(raw)
-    else:
-        m = re.search(r"\d+", raw)
-        if not m:
-            return default
-        n = int(m.group(0))
-    if n <= 0:
-        return default
-    return n
+    if not raw or not re.fullmatch(r"[1-9]\d*", raw):
+        return None
+    return int(raw)
 
 
 def format_workout_goal_display(s: Any) -> str:
-    n = parse_workout_goal_count(s)
+    n = parse_challenge_workout_goal(s)
     if n is None:
         return "—"
-    suffix = "workout" if n == 1 else "workouts"
-    return f"{n} {suffix}"
+    return str(n)
 
 
 def format_challenge_date_range(start: Any, end: Any) -> str:
@@ -452,6 +445,167 @@ def ensure_post_photo_path_column(cur) -> None:
         raise
 
 
+# Tagged workouts count toward c regardless of date; legacy NULL uses challenge date window.
+SQL_WORKOUT_COUNTS_TOWARD_CHALLENGE = """(
+  w.challenge_id = c.challenge_id
+  OR (
+    w.challenge_id IS NULL
+    AND (c.challenge_start_date IS NULL OR w.workout_date >= c.challenge_start_date)
+    AND (c.challenge_end_date IS NULL OR w.workout_date <= c.challenge_end_date)
+  )
+)"""
+
+
+def ensure_workout_challenge_id_column(cur) -> None:
+    """Add workout.challenge_id + FK when missing; matches sql/migration_workout_challenge_id.sql."""
+    try:
+        cur.execute(
+            """
+            ALTER TABLE workout
+            ADD COLUMN challenge_id INT NULL AFTER group_workout_id
+            """
+        )
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError) as e:
+        mysql.connection.rollback()
+        if e.args[0] != 1060:
+            raise
+    try:
+        cur.execute(
+            """
+            ALTER TABLE workout
+            ADD CONSTRAINT fk_workout_challenge
+            FOREIGN KEY (challenge_id) REFERENCES challenge (challenge_id)
+            ON DELETE SET NULL
+            """
+        )
+        mysql.connection.commit()
+    except (OperationalError, ProgrammingError) as e:
+        mysql.connection.rollback()
+        errno = e.args[0] if e.args else None
+        if errno in (1826, 1005, 121):
+            return
+        raise
+
+
+def resolve_challenge_id_for_workout_log(
+    cur,
+    raw_cid: Any,
+    uid: int,
+    group_admin_session_id: int | None,
+) -> tuple[int | None, str | None]:
+    """Validate optional challenge_id from workout log form. Returns (id or None, err code or None)."""
+    cid = parse_int(raw_cid) if raw_cid not in (None, "") else None
+    if not cid:
+        return (None, None)
+    ensure_user_challenge_leave_table(cur)
+    ensure_challenge_participant_exclusion_table(cur)
+    cur.execute(
+        """
+        SELECT c.challenge_id, g.group_admin_id
+        FROM challenge c
+        JOIN motiv_group g ON g.group_id = c.group_id
+        WHERE c.challenge_id = %s
+        LIMIT 1
+        """,
+        (cid,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return (None, "challenge")
+    # Default cursor returns tuples; DictCursor returns dicts.
+    ga_of_group = (
+        row["group_admin_id"] if isinstance(row, dict) else row[1]
+    )
+    cur.execute(
+        """
+        SELECT 1 FROM user_challenge_leave
+        WHERE user_id = %s AND challenge_id = %s LIMIT 1
+        """,
+        (uid, cid),
+    )
+    if cur.fetchone():
+        return (None, "challenge")
+    cur.execute(
+        """
+        SELECT 1 FROM challenge_participant_exclusion
+        WHERE user_id = %s AND challenge_id = %s LIMIT 1
+        """,
+        (uid, cid),
+    )
+    if cur.fetchone():
+        return (None, "challenge")
+    cur.execute(
+        """
+        SELECT 1 FROM user_group ug
+        WHERE ug.group_id = (SELECT group_id FROM challenge WHERE challenge_id = %s)
+          AND ug.user_id = %s
+        LIMIT 1
+        """,
+        (cid, uid),
+    )
+    if cur.fetchone():
+        return (cid, None)
+    if group_admin_session_id is not None and int(ga_of_group) == int(
+        group_admin_session_id
+    ):
+        return (cid, None)
+    return (None, "challenge")
+
+
+def fetch_workout_log_challenge_options(
+    cur, uid: int, group_admin_session_id: int | None
+) -> list[dict[str, Any]]:
+    """Challenges the user may attach a personal workout to (member or GA organizer of group)."""
+    ensure_user_challenge_leave_table(cur)
+    ensure_challenge_participant_exclusion_table(cur)
+    if group_admin_session_id is not None:
+        cur.execute(
+            """
+            SELECT DISTINCT c.challenge_id, c.challenge_title, g.group_name
+            FROM challenge c
+            JOIN motiv_group g ON g.group_id = c.group_id
+            WHERE (
+              EXISTS (
+                SELECT 1 FROM user_group ug
+                WHERE ug.group_id = c.group_id AND ug.user_id = %s
+              )
+              OR g.group_admin_id = %s
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM user_challenge_leave ucl
+              WHERE ucl.user_id = %s AND ucl.challenge_id = c.challenge_id
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM challenge_participant_exclusion cpe
+              WHERE cpe.user_id = %s AND cpe.challenge_id = c.challenge_id
+            )
+            ORDER BY (c.challenge_start_date IS NULL), c.challenge_start_date DESC, c.challenge_id DESC
+            """,
+            (uid, group_admin_session_id, uid, uid),
+        )
+    else:
+        cur.execute(
+            """
+            SELECT c.challenge_id, c.challenge_title, g.group_name
+            FROM challenge c
+            JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
+            JOIN motiv_group g ON g.group_id = c.group_id
+            WHERE NOT EXISTS (
+              SELECT 1 FROM user_challenge_leave ucl
+              WHERE ucl.user_id = %s AND ucl.challenge_id = c.challenge_id
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM challenge_participant_exclusion cpe
+              WHERE cpe.user_id = %s AND cpe.challenge_id = c.challenge_id
+            )
+            ORDER BY (c.challenge_start_date IS NULL), c.challenge_start_date DESC, c.challenge_id DESC
+            """,
+            (uid, uid, uid),
+        )
+    return list(cur.fetchall() or [])
+
+
 def fetch_posts_rows(cur) -> list[dict[str, Any]]:
     """
     Read posts with photo column when available, but gracefully
@@ -509,8 +663,11 @@ def save_post_photo(file_obj) -> tuple[str | None, str | None]:
     return f"/Static/{POST_UPLOAD_SUBDIR.as_posix()}/{saved_name}", None
 
 
-def collect_workout_exercises_from_request() -> list[dict[str, Any]]:
-    """Parse multi-row exercise fields from request.form (same shape as GA workout log)."""
+def collect_workout_exercises_from_request() -> list[dict[str, Any]] | None:
+    """Parse multi-row exercise fields from request.form (same shape as GA workout log).
+
+    Returns None if a non-empty row is missing an exercise name (invalid client data).
+    """
     exercise_names = request.form.getlist("exercise_name[]")
     sets_values = request.form.getlist("num_sets[]")
     reps_values = request.form.getlist("num_reps[]")
@@ -540,6 +697,8 @@ def collect_workout_exercises_from_request() -> list[dict[str, Any]]:
             ]
         ):
             continue
+        if not ex_name:
+            return None
         sets = parse_int(sets_raw)
         reps = parse_int(reps_raw)
         try:
@@ -550,7 +709,7 @@ def collect_workout_exercises_from_request() -> list[dict[str, Any]]:
             wfloat = None
         exercises.append(
             {
-                "exercise_name": ex_name or "Custom",
+                "exercise_name": ex_name,
                 "num_sets": sets,
                 "num_reps": reps,
                 "weight": wfloat,
@@ -648,6 +807,10 @@ def _offline_page_context(base: dict) -> dict:
             "user_editor_duration_minutes": "",
             "user_editor_exercises": [],
             "user_editor_mode": "create",
+            "user_workout_challenge_options": [],
+            "user_editor_challenge_id": None,
+            "ga_workout_challenge_options": [],
+            "ga_editor_challenge_id": None,
             "admin_graph_json": "{}",
         }
     )
@@ -1657,12 +1820,19 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 ctx["groups"] = []
             cid = request.args.get("id", type=int)
             ctx["edit_challenge"] = None
+            ctx["edit_challenge_goal_count"] = ""
             if cid and path == "GroupAdmin/edit-challenge-GA.html":
                 cur.execute(
                     "SELECT * FROM challenge WHERE challenge_id = %s AND group_admin_id = %s",
                     (cid, ga_id),
                 )
                 ctx["edit_challenge"] = cur.fetchone()
+                if ctx["edit_challenge"]:
+                    gct = parse_challenge_workout_goal(
+                        ctx["edit_challenge"].get("challenge_goal")
+                    )
+                    if gct is not None:
+                        ctx["edit_challenge_goal_count"] = str(gct)
         elif path in (
             "GroupAdmin/create-schedule-GA.html",
             "GroupAdmin/edit-schedule-GA.html",
@@ -1762,6 +1932,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     (ga_id,),
                 )
                 ga_challenges = cur.fetchall()
+                for ch in ga_challenges:
+                    ch["challenge_goal_display"] = format_workout_goal_display(
+                        ch.get("challenge_goal")
+                    )
                 ctx["ga_created_challenges"] = ga_challenges
                 if ga_challenges:
                     selected_challenge_id = request.args.get("challenge_id", type=int)
@@ -2051,16 +2225,13 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                             ga_uid = ur.get("user_id")
                     uid_param = ga_uid if ga_uid is not None else -1
                     cur.execute(
-                        """
+                        f"""
                         SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
                           c.challenge_end_date, c.challenge_status, c.challenge_goal,
                           c.group_id, c.group_admin_id, g.group_name,
                           (SELECT COUNT(*) FROM workout w
                            WHERE w.user_id = %s
-                             AND (c.challenge_start_date IS NULL
-                                  OR w.workout_date >= c.challenge_start_date)
-                             AND (c.challenge_end_date IS NULL
-                                  OR w.workout_date <= c.challenge_end_date)
+                             AND {SQL_WORKOUT_COUNTS_TOWARD_CHALLENGE}
                           ) AS my_workout_count
                         FROM challenge c
                         JOIN motiv_group g ON g.group_id = c.group_id
@@ -2075,16 +2246,13 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     joined_rows: list[dict[str, Any]] = []
                     if ga_uid:
                         cur.execute(
-                            """
+                            f"""
                             SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
                               c.challenge_end_date, c.challenge_status, c.challenge_goal,
                               c.group_id, c.group_admin_id, g.group_name,
                               (SELECT COUNT(*) FROM workout w
                                WHERE w.user_id = %s
-                                 AND (c.challenge_start_date IS NULL
-                                      OR w.workout_date >= c.challenge_start_date)
-                                 AND (c.challenge_end_date IS NULL
-                                      OR w.workout_date <= c.challenge_end_date)
+                                 AND {SQL_WORKOUT_COUNTS_TOWARD_CHALLENGE}
                               ) AS my_workout_count
                             FROM challenge c
                             JOIN user_group ug ON ug.group_id = c.group_id
@@ -2121,7 +2289,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ch["challenge_goal_display"] = format_workout_goal_display(
                             ch.get("challenge_goal")
                         )
-                        goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                        goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                         cnt = int(ch.get("my_workout_count") or 0)
                         if goal_n:
                             ch["my_progress_display"] = f"{cnt}/{goal_n}"
@@ -2158,7 +2326,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 bits.append(f"Progress: {prog}")
                             st = (sel.get("challenge_status") or "").strip()
                             if st:
-                                bits.append(st)
+                                bits.append(st.title())
                             ctx["dash_selected_challenge"] = {
                                 "challenge_id": sel["challenge_id"],
                                 "challenge_title": sel.get("challenge_title") or "Challenge",
@@ -2414,16 +2582,13 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 except (OperationalError, ProgrammingError):
                     mysql.connection.rollback()
                 cur.execute(
-                    """
+                    f"""
                     SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
                            c.challenge_end_date, c.challenge_status, c.challenge_goal,
                            c.group_id, g.group_name,
                            (SELECT COUNT(*) FROM workout w
                             WHERE w.user_id = %s
-                              AND (c.challenge_start_date IS NULL
-                                   OR w.workout_date >= c.challenge_start_date)
-                              AND (c.challenge_end_date IS NULL
-                                   OR w.workout_date <= c.challenge_end_date)
+                              AND {SQL_WORKOUT_COUNTS_TOWARD_CHALLENGE}
                            ) AS my_workout_count
                     FROM challenge c
                     JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
@@ -2443,7 +2608,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     ch["challenge_goal_display"] = format_workout_goal_display(
                         ch.get("challenge_goal")
                     )
-                    goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                    goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                     cnt = int(ch.get("my_workout_count") or 0)
                     if goal_n:
                         ch["my_progress_display"] = f"{cnt}/{goal_n}"
@@ -2463,7 +2628,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ctx["selected_challenge_name"] = sel["challenge_title"]
                         start_d = sel.get("challenge_start_date")
                         end_d = sel.get("challenge_end_date")
-                        goal_sel = parse_workout_goal_count(sel.get("challenge_goal"))
+                        goal_sel = parse_challenge_workout_goal(sel.get("challenge_goal"))
                         cur.execute(
                             """
                             SELECT u.user_id, u.user_first_name, u.user_last_name
@@ -2496,15 +2661,20 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 date_parts.append("w.workout_date <= %s")
                                 qparams.append(end_d)
                             date_sql = " AND ".join(date_parts) if date_parts else "1"
+                            # Placeholders: IN(uids...), challenge_id match, then date_sql params.
+                            qparams_lb = list(uids_m) + [selected_id] + qparams[len(uids_m) :]
                             cur.execute(
                                 f"""
                                 SELECT w.user_id, COUNT(*) AS cnt
                                 FROM workout w
                                 WHERE w.user_id IN ({placeholders})
-                                  AND ({date_sql})
+                                  AND (
+                                    w.challenge_id = %s
+                                    OR (w.challenge_id IS NULL AND ({date_sql}))
+                                  )
                                 GROUP BY w.user_id
                                 """,
-                                tuple(qparams),
+                                tuple(qparams_lb),
                             )
                             for rr in cur.fetchall() or []:
                                 counts[rr["user_id"]] = int(rr.get("cnt") or 0)
@@ -2611,16 +2781,13 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     mysql.connection.rollback()
                 try:
                     cur.execute(
-                        """
+                        f"""
                         SELECT c.challenge_id, c.challenge_title, c.challenge_start_date,
                                c.challenge_end_date, c.challenge_status, c.challenge_goal,
                                c.group_id, g.group_name,
                                (SELECT COUNT(*) FROM workout w
                                 WHERE w.user_id = %s
-                                  AND (c.challenge_start_date IS NULL
-                                       OR w.workout_date >= c.challenge_start_date)
-                                  AND (c.challenge_end_date IS NULL
-                                       OR w.workout_date <= c.challenge_end_date)
+                                  AND {SQL_WORKOUT_COUNTS_TOWARD_CHALLENGE}
                                ) AS my_workout_count
                         FROM challenge c
                         JOIN user_group ug ON ug.group_id = c.group_id AND ug.user_id = %s
@@ -2640,7 +2807,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ch["challenge_goal_display"] = format_workout_goal_display(
                             ch.get("challenge_goal")
                         )
-                        goal_n = parse_workout_goal_count(ch.get("challenge_goal"))
+                        goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                         cnt = int(ch.get("my_workout_count") or 0)
                         if goal_n:
                             ch["my_progress_display"] = f"{cnt}/{goal_n}"
@@ -2669,7 +2836,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 bits.append(f"Progress: {prog}")
                             st = (sel.get("challenge_status") or "").strip()
                             if st:
-                                bits.append(st)
+                                bits.append(st.title())
                             ctx["dash_selected_challenge"] = {
                                 "challenge_id": sel["challenge_id"],
                                 "challenge_title": sel.get("challenge_title") or "Challenge",
@@ -2750,17 +2917,32 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["ga_editor_duration_minutes"] = ""
             ctx["ga_editor_exercises"] = []
             ctx["ga_editor_mode"] = "create"
+            ctx["ga_workout_challenge_options"] = []
+            ctx["ga_editor_challenge_id"] = None
             if ga_email:
+                try:
+                    ensure_workout_challenge_id_column(cur)
+                    mysql.connection.commit()
+                except (OperationalError, ProgrammingError):
+                    mysql.connection.rollback()
                 cur.execute(
                     "SELECT user_id FROM app_user WHERE user_email = %s LIMIT 1",
                     (ga_email,),
                 )
                 ga_user = cur.fetchone() or {}
                 ga_user_id = ga_user.get("user_id")
+                ga_sid = session.get("id") if session.get("role") == "group_admin" else None
+                if ga_user_id and isinstance(ga_sid, int):
+                    try:
+                        ctx["ga_workout_challenge_options"] = (
+                            fetch_workout_log_challenge_options(cur, ga_user_id, ga_sid)
+                        )
+                    except (OperationalError, ProgrammingError):
+                        pass
                 if ga_user_id and wid:
                     cur.execute(
                         """
-                        SELECT workout_id, workout_date, workout_duration_minutes
+                        SELECT workout_id, workout_date, workout_duration_minutes, challenge_id
                         FROM workout
                         WHERE workout_id = %s AND user_id = %s
                         LIMIT 1
@@ -2776,6 +2958,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         )
                         ctx["ga_editor_duration_minutes"] = str(
                             edit_workout.get("workout_duration_minutes") or ""
+                        )
+                        cid_e = edit_workout.get("challenge_id")
+                        ctx["ga_editor_challenge_id"] = (
+                            int(cid_e) if cid_e is not None else None
                         )
                         cur.execute(
                             """
@@ -2811,11 +2997,24 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
             ctx["user_editor_duration_minutes"] = ""
             ctx["user_editor_exercises"] = []
             ctx["user_editor_mode"] = "create"
+            ctx["user_workout_challenge_options"] = []
+            ctx["user_editor_challenge_id"] = None
             if uid:
+                try:
+                    ensure_workout_challenge_id_column(cur)
+                    mysql.connection.commit()
+                except (OperationalError, ProgrammingError):
+                    mysql.connection.rollback()
+                try:
+                    ctx["user_workout_challenge_options"] = (
+                        fetch_workout_log_challenge_options(cur, uid, None)
+                    )
+                except (OperationalError, ProgrammingError):
+                    pass
                 if wid:
                     cur.execute(
                         """
-                        SELECT workout_id, workout_date, workout_duration_minutes
+                        SELECT workout_id, workout_date, workout_duration_minutes, challenge_id
                         FROM workout
                         WHERE workout_id = %s AND user_id = %s
                         LIMIT 1
@@ -2831,6 +3030,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         )
                         ctx["user_editor_duration_minutes"] = str(
                             edit_workout.get("workout_duration_minutes") or ""
+                        )
+                        cid_u = edit_workout.get("challenge_id")
+                        ctx["user_editor_challenge_id"] = (
+                            int(cid_u) if cid_u is not None else None
                         )
                         cur.execute(
                             """
@@ -2857,8 +3060,6 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 }
                             )
                         ctx["user_editor_exercises"] = exercises
-        elif path == "GroupAdmin/edit-workout-logging-GA.html":
-            ctx["app_users"] = []
         elif path == "User/WLEU.html":
             wid = request.args.get("id", type=int)
             ctx["edit_w"] = None
@@ -2931,7 +3132,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                 cur.execute("SELECT * FROM challenge WHERE challenge_id = %s", (cid,))
                 ctx["edit_challenge_admin"] = cur.fetchone()
                 if ctx["edit_challenge_admin"]:
-                    goal_count = parse_workout_goal_count(
+                    goal_count = parse_challenge_workout_goal(
                         ctx["edit_challenge_admin"].get("challenge_goal")
                     )
                     ctx["edit_challenge_goal_count"] = (
@@ -3049,6 +3250,15 @@ def groupadmin_page(filename):
 
 
 # --- Auth (form POST) ---
+
+
+@app.get("/auth/login")
+def auth_login_get():
+    """GET /auth/login is not the login UI (that is /Admin/index.html). Redirect so bookmarks do not 405."""
+    nxt = safe_next_url(request.args.get("next"))
+    if nxt:
+        return redirect(f"/Admin/index.html?next={quote(nxt, safe='/')}")
+    return redirect("/Admin/index.html")
 
 
 @app.post("/auth/login")
@@ -3549,6 +3759,32 @@ def user_schedule_rsvp(wid):
     return redirect(f"/User/SU.html?workout_id={wid}")
 
 
+@app.post("/actions/user/group/<int:gid>/leave")
+@require_roles("user")
+def user_leave_group(gid):
+    uid = session.get("id")
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT 1 FROM user_group WHERE user_id = %s AND group_id = %s LIMIT 1",
+        (uid, gid),
+    )
+    if not cur.fetchone():
+        cur.close()
+        return redirect("/User/GJU.html?leave_err=forbidden")
+    try:
+        cur.execute(
+            "DELETE FROM user_group WHERE user_id = %s AND group_id = %s",
+            (uid, gid),
+        )
+        mysql.connection.commit()
+    except Exception:
+        mysql.connection.rollback()
+        cur.close()
+        return redirect("/User/GJU.html?leave_err=schema")
+    cur.close()
+    return redirect("/User/GJU.html")
+
+
 @app.post("/actions/user/challenge/<int:cid>/leave")
 @require_roles("user")
 def user_challenge_leave(cid):
@@ -3599,19 +3835,22 @@ def ga_create_challenge():
     if session.get("role") != "group_admin":
         return redirect("/GroupAdmin/challenge-creation-GA.html")
     title = request.form.get("challenge_title", "").strip()
-    goal = request.form.get("challenge_goal", "").strip()
+    goal_n = parse_challenge_workout_goal(request.form.get("challenge_goal"))
     group_id = parse_int(request.form.get("group_id"))
     start = parse_date(request.form.get("start_date"))
     end = parse_date(request.form.get("end_date"))
     if not title or not group_id:
         return redirect("/GroupAdmin/challenge-creation-GA.html?err=1")
+    if goal_n is None:
+        return redirect("/GroupAdmin/challenge-creation-GA.html?err=2")
+    goal_store = str(goal_n)
     cur = mysql.connection.cursor()
     cur.execute(
         """INSERT INTO challenge
            (challenge_title, challenge_date, challenge_start_date, challenge_end_date,
             challenge_status, challenge_goal, group_admin_id, group_id)
            VALUES (%s, CURDATE(), %s, %s, %s, %s, %s, %s)""",
-        (title, start, end, "active", goal, session["id"], group_id),
+        (title, start, end, "active", goal_store, session["id"], group_id),
     )
     mysql.connection.commit()
     cur.close()
@@ -3623,16 +3862,21 @@ def ga_edit_challenge(cid):
     if session.get("role") != "group_admin":
         return redirect("/GroupAdmin/created-challenges-GA.html")
     title = request.form.get("challenge_title", "").strip()
-    goal = request.form.get("challenge_goal", "").strip()
+    goal_n = parse_challenge_workout_goal(request.form.get("challenge_goal"))
     group_id = parse_int(request.form.get("group_id"))
     start = parse_date(request.form.get("start_date"))
     end = parse_date(request.form.get("end_date"))
+    if not title:
+        return redirect(f"/GroupAdmin/edit-challenge-GA.html?id={cid}&err=1")
+    if goal_n is None:
+        return redirect(f"/GroupAdmin/edit-challenge-GA.html?id={cid}&err=2")
+    goal_store = str(goal_n)
     cur = mysql.connection.cursor()
     cur.execute(
         """UPDATE challenge SET challenge_title = %s, challenge_goal = %s,
            challenge_start_date = %s, challenge_end_date = %s, group_id = %s
            WHERE challenge_id = %s AND group_admin_id = %s""",
-        (title, goal, start, end, group_id, cid, session["id"]),
+        (title, goal_store, start, end, group_id, cid, session["id"]),
     )
     mysql.connection.commit()
     cur.close()
@@ -3762,6 +4006,8 @@ def ga_profile():
     first = request.form.get("first_name", "").strip()
     last = request.form.get("last_name", "").strip()
     email = request.form.get("email", "").strip()
+    if not first or not last or not email:
+        return redirect("/GroupAdmin/profile-GA.html?err=required")
     password = request.form.get("password", "")
     cur = mysql.connection.cursor()
     if password:
@@ -3803,6 +4049,13 @@ def ga_workout_log():
     duration = parse_int(request.form.get("duration_minutes"))
     exercises = collect_workout_exercises_from_request()
 
+    if exercises is None:
+        target = (
+            f"/GroupAdmin/workout-logging-GA.html?workout_id={workout_id}&err=exercise_name"
+            if workout_id
+            else "/GroupAdmin/workout-logging-GA.html?err=exercise_name"
+        )
+        return redirect(target)
     if not exercises:
         target = (
             f"/GroupAdmin/workout-logging-GA.html?workout_id={workout_id}&err=exercise"
@@ -3827,6 +4080,26 @@ def ga_workout_log():
             cur.close()
             return redirect("/GroupAdmin/workout-history-GA.html?err=user")
 
+        try:
+            ensure_workout_challenge_id_column(cur)
+            mysql.connection.commit()
+        except (OperationalError, ProgrammingError):
+            mysql.connection.rollback()
+        ga_sid = session.get("id")
+        ch_id, ch_err = resolve_challenge_id_for_workout_log(
+            cur,
+            request.form.get("challenge_id"),
+            ga_user_id,
+            int(ga_sid) if isinstance(ga_sid, int) else None,
+        )
+        if ch_err:
+            cur.close()
+            return redirect(
+                f"/GroupAdmin/workout-logging-GA.html?workout_id={workout_id}&err=challenge"
+                if workout_id
+                else "/GroupAdmin/workout-logging-GA.html?err=challenge"
+            )
+
         if workout_id:
             cur.execute(
                 "SELECT 1 FROM workout WHERE workout_id = %s AND user_id = %s LIMIT 1",
@@ -3838,20 +4111,20 @@ def ga_workout_log():
             cur.execute(
                 """
                 UPDATE workout
-                SET workout_date = %s, workout_duration_minutes = %s
+                SET workout_date = %s, workout_duration_minutes = %s, challenge_id = %s
                 WHERE workout_id = %s AND user_id = %s
                 """,
-                (wdate, duration, workout_id, ga_user_id),
+                (wdate, duration, ch_id, workout_id, ga_user_id),
             )
             cur.execute("DELETE FROM workout_log WHERE workout_id = %s", (workout_id,))
             wid = workout_id
         else:
             cur.execute(
                 """
-                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
-                VALUES (%s, %s, %s, NULL)
+                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id, challenge_id)
+                VALUES (%s, %s, %s, NULL, %s)
                 """,
-                (wdate, duration, ga_user_id),
+                (wdate, duration, ga_user_id, ch_id),
             )
             wid = cur.lastrowid
 
@@ -3989,6 +4262,8 @@ def user_profile():
     first = request.form.get("first_name", "").strip()
     last = request.form.get("last_name", "").strip()
     email = request.form.get("email", "").strip()
+    if not first or not last or not email:
+        return redirect("/User/ProU.html?err=required")
     password = request.form.get("password", "")
     cur = mysql.connection.cursor()
     if password:
@@ -4036,6 +4311,13 @@ def _user_workout_log_save(workout_id_from_form: int | None):
     wdate = parse_date(request.form.get("workout_date")) or date.today()
     duration = parse_int(request.form.get("duration_minutes"))
     exercises = collect_workout_exercises_from_request()
+    if exercises is None:
+        target = (
+            f"/User/WLAU.html?workout_id={workout_id_from_form}&err=exercise_name"
+            if workout_id_from_form
+            else "/User/WLAU.html?err=exercise_name"
+        )
+        return redirect(target)
     if not exercises:
         target = (
             f"/User/WLAU.html?workout_id={workout_id_from_form}&err=exercise"
@@ -4046,6 +4328,21 @@ def _user_workout_log_save(workout_id_from_form: int | None):
 
     cur = mysql.connection.cursor()
     try:
+        try:
+            ensure_workout_challenge_id_column(cur)
+            mysql.connection.commit()
+        except (OperationalError, ProgrammingError):
+            mysql.connection.rollback()
+        ch_id, ch_err = resolve_challenge_id_for_workout_log(
+            cur, request.form.get("challenge_id"), uid, None
+        )
+        if ch_err:
+            cur.close()
+            return redirect(
+                f"/User/WLAU.html?workout_id={workout_id_from_form}&err=challenge"
+                if workout_id_from_form
+                else "/User/WLAU.html?err=challenge"
+            )
         wid_use = workout_id_from_form
         if wid_use:
             cur.execute(
@@ -4058,19 +4355,19 @@ def _user_workout_log_save(workout_id_from_form: int | None):
             cur.execute(
                 """
                 UPDATE workout
-                SET workout_date = %s, workout_duration_minutes = %s
+                SET workout_date = %s, workout_duration_minutes = %s, challenge_id = %s
                 WHERE workout_id = %s AND user_id = %s
                 """,
-                (wdate, duration, wid_use, uid),
+                (wdate, duration, ch_id, wid_use, uid),
             )
             cur.execute("DELETE FROM workout_log WHERE workout_id = %s", (wid_use,))
         else:
             cur.execute(
                 """
-                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id)
-                VALUES (%s, %s, %s, NULL)
+                INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id, challenge_id)
+                VALUES (%s, %s, %s, NULL, %s)
                 """,
-                (wdate, duration, uid),
+                (wdate, duration, uid, ch_id),
             )
             wid_use = cur.lastrowid
 
@@ -4139,6 +4436,8 @@ def ga_workout_edit(wid):
     ex_name = request.form.get("exercise_name", "").strip()
     muscle = request.form.get("muscle_group", "").strip()
     diff = request.form.get("difficulty", "").strip()
+    if not ex_name:
+        return redirect(f"/User/WLEU.html?id={wid}&err=exercise_name")
     cur = mysql.connection.cursor()
     if not _ga_can_edit_workout(cur, wid, ga_email):
         cur.close()
@@ -4204,6 +4503,162 @@ def user_workout_delete(wid):
     mysql.connection.commit()
     cur.close()
     return redirect("/User/WLU.html")
+
+
+# --- Workout coach (Google Gemini, server-side key) ---
+
+
+def _parse_gemini_key_from_dotenv_file() -> str:
+    """Fallback: read KEY=value from project .env (handles cases where OS env is empty)."""
+    path = Path(__file__).resolve().parent / ".env"
+    names = ("GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_KEY")
+    try:
+        raw = path.read_text(encoding="utf-8-sig")
+    except OSError:
+        return ""
+    for line in raw.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        for name in names:
+            prefix = f"{name}="
+            if stripped.startswith(prefix):
+                val = stripped[len(prefix) :].strip()
+                if len(val) >= 2 and val[0] == val[-1] and val[0] in "\"'":
+                    val = val[1:-1].strip()
+                return val
+    return ""
+
+
+def _get_gemini_api_key() -> str:
+    """Read key at call time so .env edits after restart work; allow common aliases."""
+    k = (
+        os.environ.get("GEMINI_API_KEY")
+        or os.environ.get("GOOGLE_API_KEY")
+        or os.environ.get("GEMINI_KEY")
+        or ""
+    ).strip()
+    if not k:
+        k = _parse_gemini_key_from_dotenv_file()
+    if len(k) >= 2 and k[0] == k[-1] and k[0] in "\"'":
+        k = k[1:-1].strip()
+    return k
+
+
+def _gemini_api_key_configured() -> bool:
+    k = _get_gemini_api_key()
+    return bool(k and not k.startswith("<") and "..." not in k)
+
+
+def _load_workout_coach_context_file(filename: str) -> str:
+    p = Path(__file__).resolve().parent / "Static" / "knowledge" / filename
+    try:
+        return p.read_text(encoding="utf-8").strip()
+    except OSError:
+        return (
+            "You are a concise fitness coach. Give practical training and recovery tips. "
+            "Do not give medical diagnoses."
+        )
+
+
+def _gemini_workout_reply(system_text: str, user_message: str) -> dict[str, Any]:
+    """Call Gemini with combined system + user text; return {reply, error}."""
+    if not _gemini_api_key_configured():
+        return {
+            "reply": None,
+            "error": (
+                "Gemini is not configured. Add GEMINI_API_KEY to your project .env file "
+                "(see https://aistudio.google.com/apikey )."
+            ),
+        }
+    try:
+        from google import genai
+    except ImportError:
+        return {
+            "reply": None,
+            "error": "Missing package: pip install 'google-genai>=1.0.0,<2'",
+        }
+    client = genai.Client(api_key=_get_gemini_api_key())
+    full_prompt = f"{system_text}\n\nUser question:\n{user_message}"
+    # gemini-1.5-flash is retired for many API keys (404 on v1beta). Prefer 2.x first.
+    models_try = (
+        (os.environ.get("GEMINI_MODEL") or "").strip(),
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-001",
+        "gemini-2.5-pro",
+    )
+    models_try = tuple(m for m in models_try if m)
+    last_err: str | None = None
+    response = None
+    for model_name in models_try:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=full_prompt,
+            )
+            break
+        except Exception as e:  # noqa: BLE001
+            last_err = str(e)
+            continue
+    if response is None:
+        return {
+            "reply": None,
+            "error": f"Gemini error: {last_err or 'no model succeeded'}",
+        }
+    try:
+        if hasattr(response, "text") and response.text:
+            return {"reply": response.text.strip(), "error": None}
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        cands = getattr(response, "candidates", None) or []
+        if cands:
+            parts = getattr(cands[0].content, "parts", None) or []
+            if parts and getattr(parts[0], "text", None):
+                return {"reply": parts[0].text.strip(), "error": None}
+    except Exception:  # noqa: BLE001
+        pass
+    return {"reply": None, "error": "Gemini returned an empty response."}
+
+
+def _workout_coach_json_response(which: str) -> Any:
+    """which is 'ga' (group admin) or 'user' — selects knowledge .txt file."""
+    payload = request.get_json(silent=True) or {}
+    msg = (payload.get("message") or "").strip()
+    if not msg:
+        return jsonify(error="Missing message."), 400
+    if len(msg) > 4000:
+        return jsonify(error="Message too long (max 4000 characters)."), 400
+    fname = (
+        "workout_coach_context_ga.txt"
+        if which == "ga"
+        else "workout_coach_context_user.txt"
+    )
+    system = _load_workout_coach_context_file(fname)
+    result = _gemini_workout_reply(system, msg)
+    if result.get("error"):
+        return jsonify(reply=None, error=result["error"]), 200
+    return jsonify(reply=result.get("reply"), error=None)
+
+
+@app.get("/actions/api/gemini-configured")
+@require_roles("user", "group_admin")
+def api_gemini_configured():
+    return jsonify(gemini_configured=_gemini_api_key_configured())
+
+
+@app.post("/actions/group-admin/workout-coach")
+@require_roles("group_admin")
+def group_admin_workout_coach():
+    return _workout_coach_json_response("ga")
+
+
+@app.post("/actions/user/workout-coach")
+@require_roles("user")
+def user_workout_coach():
+    return _workout_coach_json_response("user")
 
 
 # --- Admin actions ---
@@ -4546,7 +5001,7 @@ def admin_challenge_edit(cid):
     )
     start = parse_date(request.form.get("start_date"))
     end = parse_date(request.form.get("end_date"))
-    goal = parse_workout_goal_count(request.form.get("challenge_goal"))
+    goal = parse_challenge_workout_goal(request.form.get("challenge_goal"))
     cur = mysql.connection.cursor()
     cur.execute("SELECT challenge_goal FROM challenge WHERE challenge_id = %s", (cid,))
     existing_row = cur.fetchone()
@@ -4559,8 +5014,11 @@ def admin_challenge_edit(cid):
         else existing_row.get("challenge_goal")
     )
     if goal is None:
-        goal = parse_workout_goal_count(existing_goal)
-    goal_to_store = str(goal) if goal is not None else None
+        goal = parse_challenge_workout_goal(existing_goal)
+    if goal is None:
+        cur.close()
+        return redirect(f"/Admin/ScheduleAed.html?id={cid}&err=2")
+    goal_to_store = str(goal)
     cur.execute(
         """UPDATE challenge SET challenge_title = %s, challenge_start_date = %s,
            challenge_end_date = %s, challenge_goal = %s WHERE challenge_id = %s""",

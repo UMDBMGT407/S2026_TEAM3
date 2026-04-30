@@ -275,6 +275,8 @@
   padding: 0 28px;
   text-decoration: none;
   border: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 14px rgba(46, 65, 158, 0.32);
 }
 
 .auth-create-account-btn .create-account-btn-label {
@@ -291,6 +293,16 @@
   background-color: #2e419e !important;
   color: #ffffff !important;
   text-decoration: none;
+}
+
+.auth-create-account-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(46, 65, 158, 0.38);
+}
+
+.auth-create-account-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(46, 65, 158, 0.28);
 }
 
 /* Footer — matches login page “Create Account Now” link treatment */
@@ -313,3 +325,18 @@ a.auth-login-footer-link:focus {
   color: #0a58ca;
   text-decoration: none;
 }
+
+/* Bootstrap create-account layout — polish only (no geometry changes) */
+form.w-75 .form-control {
+  border-radius: 12px;
+  border: 1px solid var(--admin-border, #e6eff5);
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+form.w-75 .form-control:focus {
+  border-color: var(--admin-login-accent, #2e419e);
+  box-shadow: 0 0 0 3px rgba(46, 65, 158, 0.18);
+}
+

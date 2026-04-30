@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/CHUstyle.css">
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
   <title>Challenges</title>
 </head>
 <body>
@@ -55,35 +56,35 @@
                   id="chu-challenge-search"
                   class="chu-search-input"
                   type="search"
-                  name="chu_challenge_q"
-                  list="chu-challenge-search-list"
                   placeholder="Search Challenge"
                   autocomplete="off"
+                  aria-label="Search challenges"
                 />
-                <datalist id="chu-challenge-search-list"></datalist>
               </label>
             </div>
           </div>
 
           <div class="row g-4 align-items-start">
             <div class="col-12 col-xl-5">
-              <div class="chu-arrows-wrap mb-3"><img class="img-fluid" src="../../Static/Images%202/CHUarrows0.svg" alt="" /></div>
-              <p id="chu-filter-empty" class="chu-filter-empty mb-2" style="display:none;">No challenges match your search.</p>
-              <div class="d-grid gap-3">
+              <div class="chu-arrows-wrap mb-3" aria-label="Joined challenges pagination controls">
+                <button type="button" class="chu-arrow-btn" id="chuPrevChallenges" aria-label="Previous challenges page">&#8592;</button>
+                <span class="chu-page-indicator" id="chuChallengesPageIndicator">Page 1 of 1</span>
+                <button type="button" class="chu-arrow-btn" id="chuNextChallenges" aria-label="Next challenges page">&#8594;</button>
+              </div>
+              <div class="row g-3" id="chu-challenges-grid">
                 {% for ch in chu_joined_challenges %}
-                <article
-                  class="chu-card"
-                  data-chu-challenge-card
-                  data-challenge-id="{{ ch.challenge_id }}"
-                  data-challenge-title="{{ ch.challenge_title }}"
+                <div
+                  class="col-12 js-chu-challenge-tile"
+                  data-challenge-search="{{ ('#' ~ (ch.challenge_id|string) ~ ' ' ~ ch.challenge_title ~ ' ' ~ ch.group_name ~ ' ' ~ (ch.challenge_status or '') ~ ' ' ~ ch.challenge_goal_display ~ ' ' ~ ch.my_progress_display ~ ' ' ~ (ch.challenge_start_date|default('', true)|string) ~ ' ' ~ (ch.challenge_end_date|default('', true)|string))|e }}"
                 >
+                <article class="chu-card">
                   <h3>{{ ch.challenge_title }}</h3>
                   <p class="chu-meta">{{ ch.group_name }}</p>
                   <div class="chu-progress">
                     <span>{{ ch.my_progress_display }}</span>
-                    <span class="chu-status">{{ ch.challenge_status or '—' }}</span>
+                    <span class="chu-status">{% if ch.challenge_status %}{{ ch.challenge_status|title }}{% else %}—{% endif %}</span>
                   </div>
-                  <p class="chu-meta mb-1">Goal: {{ ch.challenge_goal_display }}</p>
+                  <p class="chu-meta mb-1">Target workouts: {{ ch.challenge_goal_display }}</p>
                   <div class="chu-actions">
                     <form method="get" action="CHU.html" class="m-0 d-inline">
                       <input type="hidden" name="challenge_id" value="{{ ch.challenge_id }}" />
@@ -99,12 +100,21 @@
                     </form>
                   </div>
                 </article>
+                </div>
                 {% else %}
+                <div class="col-12" id="chu-no-challenges-empty">
                 <article class="chu-card">
                   <h3>No challenges yet</h3>
                   <p class="chu-meta">Join a group with an active challenge to see it here.</p>
                 </article>
+                </div>
                 {% endfor %}
+                <div class="col-12 d-none" id="chu-no-challenges-match">
+                  <article class="chu-card">
+                    <h3>No challenges match your search.</h3>
+                    <p class="chu-meta">Try a different title, group, status, or goal.</p>
+                  </article>
+                </div>
               </div>
             </div>
 

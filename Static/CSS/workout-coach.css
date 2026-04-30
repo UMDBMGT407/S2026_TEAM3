@@ -1,0 +1,78 @@
+/* Shared “Workout coach” panel (Group Admin + User workout history pages) */
+.motiv-workout-coach {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e6eff5;
+  box-shadow: 4px 4px 18px -5px rgba(231, 228, 232, 0.85);
+}
+
+.motiv-workout-coach__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #343c6a;
+}
+
+.motiv-workout-coach__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  color: #718ebf;
+}
+
+.motiv-workout-coach__status {
+  font-size: 0.8125rem;
+  margin-bottom: 0.5rem;
+}
+
+.motiv-workout-coach__status--ok {
+  color: #0d6efd;
+}
+
+.motiv-workout-coach__status--off {
+  color: #6c757d;
+}
+
+.motiv-workout-coach__input {
+  resize: vertical;
+  min-height: 4.5rem;
+  border-radius: 12px;
+  border: 1px solid #e6eff5;
+}
+
+.motiv-workout-coach__actions {
+  margin-top: 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.motiv-workout-coach__send {
+  border-radius: 999px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.motiv-workout-coach__reply {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: #f5f7fa;
+  border: 1px solid #e6eff5;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #232323;
+  white-space: pre-wrap;
+}
+
+.motiv-workout-coach__reply:empty {
+  display: none;
+}
+
+.motiv-workout-coach__error {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #b42318;
+}

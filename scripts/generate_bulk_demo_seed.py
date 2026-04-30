@@ -167,7 +167,7 @@ def emit_ga_expansion_block(today: date) -> None:
             start_date = monday + timedelta(days=(challenge_idx - 1) * 7)
             end_date = start_date + timedelta(days=6)
             challenge_title = f"GA{ga_idx:02d} Challenge {challenge_idx}"
-            challenge_goal = f"Complete challenge {challenge_idx} goals for GA {ga_idx:02d} groups."
+            challenge_goal = str(5 + challenge_idx)
             challenge_status = "active" if challenge_idx <= 2 else "upcoming"
             print(
                 "INSERT INTO challenge "
@@ -220,8 +220,8 @@ def emit_ga_expansion_block(today: date) -> None:
             reps = 8 + ((user_idx * 2 + w_idx) % 10)
             weight = float(45 + ((user_idx * 7 + w_idx * 9) % 155))
             print(
-                "INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id) "
-                f"VALUES ({_sql_str(w_date.isoformat())}, {duration}, @uid, NULL);"
+                "INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id, challenge_id) "
+                f"VALUES ({_sql_str(w_date.isoformat())}, {duration}, @uid, NULL, NULL);"
             )
             print("SET @wid := LAST_INSERT_ID();")
             print(
@@ -265,8 +265,8 @@ def emit_user_block(i: int, today: date) -> None:
     def emit_workout(d: date, n_logs: int) -> None:
         wdur = dur + (d.day % 20)
         print(
-            "INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id) "
-            f"VALUES ({_sql_str(d.isoformat())}, {wdur}, @uid, NULL);"
+            "INSERT INTO workout (workout_date, workout_duration_minutes, user_id, group_workout_id, challenge_id) "
+            f"VALUES ({_sql_str(d.isoformat())}, {wdur}, @uid, NULL, NULL);"
         )
         print("SET @wid := LAST_INSERT_ID();")
         for ln in range(n_logs):

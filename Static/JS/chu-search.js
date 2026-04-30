@@ -1,42 +1,84 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("chu-challenge-search");
-  const list = document.getElementById("chu-challenge-search-list");
-  const cards = Array.from(document.querySelectorAll("[data-chu-challenge-card]"));
-  const emptyFilter = document.getElementById("chu-filter-empty");
+(function () {
+  "use strict";
 
-  if (!input || !cards.length) return;
+  var pageSize = 3;
+  var challengeInput = document.getElementById("chu-challenge-search");
+  var challengeTiles = Array.prototype.slice.call(
+    document.querySelectorAll(".js-chu-challenge-tile")
+  );
+  var prevBtn = document.getElementById("chuPrevChallenges");
+  var nextBtn = document.getElementById("chuNextChallenges");
+  var pageIndicator = document.getElementById("chuChallengesPageIndicator");
+  var noChallengeMatch = document.getElementById("chu-no-challenges-match");
+  var currentPage = 1;
+  var filteredTiles = challengeTiles.slice();
 
-  if (list) {
-    const seen = new Set();
-    const allOpt = document.createElement("option");
-    allOpt.value = "All Challenges";
-    list.appendChild(allOpt);
-    cards.forEach((card) => {
-      const title = (card.dataset.challengeTitle || "").trim();
-      if (!title || seen.has(title.toLowerCase())) return;
-      seen.add(title.toLowerCase());
-      const opt = document.createElement("option");
-      opt.value = title;
-      list.appendChild(opt);
-    });
+  function updateChallengesView() {
+    if (!challengeTiles.length) {
+      if (pageIndicator) pageIndicator.textContent = "Page 1 of 1";
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+      if (noChallengeMatch) noChallengeMatch.classList.add("d-none");
+      return;
+    }
+
+    var totalPages = Math.max(1, Math.ceil(filteredTiles.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+    var start = (currentPage - 1) * pageSize;
+    var end = start + pageSize;
+
+    for (var i = 0; i < challengeTiles.length; i++) {
+      var tile = challengeTiles[i];
+      var idx = filteredTiles.indexOf(tile);
+      var visible = idx >= start && idx < end;
+      tile.style.display = visible ? "" : "none";
+    }
+
+    if (pageIndicator) {
+      pageIndicator.textContent = "Page " + currentPage + " of " + totalPages;
+    }
+    if (prevBtn) prevBtn.disabled = currentPage <= 1;
+    if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+
+    if (noChallengeMatch) {
+      var q = (challengeInput && challengeInput.value ? challengeInput.value : "").trim();
+      if (q && filteredTiles.length === 0) {
+        noChallengeMatch.classList.remove("d-none");
+      } else {
+        noChallengeMatch.classList.add("d-none");
+      }
+    }
   }
 
-  const sync = () => {
-    const q = input.value.trim().toLowerCase();
-    const showAll = !q || q === "all challenges";
-    let visible = 0;
-    cards.forEach((card) => {
-      const title = (card.dataset.challengeTitle || "").toLowerCase();
-      const match = showAll || title.includes(q);
-      card.style.display = match ? "" : "none";
-      if (match) visible += 1;
+  function applyChallengeSearch() {
+    if (!challengeTiles.length) return;
+    var q = (challengeInput && challengeInput.value ? challengeInput.value : "")
+      .trim()
+      .toLowerCase();
+    filteredTiles = challengeTiles.filter(function (tile) {
+      var hay = (tile.getAttribute("data-challenge-search") || "").toLowerCase();
+      return !q || hay.indexOf(q) !== -1;
     });
-    if (emptyFilter) {
-      emptyFilter.style.display = visible ? "none" : "";
-    }
-  };
+    currentPage = 1;
+    updateChallengesView();
+  }
 
-  input.addEventListener("input", sync);
-  input.addEventListener("change", sync);
-  sync();
-});
+  if (challengeInput) challengeInput.addEventListener("input", applyChallengeSearch);
+  if (prevBtn) {
+    prevBtn.addEventListener("click", function () {
+      currentPage = Math.max(1, currentPage - 1);
+      updateChallengesView();
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", function () {
+      var totalPages = Math.max(
+        1,
+        Math.ceil(filteredTiles.length / pageSize)
+      );
+      currentPage = Math.min(totalPages, currentPage + 1);
+      updateChallengesView();
+    });
+  }
+  updateChallengesView();
+})();

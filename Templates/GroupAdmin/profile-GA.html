@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/profile-GA.css">
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
   <title>Profile</title>
 </head>
 <body>
@@ -47,6 +48,9 @@
             </div>
 
             <form id="ga-profile-form" class="pga-profile-form" action="/actions/group-admin/profile" method="post">
+              {% if request.args.get('err') == 'required' %}
+              <div class="alert alert-warning py-2 mb-3" role="alert">First name, last name, and email are required.</div>
+              {% endif %}
               <div class="row g-4 align-items-start">
                 <div class="col-12 col-xl-auto">
                   <div class="pga-profile-photo-wrap">
@@ -61,15 +65,15 @@
                   <div class="row g-4">
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-first-name">First Name</label>
-                      <input id="pga-profile-first-name" name="first_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_first_name if ga_me else '' }}" />
+                      <input id="pga-profile-first-name" name="first_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_first_name if ga_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-last-name">Last Name</label>
-                      <input id="pga-profile-last-name" name="last_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_last_name if ga_me else '' }}" />
+                      <input id="pga-profile-last-name" name="last_name" class="pga-profile-input" type="text" value="{{ ga_me.group_admin_last_name if ga_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-email">Email</label>
-                      <input id="pga-profile-email" name="email" class="pga-profile-input" type="email" value="{{ ga_me.group_admin_email if ga_me else '' }}" />
+                      <input id="pga-profile-email" name="email" class="pga-profile-input" type="email" value="{{ ga_me.group_admin_email if ga_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="pga-profile-label" for="pga-profile-password">New password (optional)</label>

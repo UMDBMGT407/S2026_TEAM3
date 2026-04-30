@@ -2,4 +2,39 @@
 :root {
   --h1: 120px;
   --h2: 80px;
+
+  /* Admin / platform UI palette (matches existing hex usage) */
+  --admin-bg: #f5f7fa;
+  --admin-bg-alt: #eef3f9;
+  --admin-surface: #ffffff;
+  --admin-border: #e6eff5;
+  --admin-border-soft: #f2f4f7;
+  --admin-accent: #1814f3;
+  --admin-accent-muted: rgba(24, 20, 243, 0.08);
+  --admin-text: #343c6a;
+  --admin-text-muted: #718ebf;
+  --admin-text-placeholder: #8ba3cb;
+  --admin-nav-inactive: #b1b1b1;
+  --admin-login-accent: #2e419e;
+
+  --admin-radius-sm: 10px;
+  --admin-radius-md: 16px;
+  --admin-radius-lg: 25px;
+  --admin-radius-pill: 40px;
+
+  --admin-shadow-soft: 4px 4px 18px -5px rgba(231, 228, 232, 0.85);
+  --admin-shadow-card: 4px 4px 22px -4px rgba(180, 190, 210, 0.45);
+  --admin-shadow-topbar: 0 1px 0 rgba(230, 239, 245, 0.9), 0 8px 24px -12px rgba(52, 60, 106, 0.08);
+  --admin-shadow-sidebar: 2px 0 24px -8px rgba(52, 60, 106, 0.06);
+
+  --admin-transition: 0.2s ease;
+
+  /* Group Admin + User portal (reference UI); Admin pages may ignore these */
+  --portal-accent: #2b44ff;
+  /* Space-separated channels for rgb(var(--portal-accent-rgb) / a%) */
+  --portal-accent-rgb: 43 68 255;
+  --portal-page-tint: #f8faff;
+  --portal-radius-card: 24px;
+  --portal-shadow-soft: 0 12px 28px -18px rgba(43, 68, 255, 0.18),
+    0 6px 16px -12px rgba(52, 60, 106, 0.12);
 }

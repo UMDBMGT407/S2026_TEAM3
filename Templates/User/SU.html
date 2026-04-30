@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/SUstyle.css">
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
   <title>Schedule</title>
 </head>
 <body>
@@ -43,15 +44,30 @@
           <div class="row g-3 align-items-center mb-3">
             <div class="col-12 col-lg-auto"><h2 class="su-section-title">Your Scheduled Workouts</h2></div>
             <div class="col-12 col-md-7 col-lg-4 ms-lg-auto">
-              <div class="su-search"><img src="../../Static/Images%202/SUgroup0.svg" alt="" /><span>Search Workouts</span></div>
+              <div class="su-search" role="search">
+                <img src="../../Static/Images%202/SUgroup0.svg" alt="" />
+                <label class="visually-hidden" for="su-workout-search">Search workouts</label>
+                <input
+                  id="su-workout-search"
+                  class="su-search-input"
+                  type="search"
+                  placeholder="Search Workouts"
+                  autocomplete="off"
+                  aria-label="Search workouts"
+                />
+              </div>
             </div>
           </div>
 
-          <div class="su-arrows-wrap mb-4"><img class="img-fluid" src="../../Static/Images%202/SUarrows0.svg" alt="" /></div>
+          <div class="su-arrows-wrap mb-4" aria-label="Scheduled workouts pagination controls">
+            <button type="button" class="su-arrow-btn" id="suPrevWorkouts" aria-label="Previous workouts page">&#8592;</button>
+            <span class="su-page-indicator" id="suWorkoutsPageIndicator">Page 1 of 1</span>
+            <button type="button" class="su-arrow-btn" id="suNextWorkouts" aria-label="Next workouts page">&#8594;</button>
+          </div>
 
-          <div class="row g-4 mb-4">
+          <div class="row g-4 mb-4" id="su-workout-grid">
             {% for s in schedules %}
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-6 js-su-workout-tile" data-workout-search="{{ ('#' ~ (s.group_workout_id|string) ~ ' ' ~ s.group_workout_title ~ ' ' ~ (s.group_workout_scheduled_date|string) ~ ' ' ~ (s.group_workout_location or '') ~ ' ' ~ s.group_name)|e }}">
               <article class="su-workout-card">
                 <div>
                   <h3>{{ s.group_workout_title }}</h3>
@@ -69,8 +85,18 @@
               </article>
             </div>
             {% else %}
-            <p class="text-muted">No scheduled group workouts. Join a group to see sessions here.</p>
+            <div class="col-12" id="su-no-workouts-empty">
+              <p class="text-muted">No scheduled group workouts. Join a group to see sessions here.</p>
+            </div>
             {% endfor %}
+            <div class="col-12 d-none" id="su-no-workouts-match">
+              <article class="su-workout-card">
+                <div>
+                  <h3>No workouts match your search.</h3>
+                  <p>Try a different title, group, date, or location.</p>
+                </div>
+              </article>
+            </div>
           </div>
 
           <div class="row g-4 align-items-start">
@@ -110,19 +136,33 @@
             <div class="col-12 col-xl-6">
               <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between mb-3">
                 <h2 class="su-subtitle m-0">Attendance</h2>
-                <div class="su-search su-search--small"><img src="../../Static/Images%202/SUgroup4.svg" alt="" /><span>Search Members</span></div>
+                <div class="su-search su-search--small" role="search">
+                  <img src="../../Static/Images%202/SUgroup4.svg" alt="" />
+                  <label class="visually-hidden" for="su-member-search">Search members</label>
+                  <input
+                    id="su-member-search"
+                    class="su-search-input"
+                    type="search"
+                    placeholder="Search Members"
+                    autocomplete="off"
+                    aria-label="Search members"
+                  />
+                </div>
               </div>
               <section class="su-attendance-card">
                 <div class="su-attendance-head"><span>Member Name</span><span>Status</span></div>
                 {% for m in selected_workout_attendance %}
                 {% set st = m.attendance_status %}
-                <div class="su-attendance-row">
+                <div class="su-attendance-row js-su-attendance-row" data-member-search="{{ (m.user_first_name ~ ' ' ~ m.user_last_name ~ ' ' ~ (m.attendance_status or ''))|e }}">
                   <span>{{ m.user_first_name }} {{ m.user_last_name }}</span>
                   <span class="su-state {% if st == 'Going' %}su-state--going{% elif st == 'Not Going' %}su-state--no{% else %}su-state--pending{% endif %}">{{ st }}</span>
                 </div>
                 {% else %}
                 <div class="su-attendance-row"><span class="text-muted">No attendance data yet.</span><span class="su-state su-state--pending">Pending</span></div>
                 {% endfor %}
+                <div class="su-attendance-row su-attendance-row--no-match d-none" id="su-no-members-match" role="status">
+                  <span class="text-muted">No members match your search.</span>
+                </div>
               </section>
             </div>
           </div>
@@ -130,5 +170,6 @@
       </div>
     </div>
   </div>
+  <script src="../../Static/JS/su-search.js"></script>
 </body>
 </html>

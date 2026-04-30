@@ -165,8 +165,10 @@ CREATE TABLE IF NOT EXISTS workout (
   workout_duration_minutes INT NULL COMMENT 'Duration stored in minutes',
   user_id INT NOT NULL,
   group_workout_id INT NULL,
+  challenge_id INT NULL,
   CONSTRAINT fk_workout_user FOREIGN KEY (user_id) REFERENCES app_user (user_id),
-  CONSTRAINT fk_workout_gw FOREIGN KEY (group_workout_id) REFERENCES group_workout (group_workout_id)
+  CONSTRAINT fk_workout_gw FOREIGN KEY (group_workout_id) REFERENCES group_workout (group_workout_id),
+  CONSTRAINT fk_workout_challenge FOREIGN KEY (challenge_id) REFERENCES challenge (challenge_id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS workout_log (

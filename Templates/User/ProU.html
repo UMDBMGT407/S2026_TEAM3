@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../Static/CSS/vars.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Static/CSS/ProUstyle.css">
+  <link rel="stylesheet" href="../../Static/CSS/ga-user-shared.css">
   <title>Profile</title>
 </head>
 <body>
@@ -47,6 +48,9 @@
             </div>
 
             <form id="prou-profile-form" class="prou-form" action="/actions/user/profile" method="post">
+              {% if request.args.get('err') == 'required' %}
+              <div class="alert alert-warning py-2 mb-3" role="alert">First name, last name, and email are required.</div>
+              {% endif %}
               <div class="row g-4 align-items-start">
                 <div class="col-12 col-xl-auto">
                   <div class="prou-photo-wrap">
@@ -61,15 +65,15 @@
                   <div class="row g-4">
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-first-name">First Name</label>
-                      <input id="prou-first-name" name="first_name" class="prou-input" type="text" value="{{ user_me.user_first_name if user_me else '' }}" />
+                      <input id="prou-first-name" name="first_name" class="prou-input" type="text" value="{{ user_me.user_first_name if user_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-last-name">Last Name</label>
-                      <input id="prou-last-name" name="last_name" class="prou-input" type="text" value="{{ user_me.user_last_name if user_me else '' }}" />
+                      <input id="prou-last-name" name="last_name" class="prou-input" type="text" value="{{ user_me.user_last_name if user_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-email">Email</label>
-                      <input id="prou-email" name="email" class="prou-input" type="email" value="{{ user_me.user_email if user_me else '' }}" />
+                      <input id="prou-email" name="email" class="prou-input" type="email" value="{{ user_me.user_email if user_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
                       <label class="prou-label" for="prou-password">New password (optional)</label>

@@ -1,0 +1,380 @@
+/**
+ * Admin shell polish — loaded after page CSS + Bootstrap.
+ * Scoped to admin layout roots only (no Group/User GA templates).
+ */
+
+:root {
+  --admin-shell-bg: linear-gradient(
+    165deg,
+    #eef3f9 0%,
+    #f5f7fa 38%,
+    #f8fafc 100%
+  );
+}
+
+body:has(
+    :is(
+      .group-layout,
+      .group-edit-layout,
+      .challenge-layout,
+      .challenge-edit-layout,
+      .schedule-layout,
+      .schedule-aed-layout,
+      .post-layout,
+      .profile-layout,
+      .dash-layout
+    )
+  ) {
+  background: var(--admin-shell-bg, #f5f7fa);
+  -webkit-font-smoothing: antialiased;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .sidebar-wrap {
+  background: var(--admin-surface, #ffffff);
+  border-right: 1px solid var(--admin-border, #e6eff5);
+  box-shadow: var(--admin-shadow-sidebar, 2px 0 24px -8px rgba(52, 60, 106, 0.06));
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .topbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--admin-border, #e6eff5);
+  box-shadow: var(
+    --admin-shadow-topbar,
+    0 1px 0 rgba(230, 239, 245, 0.9),
+    0 8px 24px -12px rgba(52, 60, 106, 0.08)
+  );
+  backdrop-filter: blur(10px);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  :is(
+      .group-layout,
+      .group-edit-layout,
+      .challenge-layout,
+      .challenge-edit-layout,
+      .schedule-layout,
+      .schedule-aed-layout,
+      .post-layout,
+      .profile-layout,
+      .dash-layout
+    )
+    .topbar {
+    background: var(--admin-surface, #ffffff);
+  }
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .nav-item-link {
+  border-radius: var(--admin-radius-sm, 10px);
+  padding: 6px 10px;
+  margin-left: -2px;
+  margin-right: -2px;
+  transition: color var(--admin-transition, 0.2s ease),
+    background-color var(--admin-transition, 0.2s ease);
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .nav-item-link:not(.active):hover {
+  background: #f4f6fb;
+  color: var(--admin-text, #343c6a);
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .nav-item-link:focus-visible {
+  outline: 2px solid var(--admin-accent, #1814f3);
+  outline-offset: 2px;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .section-title,
+  :is(
+      .group-layout,
+      .group-edit-layout,
+      .challenge-layout,
+      .challenge-edit-layout,
+      .schedule-layout,
+      .schedule-aed-layout,
+      .post-layout,
+      .profile-layout,
+      .dash-layout
+    )
+    .section-heading
+    h2 {
+  letter-spacing: -0.02em;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .search-pill,
+  :is(
+      .group-layout,
+      .group-edit-layout,
+      .challenge-layout,
+      .challenge-edit-layout,
+      .schedule-layout,
+      .schedule-aed-layout,
+      .post-layout,
+      .profile-layout,
+      .dash-layout
+    )
+    .group-pill {
+  border-radius: var(--admin-radius-pill, 40px);
+  box-shadow: var(--admin-shadow-soft, 4px 4px 18px -5px rgba(231, 228, 232, 0.85));
+  border: 1px solid rgba(230, 239, 245, 0.65);
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .table-card,
+  :is(
+      .group-layout,
+      .group-edit-layout,
+      .challenge-layout,
+      .challenge-edit-layout,
+      .schedule-layout,
+      .schedule-aed-layout,
+      .post-layout,
+      .profile-layout,
+      .dash-layout
+    )
+    .table-card-wide {
+  border-radius: var(--admin-radius-lg, 25px);
+  box-shadow: var(--admin-shadow-card, 4px 4px 22px -4px rgba(180, 190, 210, 0.45));
+  border: 1px solid rgba(230, 239, 245, 0.9);
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .custom-table
+  thead
+  th {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 247, 250, 0.95) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .custom-table
+  tbody
+  tr:hover
+  td {
+  background-color: #fafbfd;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .table-compact
+  tbody
+  tr:hover
+  td {
+  background-color: #fafbfd;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .view-btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .view-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -4px rgba(24, 20, 243, 0.22);
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .view-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+:is(
+    .group-layout,
+    .group-edit-layout,
+    .challenge-layout,
+    .challenge-edit-layout,
+    .schedule-layout,
+    .schedule-aed-layout,
+    .post-layout,
+    .profile-layout,
+    .dash-layout
+  )
+  .profile-picture {
+  box-shadow: 0 0 0 2px var(--admin-border, #e6eff5),
+    0 6px 18px -6px rgba(52, 60, 106, 0.12);
+}
+
+/* Dashboard-specific cards (do not duplicate nav rules here) */
+.dash-layout .metric-card,
+.dash-layout .panel-card {
+  border: 1px solid rgba(230, 239, 245, 0.85);
+  box-shadow: var(--admin-shadow-card, 4px 4px 22px -4px rgba(180, 190, 210, 0.45));
+  transition: box-shadow var(--admin-transition, 0.2s ease),
+    transform var(--admin-transition, 0.2s ease);
+}
+
+.dash-layout .metric-card:hover,
+.dash-layout .panel-card:hover {
+  box-shadow: 0 10px 28px -8px rgba(52, 60, 106, 0.12);
+}
+
+.dash-layout .graph-wrap {
+  border: 1px solid rgba(230, 239, 245, 0.85);
+  box-shadow: var(--admin-shadow-soft, 4px 4px 18px -5px rgba(231, 228, 232, 0.85));
+}
+
+.dash-layout .graph-type-btn {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dash-layout .data-list--downloads a {
+  border-radius: 6px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dash-layout .data-list--downloads a:hover {
+  background: var(--admin-accent-muted, rgba(24, 20, 243, 0.08));
+  text-decoration: none;
+}

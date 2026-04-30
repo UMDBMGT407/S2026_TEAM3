@@ -38,6 +38,7 @@
        padding: 0;
    }
    </style>
+  <link rel="stylesheet" href="../../Static/CSS/admin-shared.css" />
   <title>Document</title>
 </head>
 <body>
@@ -67,6 +68,9 @@
           <div class="card-header-line">
             <h2 class="edit-group">Edit Challenge</h2>
           </div>
+          {% if request.args.get('err') == '2' %}
+          <p class="px-3 pt-2 mb-0 text-danger small">Save a valid workout goal: a positive whole number (e.g. 10).</p>
+          {% endif %}
 
           {% if edit_challenge_admin %}
           <form class="edit-form" method="post" action="/actions/admin/challenge/{{ edit_challenge_admin.challenge_id }}/edit">
@@ -85,7 +89,7 @@
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="challengeGoal">Challenge Goal (Workouts)</label>
-                <input id="challengeGoal" name="challenge_goal" class="form-control custom-input" type="number" min="1" step="1" value="{{ edit_challenge_goal_count }}" />
+                <input id="challengeGoal" name="challenge_goal" class="form-control custom-input" type="number" min="1" max="99999" step="1" value="{{ edit_challenge_goal_count }}" required aria-required="true" />
               </div>
             </div>
 
