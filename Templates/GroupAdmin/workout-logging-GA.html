@@ -116,11 +116,11 @@
                     </div>
                     <div class="col-6 col-xl-2">
                       <label class="wlga-label">Weight</label>
-                      <input name="weight[]" class="wlga-input" type="number" min="0" step="any" value="{{ ex.weight if ex.weight is not none else '' }}" />
+                      <input name="weight[]" class="wlga-input" type="number" min="0" step="any" value="{{ ex.weight if ex.weight is not none else '' }}" required />
                     </div>
                     <div class="col-6 col-xl-2">
                       <label class="wlga-label">Muscle Group</label>
-                      <input name="muscle_group[]" class="wlga-input" type="text" value="{{ ex.muscle_group }}" />
+                      <input name="muscle_group[]" class="wlga-input" type="text" value="{{ ex.muscle_group }}" required />
                     </div>
                     <div class="col-12 col-xl-1 d-flex align-items-end">
                       <button type="button" class="wlga-remove-exercise border-0 bg-transparent">Remove</button>
@@ -147,11 +147,11 @@
                     </div>
                     <div class="col-6 col-xl-2">
                       <label class="wlga-label">Weight</label>
-                      <input name="weight[]" class="wlga-input" type="number" min="0" step="any" />
+                      <input name="weight[]" class="wlga-input" type="number" min="0" step="any" required />
                     </div>
                     <div class="col-6 col-xl-2">
                       <label class="wlga-label">Muscle Group</label>
-                      <input name="muscle_group[]" class="wlga-input" type="text" />
+                      <input name="muscle_group[]" class="wlga-input" type="text" required />
                     </div>
                     <div class="col-12 col-xl-1 d-flex align-items-end">
                       <button type="button" class="wlga-remove-exercise border-0 bg-transparent">Remove</button>

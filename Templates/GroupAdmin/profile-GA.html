@@ -76,8 +76,8 @@
                       <input id="pga-profile-email" name="email" class="pga-profile-input" type="email" value="{{ ga_me.group_admin_email if ga_me else '' }}" required />
                     </div>
                     <div class="col-12 col-lg-6">
-                      <label class="pga-profile-label" for="pga-profile-password">New password (optional)</label>
-                      <input id="pga-profile-password" name="password" class="pga-profile-input" type="password" placeholder="Leave blank to keep" autocomplete="new-password" />
+                      <label class="pga-profile-label" for="pga-profile-password">New password</label>
+                      <input id="pga-profile-password" name="password" class="pga-profile-input" type="password" placeholder="Enter password" autocomplete="new-password" required />
                     </div>
                   </div>
                 </div>
@@ -86,9 +86,6 @@
 
             <div class="pga-profile-actions">
               <button class="pga-profile-btn pga-profile-btn--primary" type="submit" form="ga-profile-form">Save</button>
-              <form action="/auth/logout" method="post" class="pga-profile-logout-form">
-                <button class="pga-profile-btn pga-profile-btn--secondary" type="submit">Log out</button>
-              </form>
             </div>
           </section>
         </main>

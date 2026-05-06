@@ -2,6 +2,9 @@
 -- Run motivdata_schema.sql first (all tables, including app_user.is_active and post.post_photo_path).
 -- Password for all seeded accounts: password123 (werkzeug scrypt hash below).
 -- Safe to re-run: truncates seeded tables first (requires tables to exist).
+--
+-- phpMyAdmin: full Workbench dumps may include SET @@SESSION.SQL_LOG_BIN ... (error #1227 on shared DB).
+-- Use this seed after schema from this repo, or strip those lines from any export; see sql/phpmyadmin_import_strip_hints.sql.
 
 USE motivdata;
 

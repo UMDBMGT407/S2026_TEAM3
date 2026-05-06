@@ -48,15 +48,18 @@
 
             {% if edit_ga_group %}
             <form class="egga-form" method="post" action="/actions/group-admin/group/{{ edit_ga_group.group_id }}/edit">
+              {% if request.args.get('err') %}
+              <div class="alert alert-danger mb-3" role="alert">All fields are required.</div>
+              {% endif %}
               <div class="row g-4 justify-content-center">
                 <div class="col-12 col-xl-7">
                   <label class="egga-label" for="egga-group-name">Group Name</label>
-                  <input id="egga-group-name" name="group_name" class="egga-input" type="text" value="{{ edit_ga_group.group_name }}" />
+                  <input id="egga-group-name" name="group_name" class="egga-input" type="text" value="{{ edit_ga_group.group_name }}" required />
                 </div>
 
                 <div class="col-12 col-xl-7">
                   <label class="egga-label" for="egga-description">Description</label>
-                  <textarea id="egga-description" name="group_description" class="egga-input egga-input--textarea" rows="5">{{ edit_ga_group.group_description or '' }}</textarea>
+                  <textarea id="egga-description" name="group_description" class="egga-input egga-input--textarea" rows="5" required>{{ edit_ga_group.group_description or '' }}</textarea>
                 </div>
               </div>
 

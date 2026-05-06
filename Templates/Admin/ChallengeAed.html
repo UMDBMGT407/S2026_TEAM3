@@ -71,14 +71,19 @@
 
           {% if edit_session %}
           <form class="edit-form" method="post" action="/actions/admin/schedule/{{ edit_session.group_workout_id }}/edit">
+            {% if schedule_required_error %}
+            <div class="alert alert-danger mb-3" role="alert">
+              Session Name is required.
+            </div>
+            {% endif %}
             <div class="row g-3">
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="sessionName">Session Name</label>
-                <input id="sessionName" name="session_name" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_title }}" />
+                <input id="sessionName" name="session_name" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_title }}" required />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="groupField">Group</label>
-                <select id="groupField" name="group_id" class="form-select custom-input" aria-label="Group">
+                <select id="groupField" name="group_id" class="form-select custom-input" aria-label="Group" required>
                   {% for g in groups %}
                   <option value="{{ g.group_id }}" {% if g.group_id == edit_session.group_id %}selected{% endif %}>{{ g.group_name }}</option>
                   {% endfor %}
@@ -86,15 +91,15 @@
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="dateField">Date</label>
-                <input id="dateField" name="date_field" class="form-control custom-input" type="date" value="{{ edit_session.group_workout_scheduled_date }}" />
+                <input id="dateField" name="date_field" class="form-control custom-input" type="date" value="{{ edit_session.group_workout_scheduled_date }}" required />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="timeField">Time</label>
-                <input id="timeField" name="scheduled_time" class="form-control custom-input" type="time" value="{{ edit_workout_time }}" />
+                <input id="timeField" name="scheduled_time" class="form-control custom-input" type="time" value="{{ edit_workout_time }}" required />
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="locationField">Location</label>
-                <input id="locationField" name="location_field" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_location or '' }}" />
+                <input id="locationField" name="location_field" class="form-control custom-input" type="text" value="{{ edit_session.group_workout_location or '' }}" required />
               </div>
             </div>
 

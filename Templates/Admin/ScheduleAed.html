@@ -74,18 +74,21 @@
 
           {% if edit_challenge_admin %}
           <form class="edit-form" method="post" action="/actions/admin/challenge/{{ edit_challenge_admin.challenge_id }}/edit">
+            {% if request.args.get('err') %}
+            <div class="alert alert-danger mb-3" role="alert">All fields are required.</div>
+            {% endif %}
             <div class="row g-3">
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="challengeName">Challenge Name</label>
-                <input id="challengeName" name="challenge_name" class="form-control custom-input" type="text" value="{{ edit_challenge_admin.challenge_title }}" />
+                <input id="challengeName" name="challenge_name" class="form-control custom-input" type="text" value="{{ edit_challenge_admin.challenge_title }}" required />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="startDate">Start Date</label>
-                <input id="startDate" name="start_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_start_date or '' }}" />
+                <input id="startDate" name="start_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_start_date or '' }}" required />
               </div>
               <div class="col-12 col-md-6">
                 <label class="form-label-custom" for="endDate">End Date</label>
-                <input id="endDate" name="end_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_end_date or '' }}" />
+                <input id="endDate" name="end_date" class="form-control custom-input" type="date" value="{{ edit_challenge_admin.challenge_end_date or '' }}" required />
               </div>
               <div class="col-12">
                 <label class="form-label-custom" for="challengeGoal">Challenge Goal (Workouts)</label>

@@ -54,6 +54,9 @@
 
             {% if edit_challenge %}
             <form class="ecga-form" method="post" action="/actions/group-admin/challenge/{{ edit_challenge.challenge_id }}/edit">
+              {% if request.args.get('err') %}
+              <div class="alert alert-danger mb-3" role="alert">All fields are required.</div>
+              {% endif %}
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="ecga-label" for="ecga-challenge-name">Challenge Name</label>
@@ -66,7 +69,7 @@
                 <div class="col-12">
                   <label class="ecga-label" for="ecga-group">Group</label>
                   <div class="ecga-select-wrap">
-                    <select id="ecga-group" name="group_id" class="ecga-select" aria-label="Group">
+                    <select id="ecga-group" name="group_id" class="ecga-select" aria-label="Group" required>
                       {% for g in groups %}
                       <option value="{{ g.group_id }}" {% if g.group_id == edit_challenge.group_id %}selected{% endif %}>{{ g.group_name }}</option>
                       {% endfor %}
@@ -76,11 +79,11 @@
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="ecga-label" for="ecga-start-date">Start Date</label>
-                  <input id="ecga-start-date" name="start_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_start_date or '' }}" />
+                  <input id="ecga-start-date" name="start_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_start_date or '' }}" required />
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="ecga-label" for="ecga-end-date">End Date</label>
-                  <input id="ecga-end-date" name="end_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_end_date or '' }}" />
+                  <input id="ecga-end-date" name="end_date" class="ecga-input" type="date" value="{{ edit_challenge.challenge_end_date or '' }}" required />
                 </div>
               </div>
 

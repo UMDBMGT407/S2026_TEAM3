@@ -40,9 +40,6 @@ body {
   align-items: center;
   gap: 14px;
   min-height: 26px;
-  padding: 0 8px;
-  margin-left: -8px;
-  border-radius: 12px;
   color: #b1b1b1;
   font-size: 18px;
   font-weight: 500;
@@ -88,7 +85,6 @@ body {
 }
 
 .page-title {
-  margin: 0;
   color: #343c6a !important;
   font-size: 28px;
   font-weight: 600;

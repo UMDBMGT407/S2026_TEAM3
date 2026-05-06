@@ -1,6 +1,13 @@
 -- Motiv ERD schema for MySQL Workbench
 -- Paste into a new query tab, then execute.
 -- Re-runs: uses CREATE TABLE IF NOT EXISTS. For a full reset: DROP DATABASE motivdata; then run again.
+--
+-- phpMyAdmin / course server (BMGT407): If you import a Data Export dump instead of this file,
+-- remove lines that set privileged session variables or you may get #1227 Access denied, e.g.:
+--   SET @@SESSION.SQL_LOG_BIN = 0;
+--   SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+--   SET @@GLOBAL.GTID_PURGED = ...;
+-- Also remove DEFINER=`...`@`...` from routines/views if import complains. See sql/phpmyadmin_import_strip_hints.sql.
 
 CREATE DATABASE IF NOT EXISTS motivdata
   CHARACTER SET utf8mb4
@@ -9,7 +16,6 @@ CREATE DATABASE IF NOT EXISTS motivdata
 USE motivdata;
 
 SET NAMES utf8mb4;
-SET SESSION default_storage_engine = 'InnoDB';
 
 -- Platform admin (monitors posts, directs groups)
 CREATE TABLE IF NOT EXISTS admin (

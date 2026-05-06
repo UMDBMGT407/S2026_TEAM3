@@ -102,31 +102,33 @@
 
               <div class="col-12 col-lg-9">
                 <form id="a-profile-form" method="post" action="/actions/admin/profile">
+                {% if profile_required_error %}
+                <div class="alert alert-danger mb-3" role="alert">
+                  First name, last name, and email are required.
+                </div>
+                {% endif %}
                 <div class="row g-3">
                   <div class="col-12 col-md-6">
                     <label class="form-label-custom" for="firstName">First Name</label>
-                    <input id="firstName" name="first_name" class="form-control custom-input" type="text" value="{{ admin_me.admin_first_name if admin_me else '' }}" />
+                    <input id="firstName" name="first_name" class="form-control custom-input" type="text" value="{{ admin_me.admin_first_name if admin_me else '' }}" required />
                   </div>
                   <div class="col-12 col-md-6">
                     <label class="form-label-custom" for="lastName">Last Name</label>
-                    <input id="lastName" name="last_name" class="form-control custom-input" type="text" value="{{ admin_me.admin_last_name if admin_me else '' }}" />
+                    <input id="lastName" name="last_name" class="form-control custom-input" type="text" value="{{ admin_me.admin_last_name if admin_me else '' }}" required />
                   </div>
                   <div class="col-12 col-md-6">
                     <label class="form-label-custom" for="email">Email</label>
-                    <input id="email" name="email" class="form-control custom-input" type="email" value="{{ admin_me.admin_email if admin_me else '' }}" />
+                    <input id="email" name="email" class="form-control custom-input" type="email" value="{{ admin_me.admin_email if admin_me else '' }}" required />
                   </div>
                   <div class="col-12 col-md-6">
-                    <label class="form-label-custom" for="password">New password (optional)</label>
-                    <input id="password" name="password" class="form-control custom-input" type="password" placeholder="Leave blank to keep current" autocomplete="new-password" />
+                    <label class="form-label-custom" for="password">New password</label>
+                    <input id="password" name="password" class="form-control custom-input" type="password" placeholder="Enter password" autocomplete="new-password" required />
                   </div>
                 </div>
                 </form>
 
                 <div class="save-button-wrap">
                   <button type="submit" form="a-profile-form" class="save-button border-0">Save</button>
-                  <form action="/auth/logout" method="post" class="a-profile-logout-form">
-                    <button type="submit" class="save-button save-button--secondary">Log out</button>
-                  </form>
                 </div>
               </div>
             </div>

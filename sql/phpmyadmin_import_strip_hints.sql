@@ -1,0 +1,25 @@
+-- =============================================================================
+-- phpMyAdmin / shared MySQL import — edit your dump before upload (hints only)
+-- =============================================================================
+-- Error #1227 (Access denied; need SUPER or SESSION_VARIABLES_ADMIN) usually
+-- comes from mysqldump / Workbench Data Export adding privileged SET lines.
+--
+-- In your exported .sql, delete entire lines that match any of these patterns:
+--   SQL_LOG_BIN
+--   GTID_PURGED
+--   @@GLOBAL.GTID_EXECUTED
+--
+-- Examples (remove the whole line, including semicolon):
+--   SET @@SESSION.SQL_LOG_BIN = 0;
+--   SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+--   SET @@GLOBAL.GTID_PURGED = '...';
+--
+-- If import fails on DEFINER for views/procedures, remove DEFINER=`user`@`host`
+-- from those CREATE statements (replace with nothing or DEFINER=CURRENT_USER
+-- only if your server allows it).
+--
+-- Preferred for this course: run motivdata_schema.sql then motivdata_seed.sql
+-- from this repo instead of a full instance export when possible.
+-- =============================================================================
+
+SELECT 1 AS import_hints_read_ok;

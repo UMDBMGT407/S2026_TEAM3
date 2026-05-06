@@ -84,7 +84,7 @@
                     <span>{{ ch.my_progress_display }}</span>
                     <span class="chu-status">{% if ch.challenge_status %}{{ ch.challenge_status|title }}{% else %}—{% endif %}</span>
                   </div>
-                  <p class="chu-meta mb-1">Target workouts: {{ ch.challenge_goal_display }}</p>
+                  <p class="chu-meta mb-1">Goal: {{ ch.challenge_goal_display }}</p>
                   <div class="chu-actions">
                     <form method="get" action="CHU.html" class="m-0 d-inline">
                       <input type="hidden" name="challenge_id" value="{{ ch.challenge_id }}" />

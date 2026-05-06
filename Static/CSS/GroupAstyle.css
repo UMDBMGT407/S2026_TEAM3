@@ -8,11 +8,6 @@ body {
   font-family: "Inter", "Inter-Regular", sans-serif;
 }
 
-.sidebar-wrap {
-  background: #ffffff;
-  border-right: 1px solid #e6eff5;
-}
-
 .sidebar-content {
   position: sticky;
   top: 0;
@@ -40,7 +35,6 @@ body {
   align-items: center;
   gap: 14px;
   min-height: 26px;
-  padding: 0 8px;
   color: #b1b1b1;
   font-size: 18px;
   font-weight: 500;
@@ -64,23 +58,7 @@ body {
   object-fit: contain;
 }
 
-.main-wrap {
-  background: #f5f7fa;
-  padding: 24px 20px 32px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  margin: -24px -20px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid #e6eff5;
-}
-
 .page-title {
-  margin: 0;
   color: #343c6a;
   font-size: 28px;
   font-weight: 600;
@@ -107,7 +85,6 @@ body {
 }
 
 .section-title {
-  margin: 0;
   color: #343c6a;
   font-size: 22px;
   font-weight: 600;
@@ -235,15 +212,6 @@ body {
 }
 
 @media (max-width: 767px) {
-  .main-wrap {
-    padding: 16px 12px 24px;
-  }
-
-  .topbar {
-    margin: -16px -12px 14px;
-    padding: 10px 12px;
-  }
-
   .section-title {
     font-size: 20px;
   }

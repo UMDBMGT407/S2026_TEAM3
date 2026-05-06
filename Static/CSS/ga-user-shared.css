@@ -135,6 +135,9 @@ body:has(
     .wlau-layout
   )
   header[class*="-topbar"] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: rgba(255, 255, 255, 0.94);
   border-bottom: 1px solid var(--admin-border, #e6eff5);
   box-shadow: var(
@@ -219,14 +222,57 @@ body:has(
     .pu-layout,
     .wlau-layout
   )
+  aside[class*="-sidebar"]
+  nav {
+  margin-top: 32px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(230, 239, 245, 0.75);
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
   nav
   a[class*="-nav-link"] {
   border-radius: var(--admin-radius-sm, 10px);
   padding: 6px 10px;
-  margin-left: -2px;
-  margin-right: -2px;
+  margin-left: 0;
+  margin-right: 0;
+  border: 1px solid transparent;
   transition: color var(--admin-transition, 0.2s ease),
-    background-color var(--admin-transition, 0.2s ease);
+    background-color var(--admin-transition, 0.2s ease),
+    border-color var(--admin-transition, 0.2s ease);
 }
 
 :is(
@@ -267,6 +313,7 @@ body:has(
   a[class*="-nav-link"]:not(.active):hover {
   background: #f4f6fb;
   color: var(--admin-text, #343c6a);
+  border-color: rgba(230, 239, 245, 0.8);
 }
 
 :is(
@@ -307,6 +354,44 @@ body:has(
   a[class*="-nav-link"]:focus-visible {
   outline: 2px solid var(--portal-accent, var(--admin-accent, #1814f3));
   outline-offset: 2px;
+}
+
+:is(
+    .ga-layout,
+    .gjga-layout,
+    .whga-layout,
+    .jcga-layout,
+    .sjwga-layout,
+    .cgga-layout,
+    .csga-layout,
+    .wdga-layout,
+    .egga-layout,
+    .esga-layout,
+    .ewlga-layout,
+    .pga-layout,
+    .wlga-layout,
+    .gcga-layout,
+    .ccga-layout,
+    .cc2ga-layout,
+    .nga-layout,
+    .sga-layout,
+    .ecga-layout,
+    .pga-profile-layout,
+    .gju-layout,
+    .prou-layout,
+    .wldu-layout,
+    .chu-layout,
+    .gcu-layout,
+    .wlu-layout,
+    .nu-layout,
+    .wleu-layout,
+    .du-layout,
+    .su-layout,
+    .pu-layout,
+    .wlau-layout
+  )
+  :is([class*="-page-title"], [class*="-section-title"], [class*="-section-heading"] h2) {
+  margin: 0;
 }
 
 /* Airy portal: main canvas wash, nav bar accent, forms, generic cards/tables */
@@ -716,4 +801,78 @@ body:has(
   > tr:nth-of-type(odd)
   > * {
   --bs-table-bg: rgba(248, 250, 255, 0.65);
+}
+
+.global-logout-fab-form {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 60;
+}
+
+.global-logout-fab-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 18px;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 12px 22px -14px rgba(220, 38, 38, 0.85), 0 8px 16px -10px rgba(15, 23, 42, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.global-logout-fab-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.global-logout-fab-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.global-mobile-nav-toggle {
+  display: none;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #1f2937;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  line-height: 1.2;
+  box-shadow: 0 2px 8px -6px rgba(15, 23, 42, 0.35);
+}
+
+@media (max-width: 991px) {
+  header[class*="-topbar"] .global-mobile-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  aside[class*="-sidebar"] nav {
+    display: none;
+    margin-top: 12px;
+  }
+
+  body.mobile-nav-expanded aside[class*="-sidebar"] nav {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 767px) {
+  .global-logout-fab-form {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .global-logout-fab-button {
+    padding: 9px 14px;
+    font-size: 0.92rem;
+  }
 }

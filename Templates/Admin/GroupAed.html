@@ -71,14 +71,17 @@
 
           {% if edit_group %}
           <form class="edit-form" method="post" action="/actions/admin/group/{{ edit_group.group_id }}/edit">
+            {% if request.args.get('err') %}
+            <div class="alert alert-danger mb-3" role="alert">All fields are required.</div>
+            {% endif %}
             <div>
               <label class="form-label-custom" for="groupName">Group Name</label>
-              <input id="groupName" name="group_name" class="form-control custom-input" type="text" value="{{ edit_group.group_name }}" />
+              <input id="groupName" name="group_name" class="form-control custom-input" type="text" value="{{ edit_group.group_name }}" required />
             </div>
 
             <div>
               <label class="form-label-custom" for="groupDescription">Description</label>
-              <textarea id="groupDescription" name="group_description" class="form-control custom-textarea" rows="5">{{ edit_group.group_description or '' }}</textarea>
+              <textarea id="groupDescription" name="group_description" class="form-control custom-textarea" rows="5" required>{{ edit_group.group_description or '' }}</textarea>
             </div>
 
             <div class="button-row">

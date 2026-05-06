@@ -18,13 +18,16 @@ from __future__ import annotations
 import json
 import os
 import re
+import csv
 from decimal import Decimal
-from io import BytesIO
+from io import BytesIO, StringIO
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 from datetime import date, datetime, time, timedelta
 from functools import wraps
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from uuid import uuid4
 
 try:
@@ -151,6 +154,56 @@ def require_roles(*roles: str):
 require_session_role = require_roles
 
 
+GLOBAL_LOGOUT_FAB_MARKER = 'id="global-logout-fab"'
+GLOBAL_LOGOUT_FAB_HTML = """
+<form id="global-logout-fab" action="/auth/logout" method="post" class="global-logout-fab-form" aria-label="Log out">
+  <button type="submit" class="global-logout-fab-button">Log Out</button>
+</form>
+""".strip()
+GLOBAL_BFCACHE_GUARD_MARKER = 'id="global-bfcache-guard"'
+GLOBAL_BFCACHE_GUARD_HTML = """
+<script id="global-bfcache-guard">
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+</script>
+""".strip()
+GLOBAL_ACTION_OK_MARKER = 'id="global-action-ok-banner"'
+GLOBAL_NAV_TOGGLE_SCRIPT_MARKER = 'id="global-mobile-nav-toggle-script"'
+GLOBAL_NAV_TOGGLE_SCRIPT_HTML = """
+<script id="global-mobile-nav-toggle-script" src="/Static/JS/mobile-nav-toggle.js"></script>
+""".strip()
+
+
+def _success_message_from_request() -> str | None:
+    if request.args.get("registered") == "1":
+        return "Account created successfully."
+    ok = (request.args.get("ok") or "").strip().lower()
+    labels = {
+        "done": "Action completed successfully.",
+        "saved": "Changes saved successfully.",
+        "created": "Created successfully.",
+        "updated": "Updated successfully.",
+        "deleted": "Deleted successfully.",
+        "joined": "Joined successfully.",
+        "left": "Left successfully.",
+        "submitted": "Submitted successfully.",
+        "sent": "Sent successfully.",
+    }
+    return labels.get(ok)
+
+
+def _global_action_ok_html(message: str) -> str:
+    return (
+        f'<div id="global-action-ok-banner" role="status" '
+        f'style="margin:12px 12px 0; padding:10px 14px; border-radius:8px; '
+        f'border:1px solid #badbcc; background:#d1e7dd; color:#0f5132; '
+        f'font-size:0.95rem; line-height:1.35;">{message}</div>'
+    )
+
+
 def fetch_app_user_for_login(cur, email: str):
     """Return app_user row if password login should succeed (active users only)."""
     try:
@@ -214,6 +267,85 @@ def parse_time(s: Any):
     return None
 
 
+@app.after_request
+def inject_global_logout_button(response):
+    content_type = response.headers.get("Content-Type", "")
+    content_type_lower = content_type.lower()
+    if "text/html" not in content_type_lower:
+        return response
+    role = session.get("role")
+    is_authenticated = role in {"admin", "group_admin", "user"}
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    if response.direct_passthrough:
+        return response
+    body = response.get_data(as_text=True)
+    if not body:
+        return response
+    lower_body = body.lower()
+    body_open_end = lower_body.find(">")
+    if "<body" in lower_body:
+        body_open_idx = lower_body.find("<body")
+        body_open_end = lower_body.find(">", body_open_idx)
+    body_close_idx = lower_body.rfind("</body>")
+    if body_close_idx == -1:
+        return response
+    injections_bottom = []
+    success_html = None
+    success_message = _success_message_from_request()
+    if success_message and GLOBAL_ACTION_OK_MARKER not in body:
+        success_html = _global_action_ok_html(success_message)
+    if is_authenticated and GLOBAL_BFCACHE_GUARD_MARKER not in body:
+        injections_bottom.append(GLOBAL_BFCACHE_GUARD_HTML)
+    if is_authenticated and GLOBAL_NAV_TOGGLE_SCRIPT_MARKER not in body:
+        injections_bottom.append(GLOBAL_NAV_TOGGLE_SCRIPT_HTML)
+    if is_authenticated and GLOBAL_LOGOUT_FAB_MARKER not in body:
+        injections_bottom.append(GLOBAL_LOGOUT_FAB_HTML)
+    if not success_html and not injections_bottom:
+        return response
+    updated = body
+    if success_html and body_open_end != -1:
+        updated = updated[: body_open_end + 1] + "\n" + success_html + "\n" + updated[body_open_end + 1 :]
+        lower_updated = updated.lower()
+        body_close_idx = lower_updated.rfind("</body>")
+    if injections_bottom:
+        updated = (
+            updated[:body_close_idx]
+            + "\n"
+            + "\n".join(injections_bottom)
+            + "\n"
+            + updated[body_close_idx:]
+        )
+    response.set_data(updated)
+    return response
+
+
+@app.after_request
+def append_success_query_for_mutations(response):
+    if request.method not in {"POST", "DELETE"}:
+        return response
+    if response.status_code not in {301, 302, 303, 307, 308}:
+        return response
+    location = response.headers.get("Location")
+    if not location:
+        return response
+    # Avoid adding generic success to auth/login/logout redirects.
+    if request.path in {"/auth/login", "/auth/logout"}:
+        return response
+    parsed = urlsplit(location)
+    params = dict(parse_qsl(parsed.query, keep_blank_values=True))
+    if any(k in params for k in ("ok", "registered", "invite_ok")):
+        return response
+    if any(k in params for k in ("error", "err", "invite_err", "rsvp_err", "leave_err")):
+        return response
+    params["ok"] = "done"
+    response.headers["Location"] = urlunsplit(
+        (parsed.scheme, parsed.netloc, parsed.path, urlencode(params), parsed.fragment)
+    )
+    return response
+
+
 def format_time_for_html_input(val: Any) -> str:
     if val is None:
         return ""
@@ -238,6 +370,29 @@ def parse_int(s: Any, default: int | None = None):
         return default
 
 
+def require_text_field(value: Any) -> str | None:
+    txt = (value or "").strip() if isinstance(value, str) else str(value or "").strip()
+    return txt or None
+
+
+def require_int_field(value: Any) -> int | None:
+    if value is None or not str(value).strip():
+        return None
+    return parse_int(value)
+
+
+def require_date_field(value: Any):
+    if value is None or not str(value).strip():
+        return None
+    return parse_date(str(value))
+
+
+def require_time_field(value: Any):
+    if value is None or not str(value).strip():
+        return None
+    return parse_time(value)
+
+
 def parse_challenge_workout_goal(s: Any) -> int | None:
     """Strict challenge target: whole value must be a positive integer string (e.g. '10')."""
     if s is None:
@@ -251,8 +406,18 @@ def parse_challenge_workout_goal(s: Any) -> int | None:
 def format_workout_goal_display(s: Any) -> str:
     n = parse_challenge_workout_goal(s)
     if n is None:
-        return "—"
-    return str(n)
+        return "0/0 workouts"
+    return f"0/{n} workouts"
+
+
+def format_workout_progress_display(completed: Any, goal_raw: Any) -> str:
+    goal_n = parse_challenge_workout_goal(goal_raw)
+    done = parse_int(completed, 0) or 0
+    if done < 0:
+        done = 0
+    if goal_n is None:
+        return f"{done}/0 workouts"
+    return f"{done}/{goal_n} workouts"
 
 
 def format_challenge_date_range(start: Any, end: Any) -> str:
@@ -699,21 +864,22 @@ def collect_workout_exercises_from_request() -> list[dict[str, Any]] | None:
             continue
         if not ex_name:
             return None
-        sets = parse_int(sets_raw)
-        reps = parse_int(reps_raw)
+        sets = require_int_field(sets_raw)
+        reps = require_int_field(reps_raw)
         try:
-            wfloat = (
-                float(weight_raw) if str(weight_raw).strip() not in ("", "None") else None
-            )
+            wfloat = float(weight_raw) if str(weight_raw).strip() not in ("", "None") else None
         except ValueError:
             wfloat = None
+        muscle = str(muscle_raw).strip()
+        if sets is None or reps is None or wfloat is None or not muscle:
+            return None
         exercises.append(
             {
                 "exercise_name": ex_name,
                 "num_sets": sets,
                 "num_reps": reps,
                 "weight": wfloat,
-                "muscle_group": str(muscle_raw).strip(),
+                "muscle_group": muscle,
             }
         )
     return exercises
@@ -1801,7 +1967,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 "member_id_label": f"#U{u['user_id']}",
                                 "member_name": f"{u['user_first_name']} {u['user_last_name']}",
                                 "rank": idx,
-                                "goal_progress": "—",
+                                "goal_progress": format_workout_goal_display(
+                                    selected_challenge.get("challenge_goal")
+                                ),
                             }
                         )
                     ctx["selected_challenge_participants"] = participants
@@ -1966,7 +2134,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                     "member_name": f"{u['user_first_name']} {u['user_last_name']}",
                                     "member_email": u["user_email"],
                                     "rank": idx,
-                                    "goal_progress": "—",
+                                    "goal_progress": format_workout_goal_display(
+                                        selected_challenge.get("challenge_goal")
+                                    ),
                                 }
                             )
                         ctx["selected_challenge_participants"] = participants
@@ -2108,7 +2278,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                             f"{u['user_first_name']} {u['user_last_name']}"
                                         ),
                                         "rank": idx,
-                                        "goal_progress": "—",
+                                        "goal_progress": format_workout_goal_display(
+                                            selected_challenge.get("challenge_goal")
+                                        ),
                                     }
                                 )
                             ctx["selected_challenge_participants"] = participants
@@ -2289,12 +2461,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ch["challenge_goal_display"] = format_workout_goal_display(
                             ch.get("challenge_goal")
                         )
-                        goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                         cnt = int(ch.get("my_workout_count") or 0)
-                        if goal_n:
-                            ch["my_progress_display"] = f"{cnt}/{goal_n}"
-                        else:
-                            ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                        ch["my_progress_display"] = format_workout_progress_display(
+                            cnt, ch.get("challenge_goal")
+                        )
                         ch["dash_is_organizer"] = int(
                             ch.get("group_admin_id") or 0
                         ) == int(ga_id)
@@ -2322,7 +2492,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                                 else "Participating"
                             )
                             prog = sel.get("my_progress_display")
-                            if prog and prog != "—":
+                            if prog:
                                 bits.append(f"Progress: {prog}")
                             st = (sel.get("challenge_status") or "").strip()
                             if st:
@@ -2608,12 +2778,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                     ch["challenge_goal_display"] = format_workout_goal_display(
                         ch.get("challenge_goal")
                     )
-                    goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                     cnt = int(ch.get("my_workout_count") or 0)
-                    if goal_n:
-                        ch["my_progress_display"] = f"{cnt}/{goal_n}"
-                    else:
-                        ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                    ch["my_progress_display"] = format_workout_progress_display(
+                        cnt, ch.get("challenge_goal")
+                    )
                 ctx["chu_joined_challenges"] = joined
                 if joined:
                     selected_id = request.args.get("challenge_id", type=int)
@@ -2681,10 +2849,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ranked: list[dict[str, Any]] = []
                         for r in prows:
                             cct = counts.get(r["user_id"], 0)
-                            if goal_sel:
-                                gp = f"{cct}/{goal_sel}"
-                            else:
-                                gp = "—" if cct == 0 else str(cct)
+                            gp = format_workout_progress_display(cct, goal_sel)
                             ranked.append(
                                 {
                                     "member_name": (
@@ -2807,12 +2972,10 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                         ch["challenge_goal_display"] = format_workout_goal_display(
                             ch.get("challenge_goal")
                         )
-                        goal_n = parse_challenge_workout_goal(ch.get("challenge_goal"))
                         cnt = int(ch.get("my_workout_count") or 0)
-                        if goal_n:
-                            ch["my_progress_display"] = f"{cnt}/{goal_n}"
-                        else:
-                            ch["my_progress_display"] = "—" if cnt == 0 else str(cnt)
+                        ch["my_progress_display"] = format_workout_progress_display(
+                            cnt, ch.get("challenge_goal")
+                        )
                     ctx["dash_challenges"] = joined
                     if joined:
                         selected_id = request.args.get("challenge_id", type=int)
@@ -2832,7 +2995,7 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
                             if gn:
                                 bits.append(gn)
                             prog = sel.get("my_progress_display")
-                            if prog and prog != "—":
+                            if prog:
                                 bits.append(f"Progress: {prog}")
                             st = (sel.get("challenge_status") or "").strip()
                             if st:
@@ -3199,6 +3362,9 @@ def build_template_context(subdir: str, filename: str) -> dict[str, Any]:
 
 @app.route("/")
 def root():
+    role = session.get("role")
+    if role:
+        return redirect(default_dashboard_for_role(role))
     # Serve login page directly so hitting base URL never appears blank.
     return admin_page("index.html")
 
@@ -3207,6 +3373,12 @@ def root():
 def admin_page(filename):
     if not allowed_page(filename):
         abort(404)
+    role = session.get("role")
+    if filename == "index.html" and role:
+        nxt = safe_next_url(request.args.get("next"))
+        if nxt and next_url_allowed_for_role(nxt, role):
+            return redirect(nxt)
+        return redirect(default_dashboard_for_role(role))
     if filename not in ADMIN_PUBLIC_PAGES and session.get("role") != "admin":
         denied = session.get("role") is not None
         return redirect_to_login_with_next(access_denied=denied)
@@ -3215,6 +3387,11 @@ def admin_page(filename):
         ctx["login_next"] = safe_next_url(request.args.get("next"))
         ctx["login_error"] = request.args.get("error") == "1"
         ctx["login_denied"] = request.args.get("error") == "denied"
+        ctx["login_db_error"] = request.args.get("error") == "db"
+    if filename == "AProfile.html":
+        ctx["profile_required_error"] = request.args.get("err") == "required"
+    if filename == "ChallengeAed.html":
+        ctx["schedule_required_error"] = request.args.get("err") == "required"
     return render_template(f"Admin/{filename}", **ctx)
 
 
@@ -3256,6 +3433,11 @@ def groupadmin_page(filename):
 def auth_login_get():
     """GET /auth/login is not the login UI (that is /Admin/index.html). Redirect so bookmarks do not 405."""
     nxt = safe_next_url(request.args.get("next"))
+    role = session.get("role")
+    if role:
+        if nxt and next_url_allowed_for_role(nxt, role):
+            return redirect(nxt)
+        return redirect(default_dashboard_for_role(role))
     if nxt:
         return redirect(f"/Admin/index.html?next={quote(nxt, safe='/')}")
     return redirect("/Admin/index.html")
@@ -3266,7 +3448,14 @@ def auth_login():
     email = request.form.get("email", "").strip()
     password = request.form.get("password", "")
     next_url = safe_next_url(request.form.get("next"))
-    cur = dict_cursor()
+    try:
+        cur = dict_cursor()
+    except OperationalError:
+        app.logger.exception("MySQL connection failed during login")
+        loc = "/Admin/index.html?error=db"
+        if next_url:
+            loc = f"{loc}&next={quote(next_url, safe='/')}"
+        return redirect(loc)
     try:
         cur.execute("SELECT * FROM admin WHERE admin_email = %s", (email,))
         row = cur.fetchone()
@@ -3310,7 +3499,7 @@ def auth_login():
 @app.post("/auth/register")
 def auth_register():
     email = request.form.get("email", "").strip()
-    password = request.form.get("password", "")
+    password = request.form.get("password", "").strip()
     first = request.form.get("first_name", "").strip()
     last = request.form.get("last_name", "").strip()
     if not all([email, password, first, last]):
@@ -3341,7 +3530,11 @@ def auth_register():
 @app.post("/auth/logout")
 def auth_logout():
     session.clear()
-    return redirect("/Admin/index.html")
+    response = redirect("/Admin/index.html")
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 # --- Group Admin actions ---
@@ -3354,7 +3547,7 @@ def ga_create_group():
     name = request.form.get("group_name", "").strip()
     desc = request.form.get("group_description", "").strip()
     ga_id = session["id"]
-    if not name:
+    if not name or not desc:
         return redirect("/GroupAdmin/group-creation-GA.html?err=1")
     cur = mysql.connection.cursor()
     admin_id = parse_int(request.form.get("admin_id"))
@@ -3389,6 +3582,8 @@ def ga_edit_group(group_id):
         return redirect("/GroupAdmin/created-groups-GA.html")
     name = request.form.get("group_name", "").strip()
     desc = request.form.get("group_description", "").strip()
+    if not name or not desc:
+        return redirect(f"/GroupAdmin/edit-group-GA.html?id={group_id}&err=1")
     cur = mysql.connection.cursor()
     cur.execute(
         """UPDATE motiv_group SET group_name = %s, group_description = %s
@@ -3837,9 +4032,11 @@ def ga_create_challenge():
     title = request.form.get("challenge_title", "").strip()
     goal_n = parse_challenge_workout_goal(request.form.get("challenge_goal"))
     group_id = parse_int(request.form.get("group_id"))
-    start = parse_date(request.form.get("start_date"))
-    end = parse_date(request.form.get("end_date"))
-    if not title or not group_id:
+    start_raw = request.form.get("start_date")
+    end_raw = request.form.get("end_date")
+    start = require_date_field(start_raw)
+    end = require_date_field(end_raw)
+    if not title or not group_id or start is None or end is None:
         return redirect("/GroupAdmin/challenge-creation-GA.html?err=1")
     if goal_n is None:
         return redirect("/GroupAdmin/challenge-creation-GA.html?err=2")
@@ -3864,9 +4061,11 @@ def ga_edit_challenge(cid):
     title = request.form.get("challenge_title", "").strip()
     goal_n = parse_challenge_workout_goal(request.form.get("challenge_goal"))
     group_id = parse_int(request.form.get("group_id"))
-    start = parse_date(request.form.get("start_date"))
-    end = parse_date(request.form.get("end_date"))
-    if not title:
+    start_raw = request.form.get("start_date")
+    end_raw = request.form.get("end_date")
+    start = require_date_field(start_raw)
+    end = require_date_field(end_raw)
+    if not title or group_id is None or start is None or end is None:
         return redirect(f"/GroupAdmin/edit-challenge-GA.html?id={cid}&err=1")
     if goal_n is None:
         return redirect(f"/GroupAdmin/edit-challenge-GA.html?id={cid}&err=2")
@@ -3910,9 +4109,9 @@ def ga_create_schedule():
     title = request.form.get("title", "").strip()
     loc = request.form.get("location", "").strip()
     group_id = parse_int(request.form.get("group_id"))
-    sched_date = parse_date(request.form.get("scheduled_date"))
-    sched_time = parse_time(request.form.get("scheduled_time"))
-    if not title or not group_id:
+    sched_date = require_date_field(request.form.get("scheduled_date"))
+    sched_time = require_time_field(request.form.get("scheduled_time"))
+    if not title or not loc or not group_id or sched_date is None or sched_time is None:
         return redirect("/GroupAdmin/create-schedule-GA.html?err=1")
     cur = mysql.connection.cursor()
     ensure_group_workout_scheduled_time_column(cur)
@@ -3947,8 +4146,10 @@ def ga_edit_schedule(wid):
     title = request.form.get("title", "").strip()
     loc = request.form.get("location", "").strip()
     group_id = parse_int(request.form.get("group_id"))
-    sched_date = parse_date(request.form.get("scheduled_date"))
-    sched_time = parse_time(request.form.get("scheduled_time"))
+    sched_date = require_date_field(request.form.get("scheduled_date"))
+    sched_time = require_time_field(request.form.get("scheduled_time"))
+    if not title or not loc or group_id is None or sched_date is None or sched_time is None:
+        return redirect(f"/GroupAdmin/edit-schedule-GA.html?id={wid}&err=1")
     cur = mysql.connection.cursor()
     ensure_group_workout_scheduled_time_column(cur)
     cur.execute(
@@ -4008,29 +4209,23 @@ def ga_profile():
     email = request.form.get("email", "").strip()
     if not first or not last or not email:
         return redirect("/GroupAdmin/profile-GA.html?err=required")
-    password = request.form.get("password", "")
+    password = request.form.get("password", "").strip()
+    if not password:
+        return redirect("/GroupAdmin/profile-GA.html?err=required")
     cur = mysql.connection.cursor()
-    if password:
-        cur.execute(
-            """UPDATE group_admin SET group_admin_first_name = %s, group_admin_last_name = %s,
-               group_admin_email = %s, group_admin_name = %s, password_hash = %s
-               WHERE group_admin_id = %s""",
-            (
-                first,
-                last,
-                email,
-                f"{first} {last}",
-                generate_password_hash(password),
-                session["id"],
-            ),
-        )
-    else:
-        cur.execute(
-            """UPDATE group_admin SET group_admin_first_name = %s, group_admin_last_name = %s,
-               group_admin_email = %s, group_admin_name = %s
-               WHERE group_admin_id = %s""",
-            (first, last, email, f"{first} {last}", session["id"]),
-        )
+    cur.execute(
+        """UPDATE group_admin SET group_admin_first_name = %s, group_admin_last_name = %s,
+           group_admin_email = %s, group_admin_name = %s, password_hash = %s
+           WHERE group_admin_id = %s""",
+        (
+            first,
+            last,
+            email,
+            f"{first} {last}",
+            generate_password_hash(password),
+            session["id"],
+        ),
+    )
     mysql.connection.commit()
     cur.close()
     session["email"] = email
@@ -4045,8 +4240,15 @@ def ga_workout_log():
     if not ga_email:
         return redirect("/GroupAdmin/workout-history-GA.html?err=user")
     workout_id = parse_int(request.form.get("workout_id"))
-    wdate = parse_date(request.form.get("workout_date")) or date.today()
-    duration = parse_int(request.form.get("duration_minutes"))
+    wdate = require_date_field(request.form.get("workout_date"))
+    duration = require_int_field(request.form.get("duration_minutes"))
+    if wdate is None or duration is None:
+        target = (
+            f"/GroupAdmin/workout-logging-GA.html?workout_id={workout_id}&err=required"
+            if workout_id
+            else "/GroupAdmin/workout-logging-GA.html?err=required"
+        )
+        return redirect(target)
     exercises = collect_workout_exercises_from_request()
 
     if exercises is None:
@@ -4180,7 +4382,7 @@ def user_create_group_become_ga():
     user_id = session["id"]
     name = request.form.get("group_name", "").strip()
     desc = request.form.get("group_description", "").strip()
-    if not name:
+    if not name or not desc:
         return redirect("/User/GCU.html?err=1")
 
     admin_id = parse_int(request.form.get("admin_id"))
@@ -4264,28 +4466,23 @@ def user_profile():
     email = request.form.get("email", "").strip()
     if not first or not last or not email:
         return redirect("/User/ProU.html?err=required")
-    password = request.form.get("password", "")
+    password = request.form.get("password", "").strip()
+    if not password:
+        return redirect("/User/ProU.html?err=required")
     cur = mysql.connection.cursor()
-    if password:
-        cur.execute(
-            """UPDATE app_user SET user_first_name = %s, user_last_name = %s,
-               user_email = %s, user_name = %s, password_hash = %s
-               WHERE user_id = %s""",
-            (
-                first,
-                last,
-                email,
-                f"{first} {last}",
-                generate_password_hash(password),
-                session["id"],
-            ),
-        )
-    else:
-        cur.execute(
-            """UPDATE app_user SET user_first_name = %s, user_last_name = %s,
-               user_email = %s, user_name = %s WHERE user_id = %s""",
-            (first, last, email, f"{first} {last}", session["id"]),
-        )
+    cur.execute(
+        """UPDATE app_user SET user_first_name = %s, user_last_name = %s,
+           user_email = %s, user_name = %s, password_hash = %s
+           WHERE user_id = %s""",
+        (
+            first,
+            last,
+            email,
+            f"{first} {last}",
+            generate_password_hash(password),
+            session["id"],
+        ),
+    )
     mysql.connection.commit()
     cur.close()
     session["email"] = email
@@ -4308,8 +4505,15 @@ def user_workout_log():
 
 def _user_workout_log_save(workout_id_from_form: int | None):
     uid = session["id"]
-    wdate = parse_date(request.form.get("workout_date")) or date.today()
-    duration = parse_int(request.form.get("duration_minutes"))
+    wdate = require_date_field(request.form.get("workout_date"))
+    duration = require_int_field(request.form.get("duration_minutes"))
+    if wdate is None or duration is None:
+        target = (
+            f"/User/WLAU.html?workout_id={workout_id_from_form}&err=required"
+            if workout_id_from_form
+            else "/User/WLAU.html?err=required"
+        )
+        return redirect(target)
     exercises = collect_workout_exercises_from_request()
     if exercises is None:
         target = (
@@ -4424,10 +4628,10 @@ def ga_workout_edit(wid):
     ga_email = (session.get("email") or "").strip()
     if not ga_email:
         return redirect("/GroupAdmin/workout-history-GA.html")
-    wdate = parse_date(request.form.get("workout_date")) or date.today()
-    duration = parse_int(request.form.get("duration_minutes"))
-    sets = parse_int(request.form.get("num_sets"))
-    reps = parse_int(request.form.get("num_reps"))
+    wdate = require_date_field(request.form.get("workout_date"))
+    duration = require_int_field(request.form.get("duration_minutes"))
+    sets = require_int_field(request.form.get("num_sets"))
+    reps = require_int_field(request.form.get("num_reps"))
     weight = request.form.get("weight")
     try:
         wfloat = float(weight) if weight not in (None, "") else None
@@ -4436,7 +4640,16 @@ def ga_workout_edit(wid):
     ex_name = request.form.get("exercise_name", "").strip()
     muscle = request.form.get("muscle_group", "").strip()
     diff = request.form.get("difficulty", "").strip()
-    if not ex_name:
+    if (
+        wdate is None
+        or duration is None
+        or sets is None
+        or reps is None
+        or wfloat is None
+        or not ex_name
+        or not muscle
+        or not diff
+    ):
         return redirect(f"/User/WLEU.html?id={wid}&err=exercise_name")
     cur = mysql.connection.cursor()
     if not _ga_can_edit_workout(cur, wid, ga_email):
@@ -4571,14 +4784,6 @@ def _gemini_workout_reply(system_text: str, user_message: str) -> dict[str, Any]
                 "(see https://aistudio.google.com/apikey )."
             ),
         }
-    try:
-        from google import genai
-    except ImportError:
-        return {
-            "reply": None,
-            "error": "Missing package: pip install 'google-genai>=1.0.0,<2'",
-        }
-    client = genai.Client(api_key=_get_gemini_api_key())
     full_prompt = f"{system_text}\n\nUser question:\n{user_message}"
     # gemini-1.5-flash is retired for many API keys (404 on v1beta). Prefer 2.x first.
     models_try = (
@@ -4590,6 +4795,11 @@ def _gemini_workout_reply(system_text: str, user_message: str) -> dict[str, Any]
         "gemini-2.5-pro",
     )
     models_try = tuple(m for m in models_try if m)
+    try:
+        from google import genai
+    except ImportError:
+        return _gemini_workout_reply_http(models_try, full_prompt, _get_gemini_api_key())
+    client = genai.Client(api_key=_get_gemini_api_key())
     last_err: str | None = None
     response = None
     for model_name in models_try:
@@ -4621,6 +4831,53 @@ def _gemini_workout_reply(system_text: str, user_message: str) -> dict[str, Any]
     except Exception:  # noqa: BLE001
         pass
     return {"reply": None, "error": "Gemini returned an empty response."}
+
+
+def _gemini_workout_reply_http(
+    models_try: tuple[str, ...], full_prompt: str, api_key: str
+) -> dict[str, Any]:
+    """Stdlib HTTP fallback when google-genai isn't installed in runtime env."""
+    last_err: str | None = None
+    for model_name in models_try:
+        url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}"
+            f":generateContent?key={api_key}"
+        )
+        body = {
+            "contents": [{"parts": [{"text": full_prompt}]}],
+            "generationConfig": {"temperature": 0.5},
+        }
+        req = Request(
+            url,
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urlopen(req, timeout=30) as resp:
+                raw = resp.read().decode("utf-8", errors="replace")
+            payload = json.loads(raw)
+            cands = payload.get("candidates") or []
+            if cands:
+                parts = (cands[0].get("content") or {}).get("parts") or []
+                if parts and parts[0].get("text"):
+                    return {"reply": parts[0]["text"].strip(), "error": None}
+            last_err = "empty response"
+        except HTTPError as e:
+            err_body = ""
+            try:
+                err_body = e.read().decode("utf-8", errors="replace")
+            except Exception:  # noqa: BLE001
+                pass
+            last_err = f"{e.code} {e.reason} {err_body}".strip()
+        except (URLError, TimeoutError, ValueError) as e:
+            last_err = str(e)
+        except Exception as e:  # noqa: BLE001
+            last_err = str(e)
+    return {
+        "reply": None,
+        "error": f"Gemini error: {last_err or 'no model succeeded'}",
+    }
 
 
 def _workout_coach_json_response(which: str) -> Any:
@@ -4688,6 +4945,17 @@ def _admin_build_xlsx_bytes(rows: list[dict[str, Any]], columns: list[str]) -> B
     wb.save(buf)
     buf.seek(0)
     return buf
+
+
+def _admin_build_csv_bytes(rows: list[dict[str, Any]], columns: list[str]) -> BytesIO:
+    sio = StringIO()
+    writer = csv.writer(sio)
+    writer.writerow(columns)
+    for row in rows:
+        writer.writerow([_admin_export_cell_value(row.get(c)) for c in columns])
+    out = BytesIO(sio.getvalue().encode("utf-8-sig"))
+    out.seek(0)
+    return out
 
 
 def _admin_fetch_app_user_export(cur) -> tuple[list[dict[str, Any]], list[str]]:
@@ -4852,18 +5120,11 @@ _ADMIN_EXPORT_KINDS = frozenset(_ADMIN_EXPORT_SPECS) | {"users"}
 def admin_export_data(kind: str):
     if kind not in _ADMIN_EXPORT_KINDS:
         abort(404)
+    openpyxl_available = True
     try:
         import openpyxl  # noqa: F401
     except ImportError:
-        return (
-            "Excel export requires the openpyxl package. From the project root run:\n"
-            "  python3 -m pip install -r requirements.txt\n"
-            "or:\n"
-            "  python3 -m pip install 'openpyxl>=3.1.0,<4'\n"
-            "Then restart the Flask server.",
-            503,
-            {"Content-Type": "text/plain; charset=utf-8"},
-        )
+        openpyxl_available = False
     if kind == "users":
         cur = dict_cursor()
         try:
@@ -4885,13 +5146,20 @@ def admin_export_data(kind: str):
             return "Export failed", 500
         cur.close()
 
-    buf = _admin_build_xlsx_bytes(rows, columns)
-    fname = f"motiv_{kind}_{date.today().isoformat()}.xlsx"
+    if openpyxl_available:
+        buf = _admin_build_xlsx_bytes(rows, columns)
+        fname = f"motiv_{kind}_{date.today().isoformat()}.xlsx"
+        mimetype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    else:
+        app.logger.warning("openpyxl unavailable; serving CSV fallback for admin export %s", kind)
+        buf = _admin_build_csv_bytes(rows, columns)
+        fname = f"motiv_{kind}_{date.today().isoformat()}.csv"
+        mimetype = "text/csv"
     return send_file(
         buf,
         as_attachment=True,
         download_name=fname,
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        mimetype=mimetype,
     )
 
 
@@ -4902,28 +5170,25 @@ def admin_profile():
     first = request.form.get("first_name", "").strip()
     last = request.form.get("last_name", "").strip()
     email = request.form.get("email", "").strip()
-    password = request.form.get("password", "")
+    password = request.form.get("password", "").strip()
+    if not first or not last or not email:
+        return redirect("/Admin/AProfile.html?err=required")
+    if not password:
+        return redirect("/Admin/AProfile.html?err=required")
     cur = mysql.connection.cursor()
-    if password:
-        cur.execute(
-            """UPDATE admin SET admin_first_name = %s, admin_last_name = %s,
-               admin_email = %s, admin_name = %s, password_hash = %s
-               WHERE admin_id = %s""",
-            (
-                first,
-                last,
-                email,
-                f"{first} {last}",
-                generate_password_hash(password),
-                session["id"],
-            ),
-        )
-    else:
-        cur.execute(
-            """UPDATE admin SET admin_first_name = %s, admin_last_name = %s,
-               admin_email = %s, admin_name = %s WHERE admin_id = %s""",
-            (first, last, email, f"{first} {last}", session["id"]),
-        )
+    cur.execute(
+        """UPDATE admin SET admin_first_name = %s, admin_last_name = %s,
+           admin_email = %s, admin_name = %s, password_hash = %s
+           WHERE admin_id = %s""",
+        (
+            first,
+            last,
+            email,
+            f"{first} {last}",
+            generate_password_hash(password),
+            session["id"],
+        ),
+    )
     mysql.connection.commit()
     cur.close()
     session["email"] = email
@@ -4936,6 +5201,8 @@ def admin_group_edit(gid):
         return redirect("/Admin/GroupAed.html")
     name = request.form.get("group_name", "").strip()
     desc = request.form.get("group_description", "").strip()
+    if not name or not desc:
+        return redirect(f"/Admin/GroupAed.html?id={gid}&err=1")
     cur = mysql.connection.cursor()
     cur.execute(
         "UPDATE motiv_group SET group_name = %s, group_description = %s WHERE group_id = %s",
@@ -4999,9 +5266,11 @@ def admin_challenge_edit(cid):
         request.form.get("challenge_title", "").strip()
         or request.form.get("challenge_name", "").strip()
     )
-    start = parse_date(request.form.get("start_date"))
-    end = parse_date(request.form.get("end_date"))
+    start = require_date_field(request.form.get("start_date"))
+    end = require_date_field(request.form.get("end_date"))
     goal = parse_challenge_workout_goal(request.form.get("challenge_goal"))
+    if not title or start is None or end is None:
+        return redirect(f"/Admin/ScheduleAed.html?id={cid}&err=1")
     cur = mysql.connection.cursor()
     cur.execute("SELECT challenge_goal FROM challenge WHERE challenge_id = %s", (cid,))
     existing_row = cur.fetchone()
@@ -5100,12 +5369,14 @@ def admin_schedule_edit(wid):
         request.form.get("location", "").strip()
         or request.form.get("location_field", "").strip()
     )
-    sched_date = parse_date(
+    sched_date = require_date_field(
         request.form.get("scheduled_date") or request.form.get("date_field")
     )
     group_id = parse_int(request.form.get("group_id"))
     sched_time_raw = request.form.get("scheduled_time")
-    sched_time = parse_time(sched_time_raw)
+    sched_time = require_time_field(sched_time_raw)
+    if not title or not loc or sched_date is None or group_id is None or sched_time is None:
+        return redirect(f"/Admin/ChallengeAed.html?id={wid}&err=required")
     cur = mysql.connection.cursor()
     ensure_group_workout_scheduled_time_column(cur)
     cur.execute("SELECT * FROM group_workout WHERE group_workout_id = %s", (wid,))
@@ -5113,16 +5384,10 @@ def admin_schedule_edit(wid):
     if not existing:
         cur.close()
         return redirect("/Admin/ChallengeA.html")
-    if not title:
-        title = (existing.get("group_workout_title") or "").strip()
-    if group_id is None:
-        group_id = existing.get("group_id")
-    else:
-        cur.execute("SELECT 1 FROM motiv_group WHERE group_id = %s LIMIT 1", (group_id,))
-        if not cur.fetchone():
-            group_id = existing.get("group_id")
-    if not (sched_time_raw or "").strip():
-        sched_time = existing.get("group_workout_scheduled_time")
+    cur.execute("SELECT 1 FROM motiv_group WHERE group_id = %s LIMIT 1", (group_id,))
+    if not cur.fetchone():
+        cur.close()
+        return redirect(f"/Admin/ChallengeAed.html?id={wid}&err=required")
     cur.execute(
         """UPDATE group_workout SET group_workout_title = %s, group_workout_location = %s,
            group_workout_scheduled_date = %s, group_workout_start_date = %s,
@@ -5309,6 +5574,7 @@ def api_ga_group_invite_candidates():
 
 
 @app.get("/api/posts")
+@require_roles("user", "group_admin", "admin")
 def api_posts_get():
     cur = dict_cursor()
     rows = [serialize_row(dict(r)) for r in fetch_posts_rows(cur)]
@@ -5317,10 +5583,9 @@ def api_posts_get():
 
 
 @app.post("/api/posts")
+@require_roles("user", "group_admin")
 def api_posts_post():
     role = session.get("role")
-    if role not in ("user", "group_admin"):
-        return jsonify(error="Login as app user or group admin required"), 401
     uid = session.get("id")
     content = ""
     photo_path = None
@@ -5397,6 +5662,7 @@ def api_posts_post():
 
 
 @app.delete("/api/posts/<int:post_id>")
+@require_roles("user", "group_admin", "admin")
 def api_posts_delete(post_id):
     role = session.get("role")
     cur = mysql.connection.cursor()
@@ -5417,9 +5683,6 @@ def api_posts_delete(post_id):
             """,
             (post_id, session.get("email")),
         )
-    else:
-        cur.close()
-        return jsonify(error="Unauthorized"), 401
     mysql.connection.commit()
     deleted = cur.rowcount
     cur.close()
@@ -5429,13 +5692,13 @@ def api_posts_delete(post_id):
 
 
 @app.get("/api/workouts")
+@require_roles("user")
 def api_workouts_get():
+    session_uid = session["id"]
     uid = request.args.get("user_id", type=int)
-    if not uid:
-        if session.get("role") == "user":
-            uid = session["id"]
-        else:
-            return jsonify(error="user_id query or user login required"), 400
+    if uid is not None and uid != session_uid:
+        return jsonify(error="Forbidden"), 403
+    uid = session_uid
     cur = dict_cursor()
     cur.execute(
         """
@@ -5450,9 +5713,8 @@ def api_workouts_get():
 
 
 @app.delete("/api/workouts/<int:workout_id>")
+@require_roles("user")
 def api_workouts_delete(workout_id):
-    if session.get("role") != "user":
-        return jsonify(error="Unauthorized"), 401
     cur = mysql.connection.cursor()
     cur.execute(
         "DELETE FROM workout WHERE workout_id = %s AND user_id = %s",
@@ -5467,6 +5729,7 @@ def api_workouts_delete(workout_id):
 
 
 @app.get("/api/exercises")
+@require_roles("user", "group_admin", "admin")
 def api_exercises_get():
     cur = dict_cursor()
     cur.execute(

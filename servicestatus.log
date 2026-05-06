@@ -1,0 +1,1299 @@
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2026-04-28 12:23:40 EDT; 20s ago
+   Main PID: 1302653 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 60.8M
+        CPU: 496ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─1302653 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─1302656 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─1302657 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─1302658 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 28 12:23:40 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302653]: [2026-04-28 12:23:40 -0400] [1302653] [INFO] Starting gunicorn 23.0.0
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302653]: [2026-04-28 12:23:40 -0400] [1302653] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (1302653)
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302653]: [2026-04-28 12:23:40 -0400] [1302653] [INFO] Using worker: sync
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302656]: [2026-04-28 12:23:40 -0400] [1302656] [INFO] Booting worker with pid: 1302656
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302657]: [2026-04-28 12:23:40 -0400] [1302657] [INFO] Booting worker with pid: 1302657
+Apr 28 12:23:40 bmgt407.umd.edu gunicorn[1302658]: [2026-04-28 12:23:40 -0400] [1302658] [INFO] Booting worker with pid: 1302658
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2026-04-28 12:24:01 EDT; 10s ago
+   Main PID: 1302965 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.0M
+        CPU: 426ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─1302965 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─1302967 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─1302968 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─1302969 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 28 12:24:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302965]: [2026-04-28 12:24:01 -0400] [1302965] [INFO] Starting gunicorn 23.0.0
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302965]: [2026-04-28 12:24:01 -0400] [1302965] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (1302965)
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302965]: [2026-04-28 12:24:01 -0400] [1302965] [INFO] Using worker: sync
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302967]: [2026-04-28 12:24:01 -0400] [1302967] [INFO] Booting worker with pid: 1302967
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302968]: [2026-04-28 12:24:01 -0400] [1302968] [INFO] Booting worker with pid: 1302968
+Apr 28 12:24:01 bmgt407.umd.edu gunicorn[1302969]: [2026-04-28 12:24:01 -0400] [1302969] [INFO] Booting worker with pid: 1302969
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+× bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: failed (Result: exit-code) since Thu 2026-04-30 15:37:56 EDT; 4h 22min ago
+   Main PID: 982 (code=exited, status=3)
+        CPU: 176ms
+
+Apr 30 15:37:54 bmgt407.umd.edu gunicorn[1252]:     from app import app
+Apr 30 15:37:54 bmgt407.umd.edu gunicorn[1252]: ModuleNotFoundError: No module named 'app'
+Apr 30 15:37:54 bmgt407.umd.edu gunicorn[1252]: [2026-04-30 15:37:54 -0400] [1252] [INFO] Worker exiting (pid: 1252)
+Apr 30 15:37:55 bmgt407.umd.edu gunicorn[982]: [2026-04-30 15:37:55 -0400] [982] [ERROR] Worker (pid:1177) exited with code 3
+Apr 30 15:37:55 bmgt407.umd.edu gunicorn[982]: [2026-04-30 15:37:55 -0400] [982] [ERROR] Worker (pid:1201) was sent SIGTERM!
+Apr 30 15:37:55 bmgt407.umd.edu gunicorn[982]: [2026-04-30 15:37:55 -0400] [982] [ERROR] Worker (pid:1252) was sent SIGTERM!
+Apr 30 15:37:55 bmgt407.umd.edu gunicorn[982]: [2026-04-30 15:37:55 -0400] [982] [ERROR] Shutting down: Master
+Apr 30 15:37:55 bmgt407.umd.edu gunicorn[982]: [2026-04-30 15:37:55 -0400] [982] [ERROR] Reason: Worker failed to boot.
+Apr 30 15:37:56 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Main process exited, code=exited, status=3/NOTIMPLEMENTED
+Apr 30 15:37:56 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Failed with result 'exit-code'.
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:00:02 EDT; 10s ago
+   Main PID: 91304 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 40.4M
+        CPU: 194ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─91304 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─91306 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─91309 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─91312 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "/home/bmgts101t03/flaskapp/wsgi.py", line 1, in <module>
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:     from app import app
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:   File "/home/bmgts101t03/flaskapp/app.py", line 23
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:     from __future__ import annotations
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]: SyntaxError: from __future__ imports must occur at the beginning of the file
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:00:02 EDT; 6min ago
+   Main PID: 91304 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.4M
+        CPU: 1.369s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─91304 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95104 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95105 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─95106 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:00:02 bmgt407.umd.edu gunicorn[91312]: SyntaxError: from __future__ imports must occur at the beginning of the file
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91306]: [2026-04-30 20:07:00 -0400] [91306] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91306]: [2026-04-30 20:07:00 -0400] [91306] [INFO] Worker exiting (pid: 91306)
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91309]: [2026-04-30 20:07:00 -0400] [91309] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91309]: [2026-04-30 20:07:00 -0400] [91309] [INFO] Worker exiting (pid: 91309)
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[95104]: [2026-04-30 20:07:00 -0400] [95104] [INFO] Booting worker with pid: 95104
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[95105]: [2026-04-30 20:07:00 -0400] [95105] [INFO] Booting worker with pid: 95105
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91312]: [2026-04-30 20:07:00 -0400] [91312] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:07:00 bmgt407.umd.edu gunicorn[91312]: [2026-04-30 20:07:00 -0400] [91312] [INFO] Worker exiting (pid: 91312)
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95106]: [2026-04-30 20:07:01 -0400] [95106] [INFO] Booting worker with pid: 95106
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:07:01 EDT; 10s ago
+   Main PID: 95301 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.4M
+        CPU: 444ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─95301 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95303 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95304 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─95305 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:07:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Starting gunicorn 23.0.0
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (95301)
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Using worker: sync
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95303]: [2026-04-30 20:07:01 -0400] [95303] [INFO] Booting worker with pid: 95303
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95304]: [2026-04-30 20:07:01 -0400] [95304] [INFO] Booting worker with pid: 95304
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95305]: [2026-04-30 20:07:01 -0400] [95305] [INFO] Booting worker with pid: 95305
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:07:01 EDT; 1min 0s ago
+   Main PID: 95301 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.6M
+        CPU: 644ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─95301 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95303 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─95304 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─95305 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:07:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Starting gunicorn 23.0.0
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (95301)
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95301]: [2026-04-30 20:07:01 -0400] [95301] [INFO] Using worker: sync
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95303]: [2026-04-30 20:07:01 -0400] [95303] [INFO] Booting worker with pid: 95303
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95304]: [2026-04-30 20:07:01 -0400] [95304] [INFO] Booting worker with pid: 95304
+Apr 30 20:07:01 bmgt407.umd.edu gunicorn[95305]: [2026-04-30 20:07:01 -0400] [95305] [INFO] Booting worker with pid: 95305
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:08:02 EDT; 10s ago
+   Main PID: 96126 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.4M
+        CPU: 449ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─96126 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─96129 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─96130 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─96131 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:08:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96126]: [2026-04-30 20:08:02 -0400] [96126] [INFO] Starting gunicorn 23.0.0
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96126]: [2026-04-30 20:08:02 -0400] [96126] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (96126)
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96126]: [2026-04-30 20:08:02 -0400] [96126] [INFO] Using worker: sync
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96129]: [2026-04-30 20:08:02 -0400] [96129] [INFO] Booting worker with pid: 96129
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96130]: [2026-04-30 20:08:02 -0400] [96130] [INFO] Booting worker with pid: 96130
+Apr 30 20:08:02 bmgt407.umd.edu gunicorn[96131]: [2026-04-30 20:08:02 -0400] [96131] [INFO] Booting worker with pid: 96131
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:08:02 EDT; 2min 59s ago
+   Main PID: 96126 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 64.8M
+        CPU: 2.109s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─96126 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─97578 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─97579 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─97580 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:10:24 bmgt407.umd.edu gunicorn[97574]: [2026-04-30 20:10:24 -0400] [97574] [INFO] Booting worker with pid: 97574
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97570]: [2026-04-30 20:10:26 -0400] [97570] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97570]: [2026-04-30 20:10:26 -0400] [97570] [INFO] Worker exiting (pid: 97570)
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97573]: [2026-04-30 20:10:26 -0400] [97573] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97573]: [2026-04-30 20:10:26 -0400] [97573] [INFO] Worker exiting (pid: 97573)
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97578]: [2026-04-30 20:10:26 -0400] [97578] [INFO] Booting worker with pid: 97578
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97574]: [2026-04-30 20:10:26 -0400] [97574] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97574]: [2026-04-30 20:10:26 -0400] [97574] [INFO] Worker exiting (pid: 97574)
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97579]: [2026-04-30 20:10:26 -0400] [97579] [INFO] Booting worker with pid: 97579
+Apr 30 20:10:26 bmgt407.umd.edu gunicorn[97580]: [2026-04-30 20:10:26 -0400] [97580] [INFO] Booting worker with pid: 97580
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:11:02 EDT; 10s ago
+   Main PID: 98057 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 433ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─98057 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─98059 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─98060 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─98061 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+Apr 30 20:11:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98057]: [2026-04-30 20:11:02 -0400] [98057] [INFO] Starting gunicorn 23.0.0
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98057]: [2026-04-30 20:11:02 -0400] [98057] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (98057)
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98057]: [2026-04-30 20:11:02 -0400] [98057] [INFO] Using worker: sync
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98059]: [2026-04-30 20:11:02 -0400] [98059] [INFO] Booting worker with pid: 98059
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98060]: [2026-04-30 20:11:02 -0400] [98060] [INFO] Booting worker with pid: 98060
+Apr 30 20:11:02 bmgt407.umd.edu gunicorn[98061]: [2026-04-30 20:11:02 -0400] [98061] [INFO] Booting worker with pid: 98061
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2026-04-30 20:55:26 EDT; 5 days ago
+   Main PID: 121724 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.7M
+        CPU: 25min 43.908s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─ 121724 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2833850 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2833852 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2833853 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121728]: [2026-05-06 11:53:39 -0400] [121728] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121728]: [2026-05-06 11:53:39 -0400] [121728] [INFO] Worker exiting (pid: 121728)
+May 06 11:53:39 bmgt407.umd.edu gunicorn[2833850]: [2026-05-06 11:53:39 -0400] [2833850] [INFO] Booting worker with pid: 2833850
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121727]: [2026-05-06 11:53:39 -0400] [121727] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121727]: [2026-05-06 11:53:39 -0400] [121727] [INFO] Worker exiting (pid: 121727)
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121726]: [2026-05-06 11:53:39 -0400] [121726] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 11:53:39 bmgt407.umd.edu gunicorn[121726]: [2026-05-06 11:53:39 -0400] [121726] [INFO] Worker exiting (pid: 121726)
+May 06 11:53:40 bmgt407.umd.edu gunicorn[2833852]: [2026-05-06 11:53:40 -0400] [2833852] [INFO] Booting worker with pid: 2833852
+May 06 11:53:40 bmgt407.umd.edu gunicorn[2833853]: [2026-05-06 11:53:40 -0400] [2833853] [INFO] Booting worker with pid: 2833853
+Notice: journal has been rotated since unit was started, output may be incomplete.
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 11:54:03 EDT; 10s ago
+   Main PID: 2834325 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 458ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2834325 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2834330 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2834347 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2834352 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 11:54:03 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834325]: [2026-05-06 11:54:03 -0400] [2834325] [INFO] Starting gunicorn 23.0.0
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834325]: [2026-05-06 11:54:03 -0400] [2834325] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2834325)
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834325]: [2026-05-06 11:54:03 -0400] [2834325] [INFO] Using worker: sync
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834330]: [2026-05-06 11:54:03 -0400] [2834330] [INFO] Booting worker with pid: 2834330
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834347]: [2026-05-06 11:54:03 -0400] [2834347] [INFO] Booting worker with pid: 2834347
+May 06 11:54:03 bmgt407.umd.edu gunicorn[2834352]: [2026-05-06 11:54:03 -0400] [2834352] [INFO] Booting worker with pid: 2834352
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 11:54:03 EDT; 1h 59min ago
+   Main PID: 2834325 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 64.7M
+        CPU: 26.265s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2834325 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895221 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895222 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2895224 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:10:23 bmgt407.umd.edu gunicorn[2834352]: MySQLdb.ProgrammingError: (1146, "Table 'bmgts101t03_motivdata.post' doesn't exist")
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834347]: [2026-05-06 13:53:58 -0400] [2834347] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834347]: [2026-05-06 13:53:58 -0400] [2834347] [INFO] Worker exiting (pid: 2834347)
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834330]: [2026-05-06 13:53:58 -0400] [2834330] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834330]: [2026-05-06 13:53:58 -0400] [2834330] [INFO] Worker exiting (pid: 2834330)
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2895221]: [2026-05-06 13:53:58 -0400] [2895221] [INFO] Booting worker with pid: 2895221
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2895222]: [2026-05-06 13:53:58 -0400] [2895222] [INFO] Booting worker with pid: 2895222
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834352]: [2026-05-06 13:53:58 -0400] [2834352] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2834352]: [2026-05-06 13:53:58 -0400] [2834352] [INFO] Worker exiting (pid: 2834352)
+May 06 13:53:58 bmgt407.umd.edu gunicorn[2895224]: [2026-05-06 13:53:58 -0400] [2895224] [INFO] Booting worker with pid: 2895224
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:54:02 EDT; 10s ago
+   Main PID: 2895566 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 470ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2895566 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895616 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895619 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2895620 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:54:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Starting gunicorn 23.0.0
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2895566)
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Using worker: sync
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895616]: [2026-05-06 13:54:02 -0400] [2895616] [INFO] Booting worker with pid: 2895616
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895619]: [2026-05-06 13:54:02 -0400] [2895619] [INFO] Booting worker with pid: 2895619
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895620]: [2026-05-06 13:54:02 -0400] [2895620] [INFO] Booting worker with pid: 2895620
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:54:02 EDT; 59s ago
+   Main PID: 2895566 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 623ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2895566 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895616 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2895619 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2895620 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:54:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Starting gunicorn 23.0.0
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2895566)
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895566]: [2026-05-06 13:54:02 -0400] [2895566] [INFO] Using worker: sync
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895616]: [2026-05-06 13:54:02 -0400] [2895616] [INFO] Booting worker with pid: 2895616
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895619]: [2026-05-06 13:54:02 -0400] [2895619] [INFO] Booting worker with pid: 2895619
+May 06 13:54:02 bmgt407.umd.edu gunicorn[2895620]: [2026-05-06 13:54:02 -0400] [2895620] [INFO] Booting worker with pid: 2895620
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:55:03 EDT; 10s ago
+   Main PID: 2896182 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.4M
+        CPU: 456ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2896182 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2896187 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2896188 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2896189 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:55:03 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896182]: [2026-05-06 13:55:03 -0400] [2896182] [INFO] Starting gunicorn 23.0.0
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896182]: [2026-05-06 13:55:03 -0400] [2896182] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2896182)
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896182]: [2026-05-06 13:55:03 -0400] [2896182] [INFO] Using worker: sync
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896187]: [2026-05-06 13:55:03 -0400] [2896187] [INFO] Booting worker with pid: 2896187
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896188]: [2026-05-06 13:55:03 -0400] [2896188] [INFO] Booting worker with pid: 2896188
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896189]: [2026-05-06 13:55:03 -0400] [2896189] [INFO] Booting worker with pid: 2896189
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:55:03 EDT; 1min 58s ago
+   Main PID: 2896182 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 65.4M
+        CPU: 1.331s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2896182 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2896907 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2896909 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2896910 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:55:03 bmgt407.umd.edu gunicorn[2896189]: [2026-05-06 13:55:03 -0400] [2896189] [INFO] Booting worker with pid: 2896189
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896187]: [2026-05-06 13:56:21 -0400] [2896187] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896187]: [2026-05-06 13:56:21 -0400] [2896187] [INFO] Worker exiting (pid: 2896187)
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896907]: [2026-05-06 13:56:21 -0400] [2896907] [INFO] Booting worker with pid: 2896907
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896189]: [2026-05-06 13:56:21 -0400] [2896189] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896189]: [2026-05-06 13:56:21 -0400] [2896189] [INFO] Worker exiting (pid: 2896189)
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896188]: [2026-05-06 13:56:21 -0400] [2896188] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896188]: [2026-05-06 13:56:21 -0400] [2896188] [INFO] Worker exiting (pid: 2896188)
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896909]: [2026-05-06 13:56:21 -0400] [2896909] [INFO] Booting worker with pid: 2896909
+May 06 13:56:21 bmgt407.umd.edu gunicorn[2896910]: [2026-05-06 13:56:21 -0400] [2896910] [INFO] Booting worker with pid: 2896910
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:57:01 EDT; 10s ago
+   Main PID: 2897308 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 62.0M
+        CPU: 490ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2897308 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2897311 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2897312 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2897314 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:57:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 13:57:01 bmgt407.umd.edu gunicorn[2897308]: [2026-05-06 13:57:01 -0400] [2897308] [INFO] Starting gunicorn 23.0.0
+May 06 13:57:01 bmgt407.umd.edu gunicorn[2897308]: [2026-05-06 13:57:01 -0400] [2897308] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2897308)
+May 06 13:57:01 bmgt407.umd.edu gunicorn[2897308]: [2026-05-06 13:57:01 -0400] [2897308] [INFO] Using worker: sync
+May 06 13:57:01 bmgt407.umd.edu gunicorn[2897311]: [2026-05-06 13:57:01 -0400] [2897311] [INFO] Booting worker with pid: 2897311
+May 06 13:57:02 bmgt407.umd.edu gunicorn[2897312]: [2026-05-06 13:57:02 -0400] [2897312] [INFO] Booting worker with pid: 2897312
+May 06 13:57:02 bmgt407.umd.edu gunicorn[2897314]: [2026-05-06 13:57:02 -0400] [2897314] [INFO] Booting worker with pid: 2897314
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 13:57:01 EDT; 5min ago
+   Main PID: 2897308 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.6M
+        CPU: 1.963s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2897308 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2899656 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2899657 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2899664 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 13:57:02 bmgt407.umd.edu gunicorn[2897314]: [2026-05-06 13:57:02 -0400] [2897314] [INFO] Booting worker with pid: 2897314
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897311]: [2026-05-06 14:01:11 -0400] [2897311] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897311]: [2026-05-06 14:01:11 -0400] [2897311] [INFO] Worker exiting (pid: 2897311)
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2899656]: [2026-05-06 14:01:11 -0400] [2899656] [INFO] Booting worker with pid: 2899656
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897312]: [2026-05-06 14:01:11 -0400] [2897312] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897312]: [2026-05-06 14:01:11 -0400] [2897312] [INFO] Worker exiting (pid: 2897312)
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2899657]: [2026-05-06 14:01:11 -0400] [2899657] [INFO] Booting worker with pid: 2899657
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897314]: [2026-05-06 14:01:11 -0400] [2897314] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2897314]: [2026-05-06 14:01:11 -0400] [2897314] [INFO] Worker exiting (pid: 2897314)
+May 06 14:01:11 bmgt407.umd.edu gunicorn[2899664]: [2026-05-06 14:01:11 -0400] [2899664] [INFO] Booting worker with pid: 2899664
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:02:02 EDT; 10s ago
+   Main PID: 2900162 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 62.5M
+        CPU: 518ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2900162 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2900164 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2900165 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2900166 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:02:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 14:02:02 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:02:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 1.990s CPU time.
+May 06 14:02:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900162]: [2026-05-06 14:02:02 -0400] [2900162] [INFO] Starting gunicorn 23.0.0
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900162]: [2026-05-06 14:02:02 -0400] [2900162] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2900162)
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900162]: [2026-05-06 14:02:02 -0400] [2900162] [INFO] Using worker: sync
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900164]: [2026-05-06 14:02:02 -0400] [2900164] [INFO] Booting worker with pid: 2900164
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900165]: [2026-05-06 14:02:02 -0400] [2900165] [INFO] Booting worker with pid: 2900165
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900166]: [2026-05-06 14:02:02 -0400] [2900166] [INFO] Booting worker with pid: 2900166
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:02:02 EDT; 20min ago
+   Main PID: 2900162 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.7M
+        CPU: 6.091s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2900162 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2911474 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2911475 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2911476 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:02:02 bmgt407.umd.edu gunicorn[2900166]: [2026-05-06 14:02:02 -0400] [2900166] [INFO] Booting worker with pid: 2900166
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900164]: [2026-05-06 14:22:48 -0400] [2900164] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900164]: [2026-05-06 14:22:48 -0400] [2900164] [INFO] Worker exiting (pid: 2900164)
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2911474]: [2026-05-06 14:22:48 -0400] [2911474] [INFO] Booting worker with pid: 2911474
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900165]: [2026-05-06 14:22:48 -0400] [2900165] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900165]: [2026-05-06 14:22:48 -0400] [2900165] [INFO] Worker exiting (pid: 2900165)
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900166]: [2026-05-06 14:22:48 -0400] [2900166] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2900166]: [2026-05-06 14:22:48 -0400] [2900166] [INFO] Worker exiting (pid: 2900166)
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2911475]: [2026-05-06 14:22:48 -0400] [2911475] [INFO] Booting worker with pid: 2911475
+May 06 14:22:48 bmgt407.umd.edu gunicorn[2911476]: [2026-05-06 14:22:48 -0400] [2911476] [INFO] Booting worker with pid: 2911476
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:23:02 EDT; 10s ago
+   Main PID: 2911757 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 467ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2911757 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2911776 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2911793 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2911797 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:23:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 14:23:02 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:23:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 6.149s CPU time.
+May 06 14:23:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911757]: [2026-05-06 14:23:02 -0400] [2911757] [INFO] Starting gunicorn 23.0.0
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911757]: [2026-05-06 14:23:02 -0400] [2911757] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2911757)
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911757]: [2026-05-06 14:23:02 -0400] [2911757] [INFO] Using worker: sync
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911776]: [2026-05-06 14:23:02 -0400] [2911776] [INFO] Booting worker with pid: 2911776
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911793]: [2026-05-06 14:23:02 -0400] [2911793] [INFO] Booting worker with pid: 2911793
+May 06 14:23:02 bmgt407.umd.edu gunicorn[2911797]: [2026-05-06 14:23:02 -0400] [2911797] [INFO] Booting worker with pid: 2911797
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:23:02 EDT; 8min ago
+   Main PID: 2911757 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.7M
+        CPU: 4.161s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2911757 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2916434 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2916435 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2916436 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:31:16 bmgt407.umd.edu gunicorn[2916325]: [2026-05-06 14:31:16 -0400] [2916325] [INFO] Booting worker with pid: 2916325
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916324]: [2026-05-06 14:31:40 -0400] [2916324] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916324]: [2026-05-06 14:31:40 -0400] [2916324] [INFO] Worker exiting (pid: 2916324)
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916323]: [2026-05-06 14:31:40 -0400] [2916323] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916323]: [2026-05-06 14:31:40 -0400] [2916323] [INFO] Worker exiting (pid: 2916323)
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916434]: [2026-05-06 14:31:40 -0400] [2916434] [INFO] Booting worker with pid: 2916434
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916325]: [2026-05-06 14:31:40 -0400] [2916325] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916325]: [2026-05-06 14:31:40 -0400] [2916325] [INFO] Worker exiting (pid: 2916325)
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916435]: [2026-05-06 14:31:40 -0400] [2916435] [INFO] Booting worker with pid: 2916435
+May 06 14:31:40 bmgt407.umd.edu gunicorn[2916436]: [2026-05-06 14:31:40 -0400] [2916436] [INFO] Booting worker with pid: 2916436
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:32:01 EDT; 10s ago
+   Main PID: 2916699 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 443ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2916699 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2916701 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2916702 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2916703 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:32:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:32:01 bmgt407.umd.edu gunicorn[2916699]: [2026-05-06 14:32:01 -0400] [2916699] [INFO] Starting gunicorn 23.0.0
+May 06 14:32:01 bmgt407.umd.edu gunicorn[2916699]: [2026-05-06 14:32:01 -0400] [2916699] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2916699)
+May 06 14:32:01 bmgt407.umd.edu gunicorn[2916699]: [2026-05-06 14:32:01 -0400] [2916699] [INFO] Using worker: sync
+May 06 14:32:01 bmgt407.umd.edu gunicorn[2916701]: [2026-05-06 14:32:01 -0400] [2916701] [INFO] Booting worker with pid: 2916701
+May 06 14:32:01 bmgt407.umd.edu gunicorn[2916702]: [2026-05-06 14:32:01 -0400] [2916702] [INFO] Booting worker with pid: 2916702
+May 06 14:32:02 bmgt407.umd.edu gunicorn[2916703]: [2026-05-06 14:32:02 -0400] [2916703] [INFO] Booting worker with pid: 2916703
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:32:01 EDT; 3min 0s ago
+   Main PID: 2916699 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.7M
+        CPU: 1.470s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2916699 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2917976 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2917983 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2917984 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:32:02 bmgt407.umd.edu gunicorn[2916703]: [2026-05-06 14:32:02 -0400] [2916703] [INFO] Booting worker with pid: 2916703
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916701]: [2026-05-06 14:34:22 -0400] [2916701] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916701]: [2026-05-06 14:34:22 -0400] [2916701] [INFO] Worker exiting (pid: 2916701)
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2917976]: [2026-05-06 14:34:22 -0400] [2917976] [INFO] Booting worker with pid: 2917976
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916702]: [2026-05-06 14:34:22 -0400] [2916702] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916702]: [2026-05-06 14:34:22 -0400] [2916702] [INFO] Worker exiting (pid: 2916702)
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916703]: [2026-05-06 14:34:22 -0400] [2916703] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2916703]: [2026-05-06 14:34:22 -0400] [2916703] [INFO] Worker exiting (pid: 2916703)
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2917983]: [2026-05-06 14:34:22 -0400] [2917983] [INFO] Booting worker with pid: 2917983
+May 06 14:34:22 bmgt407.umd.edu gunicorn[2917984]: [2026-05-06 14:34:22 -0400] [2917984] [INFO] Booting worker with pid: 2917984
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:35:01 EDT; 10s ago
+   Main PID: 2918365 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 443ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2918365 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2918367 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2918368 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2918370 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:35:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918365]: [2026-05-06 14:35:02 -0400] [2918365] [INFO] Starting gunicorn 23.0.0
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918365]: [2026-05-06 14:35:02 -0400] [2918365] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2918365)
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918365]: [2026-05-06 14:35:02 -0400] [2918365] [INFO] Using worker: sync
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918367]: [2026-05-06 14:35:02 -0400] [2918367] [INFO] Booting worker with pid: 2918367
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918368]: [2026-05-06 14:35:02 -0400] [2918368] [INFO] Booting worker with pid: 2918368
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918370]: [2026-05-06 14:35:02 -0400] [2918370] [INFO] Booting worker with pid: 2918370
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 14:35:01 EDT; 1h 23min ago
+   Main PID: 2918365 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.8M
+        CPU: 19.354s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2918365 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963526 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963529 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2963530 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 14:35:02 bmgt407.umd.edu gunicorn[2918370]: [2026-05-06 14:35:02 -0400] [2918370] [INFO] Booting worker with pid: 2918370
+May 06 15:58:59 bmgt407.umd.edu gunicorn[2918370]: [2026-05-06 15:58:59 -0400] [2918370] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 15:58:59 bmgt407.umd.edu gunicorn[2918370]: [2026-05-06 15:58:59 -0400] [2918370] [INFO] Worker exiting (pid: 2918370)
+May 06 15:58:59 bmgt407.umd.edu gunicorn[2963526]: [2026-05-06 15:58:59 -0400] [2963526] [INFO] Booting worker with pid: 2963526
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2918368]: [2026-05-06 15:59:00 -0400] [2918368] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2918368]: [2026-05-06 15:59:00 -0400] [2918368] [INFO] Worker exiting (pid: 2918368)
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2963529]: [2026-05-06 15:59:00 -0400] [2963529] [INFO] Booting worker with pid: 2963529
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2918367]: [2026-05-06 15:59:00 -0400] [2918367] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2918367]: [2026-05-06 15:59:00 -0400] [2918367] [INFO] Worker exiting (pid: 2918367)
+May 06 15:59:00 bmgt407.umd.edu gunicorn[2963530]: [2026-05-06 15:59:00 -0400] [2963530] [INFO] Booting worker with pid: 2963530
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 15:59:01 EDT; 10s ago
+   Main PID: 2963732 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 439ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2963732 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963734 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963735 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2963736 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 15:59:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Starting gunicorn 23.0.0
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2963732)
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Using worker: sync
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963734]: [2026-05-06 15:59:02 -0400] [2963734] [INFO] Booting worker with pid: 2963734
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963735]: [2026-05-06 15:59:02 -0400] [2963735] [INFO] Booting worker with pid: 2963735
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963736]: [2026-05-06 15:59:02 -0400] [2963736] [INFO] Booting worker with pid: 2963736
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 15:59:01 EDT; 1min 0s ago
+   Main PID: 2963732 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 603ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2963732 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963734 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2963735 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2963736 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 15:59:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Starting gunicorn 23.0.0
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2963732)
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963732]: [2026-05-06 15:59:02 -0400] [2963732] [INFO] Using worker: sync
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963734]: [2026-05-06 15:59:02 -0400] [2963734] [INFO] Booting worker with pid: 2963734
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963735]: [2026-05-06 15:59:02 -0400] [2963735] [INFO] Booting worker with pid: 2963735
+May 06 15:59:02 bmgt407.umd.edu gunicorn[2963736]: [2026-05-06 15:59:02 -0400] [2963736] [INFO] Booting worker with pid: 2963736
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:00:02 EDT; 10s ago
+   Main PID: 2964448 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.5M
+        CPU: 475ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2964448 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2964450 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2964451 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2964452 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:00:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964448]: [2026-05-06 16:00:02 -0400] [2964448] [INFO] Starting gunicorn 23.0.0
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964448]: [2026-05-06 16:00:02 -0400] [2964448] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2964448)
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964448]: [2026-05-06 16:00:02 -0400] [2964448] [INFO] Using worker: sync
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964450]: [2026-05-06 16:00:02 -0400] [2964450] [INFO] Booting worker with pid: 2964450
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964451]: [2026-05-06 16:00:02 -0400] [2964451] [INFO] Booting worker with pid: 2964451
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964452]: [2026-05-06 16:00:02 -0400] [2964452] [INFO] Booting worker with pid: 2964452
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:00:02 EDT; 14min ago
+   Main PID: 2964448 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 64.7M
+        CPU: 6.642s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2964448 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2971995 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2971996 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2971998 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:00:02 bmgt407.umd.edu gunicorn[2964452]: [2026-05-06 16:00:02 -0400] [2964452] [INFO] Booting worker with pid: 2964452
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964450]: [2026-05-06 16:14:09 -0400] [2964450] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964450]: [2026-05-06 16:14:09 -0400] [2964450] [INFO] Worker exiting (pid: 2964450)
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964451]: [2026-05-06 16:14:09 -0400] [2964451] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964451]: [2026-05-06 16:14:09 -0400] [2964451] [INFO] Worker exiting (pid: 2964451)
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2971995]: [2026-05-06 16:14:09 -0400] [2971995] [INFO] Booting worker with pid: 2971995
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2971996]: [2026-05-06 16:14:09 -0400] [2971996] [INFO] Booting worker with pid: 2971996
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964452]: [2026-05-06 16:14:09 -0400] [2964452] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2964452]: [2026-05-06 16:14:09 -0400] [2964452] [INFO] Worker exiting (pid: 2964452)
+May 06 16:14:09 bmgt407.umd.edu gunicorn[2971998]: [2026-05-06 16:14:09 -0400] [2971998] [INFO] Booting worker with pid: 2971998
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:15:01 EDT; 10s ago
+   Main PID: 2972473 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.6M
+        CPU: 446ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2972473 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2972475 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2972476 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2972478 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:15:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:15:01 bmgt407.umd.edu gunicorn[2972473]: [2026-05-06 16:15:01 -0400] [2972473] [INFO] Starting gunicorn 23.0.0
+May 06 16:15:01 bmgt407.umd.edu gunicorn[2972473]: [2026-05-06 16:15:01 -0400] [2972473] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2972473)
+May 06 16:15:01 bmgt407.umd.edu gunicorn[2972473]: [2026-05-06 16:15:01 -0400] [2972473] [INFO] Using worker: sync
+May 06 16:15:01 bmgt407.umd.edu gunicorn[2972475]: [2026-05-06 16:15:01 -0400] [2972475] [INFO] Booting worker with pid: 2972475
+May 06 16:15:02 bmgt407.umd.edu gunicorn[2972476]: [2026-05-06 16:15:02 -0400] [2972476] [INFO] Booting worker with pid: 2972476
+May 06 16:15:02 bmgt407.umd.edu gunicorn[2972478]: [2026-05-06 16:15:02 -0400] [2972478] [INFO] Booting worker with pid: 2972478
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:15:01 EDT; 1min 0s ago
+   Main PID: 2972473 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 65.0M
+        CPU: 1.110s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2972473 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2972709 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2972710 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2972711 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972475]: [2026-05-06 16:15:19 -0400] [2972475] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972475]: [2026-05-06 16:15:19 -0400] [2972475] [INFO] Worker exiting (pid: 2972475)
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972709]: [2026-05-06 16:15:19 -0400] [2972709] [INFO] Booting worker with pid: 2972709
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972476]: [2026-05-06 16:15:19 -0400] [2972476] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972476]: [2026-05-06 16:15:19 -0400] [2972476] [INFO] Worker exiting (pid: 2972476)
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972710]: [2026-05-06 16:15:19 -0400] [2972710] [INFO] Booting worker with pid: 2972710
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972478]: [2026-05-06 16:15:19 -0400] [2972478] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972478]: [2026-05-06 16:15:19 -0400] [2972478] [INFO] Worker exiting (pid: 2972478)
+May 06 16:15:19 bmgt407.umd.edu gunicorn[2972711]: [2026-05-06 16:15:19 -0400] [2972711] [INFO] Booting worker with pid: 2972711
+May 06 16:15:46 bmgt407.umd.edu gunicorn[2972710]: [2026-05-06 16:15:46,439] WARNING in app: openpyxl unavailable; serving CSV fallback for admin export admins
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:16:02 EDT; 10s ago
+   Main PID: 2973205 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 443ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2973205 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2973207 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2973208 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2973209 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:16:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973205]: [2026-05-06 16:16:02 -0400] [2973205] [INFO] Starting gunicorn 23.0.0
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973205]: [2026-05-06 16:16:02 -0400] [2973205] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2973205)
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973205]: [2026-05-06 16:16:02 -0400] [2973205] [INFO] Using worker: sync
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973207]: [2026-05-06 16:16:02 -0400] [2973207] [INFO] Booting worker with pid: 2973207
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973208]: [2026-05-06 16:16:02 -0400] [2973208] [INFO] Booting worker with pid: 2973208
+May 06 16:16:02 bmgt407.umd.edu gunicorn[2973209]: [2026-05-06 16:16:02 -0400] [2973209] [INFO] Booting worker with pid: 2973209
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:16:02 EDT; 5min ago
+   Main PID: 2973205 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.3M
+        CPU: 2.306s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2973205 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2976108 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2976109 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2976111 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:16:47 bmgt407.umd.edu gunicorn[2973209]: [2026-05-06 16:16:47,422] WARNING in app: openpyxl unavailable; serving CSV fallback for admin export workout_logs
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973208]: [2026-05-06 16:21:10 -0400] [2973208] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973208]: [2026-05-06 16:21:10 -0400] [2973208] [INFO] Worker exiting (pid: 2973208)
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2976108]: [2026-05-06 16:21:10 -0400] [2976108] [INFO] Booting worker with pid: 2976108
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973207]: [2026-05-06 16:21:10 -0400] [2973207] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973207]: [2026-05-06 16:21:10 -0400] [2973207] [INFO] Worker exiting (pid: 2973207)
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2976109]: [2026-05-06 16:21:10 -0400] [2976109] [INFO] Booting worker with pid: 2976109
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973209]: [2026-05-06 16:21:10 -0400] [2973209] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2973209]: [2026-05-06 16:21:10 -0400] [2973209] [INFO] Worker exiting (pid: 2973209)
+May 06 16:21:10 bmgt407.umd.edu gunicorn[2976111]: [2026-05-06 16:21:10 -0400] [2976111] [INFO] Booting worker with pid: 2976111
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:22:02 EDT; 10s ago
+   Main PID: 2976521 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.6M
+        CPU: 468ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2976521 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2976565 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2976566 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2976567 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:22:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 16:22:02 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:22:02 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 2.372s CPU time.
+May 06 16:22:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976521]: [2026-05-06 16:22:02 -0400] [2976521] [INFO] Starting gunicorn 23.0.0
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976521]: [2026-05-06 16:22:02 -0400] [2976521] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2976521)
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976521]: [2026-05-06 16:22:02 -0400] [2976521] [INFO] Using worker: sync
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976565]: [2026-05-06 16:22:02 -0400] [2976565] [INFO] Booting worker with pid: 2976565
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976566]: [2026-05-06 16:22:02 -0400] [2976566] [INFO] Booting worker with pid: 2976566
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976567]: [2026-05-06 16:22:02 -0400] [2976567] [INFO] Booting worker with pid: 2976567
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:22:02 EDT; 3min 59s ago
+   Main PID: 2976521 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.3M
+        CPU: 2.169s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2976521 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2978451 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2978452 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2978453 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:22:02 bmgt407.umd.edu gunicorn[2976567]: [2026-05-06 16:22:02 -0400] [2976567] [INFO] Booting worker with pid: 2976567
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976565]: [2026-05-06 16:25:36 -0400] [2976565] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976565]: [2026-05-06 16:25:36 -0400] [2976565] [INFO] Worker exiting (pid: 2976565)
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2978451]: [2026-05-06 16:25:36 -0400] [2978451] [INFO] Booting worker with pid: 2978451
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976566]: [2026-05-06 16:25:36 -0400] [2976566] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976566]: [2026-05-06 16:25:36 -0400] [2976566] [INFO] Worker exiting (pid: 2976566)
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976567]: [2026-05-06 16:25:36 -0400] [2976567] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2976567]: [2026-05-06 16:25:36 -0400] [2976567] [INFO] Worker exiting (pid: 2976567)
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2978452]: [2026-05-06 16:25:36 -0400] [2978452] [INFO] Booting worker with pid: 2978452
+May 06 16:25:36 bmgt407.umd.edu gunicorn[2978453]: [2026-05-06 16:25:36 -0400] [2978453] [INFO] Booting worker with pid: 2978453
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:26:01 EDT; 10s ago
+   Main PID: 2978759 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.6M
+        CPU: 457ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2978759 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2978782 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2978789 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2978796 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:26:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 16:26:01 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:26:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 2.196s CPU time.
+May 06 16:26:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978759]: [2026-05-06 16:26:02 -0400] [2978759] [INFO] Starting gunicorn 23.0.0
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978759]: [2026-05-06 16:26:02 -0400] [2978759] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2978759)
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978759]: [2026-05-06 16:26:02 -0400] [2978759] [INFO] Using worker: sync
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978782]: [2026-05-06 16:26:02 -0400] [2978782] [INFO] Booting worker with pid: 2978782
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978789]: [2026-05-06 16:26:02 -0400] [2978789] [INFO] Booting worker with pid: 2978789
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978796]: [2026-05-06 16:26:02 -0400] [2978796] [INFO] Booting worker with pid: 2978796
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:26:01 EDT; 5min ago
+   Main PID: 2978759 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 62.1M
+        CPU: 2.239s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2978759 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2981146 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2981147 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2981148 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:26:02 bmgt407.umd.edu gunicorn[2978796]: [2026-05-06 16:26:02 -0400] [2978796] [INFO] Booting worker with pid: 2978796
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978782]: [2026-05-06 16:30:21 -0400] [2978782] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978782]: [2026-05-06 16:30:21 -0400] [2978782] [INFO] Worker exiting (pid: 2978782)
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978789]: [2026-05-06 16:30:21 -0400] [2978789] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978789]: [2026-05-06 16:30:21 -0400] [2978789] [INFO] Worker exiting (pid: 2978789)
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978796]: [2026-05-06 16:30:21 -0400] [2978796] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2978796]: [2026-05-06 16:30:21 -0400] [2978796] [INFO] Worker exiting (pid: 2978796)
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2981146]: [2026-05-06 16:30:21 -0400] [2981146] [INFO] Booting worker with pid: 2981146
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2981147]: [2026-05-06 16:30:21 -0400] [2981147] [INFO] Booting worker with pid: 2981147
+May 06 16:30:21 bmgt407.umd.edu gunicorn[2981148]: [2026-05-06 16:30:21 -0400] [2981148] [INFO] Booting worker with pid: 2981148
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:31:02 EDT; 10s ago
+   Main PID: 2981617 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 452ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2981617 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2981620 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2981628 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2981641 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:31:02 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981617]: [2026-05-06 16:31:03 -0400] [2981617] [INFO] Starting gunicorn 23.0.0
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981617]: [2026-05-06 16:31:03 -0400] [2981617] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2981617)
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981617]: [2026-05-06 16:31:03 -0400] [2981617] [INFO] Using worker: sync
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981620]: [2026-05-06 16:31:03 -0400] [2981620] [INFO] Booting worker with pid: 2981620
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981628]: [2026-05-06 16:31:03 -0400] [2981628] [INFO] Booting worker with pid: 2981628
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981641]: [2026-05-06 16:31:03 -0400] [2981641] [INFO] Booting worker with pid: 2981641
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:31:02 EDT; 6min ago
+   Main PID: 2981617 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.2M
+        CPU: 2.644s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2981617 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2985279 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2985280 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2985282 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:31:03 bmgt407.umd.edu gunicorn[2981641]: [2026-05-06 16:31:03 -0400] [2981641] [INFO] Booting worker with pid: 2981641
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981620]: [2026-05-06 16:37:52 -0400] [2981620] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981620]: [2026-05-06 16:37:52 -0400] [2981620] [INFO] Worker exiting (pid: 2981620)
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2985279]: [2026-05-06 16:37:52 -0400] [2985279] [INFO] Booting worker with pid: 2985279
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981628]: [2026-05-06 16:37:52 -0400] [2981628] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981628]: [2026-05-06 16:37:52 -0400] [2981628] [INFO] Worker exiting (pid: 2981628)
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2985280]: [2026-05-06 16:37:52 -0400] [2985280] [INFO] Booting worker with pid: 2985280
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981641]: [2026-05-06 16:37:52 -0400] [2981641] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2981641]: [2026-05-06 16:37:52 -0400] [2981641] [INFO] Worker exiting (pid: 2981641)
+May 06 16:37:52 bmgt407.umd.edu gunicorn[2985282]: [2026-05-06 16:37:52 -0400] [2985282] [INFO] Booting worker with pid: 2985282
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:38:01 EDT; 10s ago
+   Main PID: 2985502 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 443ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2985502 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2985505 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2985506 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2985508 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:38:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985502]: [2026-05-06 16:38:01 -0400] [2985502] [INFO] Starting gunicorn 23.0.0
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985502]: [2026-05-06 16:38:01 -0400] [2985502] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2985502)
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985502]: [2026-05-06 16:38:01 -0400] [2985502] [INFO] Using worker: sync
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985505]: [2026-05-06 16:38:01 -0400] [2985505] [INFO] Booting worker with pid: 2985505
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985506]: [2026-05-06 16:38:01 -0400] [2985506] [INFO] Booting worker with pid: 2985506
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985508]: [2026-05-06 16:38:01 -0400] [2985508] [INFO] Booting worker with pid: 2985508
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:38:01 EDT; 1min 59s ago
+   Main PID: 2985502 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.2M
+        CPU: 1.553s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2985502 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986599 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986600 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2986602 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:38:01 bmgt407.umd.edu gunicorn[2985508]: [2026-05-06 16:38:01 -0400] [2985508] [INFO] Booting worker with pid: 2985508
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985505]: [2026-05-06 16:39:59 -0400] [2985505] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985505]: [2026-05-06 16:39:59 -0400] [2985505] [INFO] Worker exiting (pid: 2985505)
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2986599]: [2026-05-06 16:39:59 -0400] [2986599] [INFO] Booting worker with pid: 2986599
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985506]: [2026-05-06 16:39:59 -0400] [2985506] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985506]: [2026-05-06 16:39:59 -0400] [2985506] [INFO] Worker exiting (pid: 2985506)
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2986600]: [2026-05-06 16:39:59 -0400] [2986600] [INFO] Booting worker with pid: 2986600
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985508]: [2026-05-06 16:39:59 -0400] [2985508] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2985508]: [2026-05-06 16:39:59 -0400] [2985508] [INFO] Worker exiting (pid: 2985508)
+May 06 16:39:59 bmgt407.umd.edu gunicorn[2986602]: [2026-05-06 16:39:59 -0400] [2986602] [INFO] Booting worker with pid: 2986602
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:40:01 EDT; 10s ago
+   Main PID: 2986808 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.6M
+        CPU: 451ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2986808 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986837 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986841 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2986842 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 1.613s CPU time.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Starting gunicorn 23.0.0
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2986808)
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Using worker: sync
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986837]: [2026-05-06 16:40:01 -0400] [2986837] [INFO] Booting worker with pid: 2986837
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986841]: [2026-05-06 16:40:01 -0400] [2986841] [INFO] Booting worker with pid: 2986841
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986842]: [2026-05-06 16:40:01 -0400] [2986842] [INFO] Booting worker with pid: 2986842
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:40:01 EDT; 1min 0s ago
+   Main PID: 2986808 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 73.1M
+        CPU: 800ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2986808 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986837 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2986841 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2986842 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Deactivated successfully.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: Stopped Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: bmgts101t03_app.service: Consumed 1.613s CPU time.
+May 06 16:40:01 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Starting gunicorn 23.0.0
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2986808)
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986808]: [2026-05-06 16:40:01 -0400] [2986808] [INFO] Using worker: sync
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986837]: [2026-05-06 16:40:01 -0400] [2986837] [INFO] Booting worker with pid: 2986837
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986841]: [2026-05-06 16:40:01 -0400] [2986841] [INFO] Booting worker with pid: 2986841
+May 06 16:40:01 bmgt407.umd.edu gunicorn[2986842]: [2026-05-06 16:40:01 -0400] [2986842] [INFO] Booting worker with pid: 2986842
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:41:03 EDT; 10s ago
+   Main PID: 2987466 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 71.7M
+        CPU: 673ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2987466 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2987469 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2987470 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2987471 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:41:03 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987466]: [2026-05-06 16:41:03 -0400] [2987466] [INFO] Starting gunicorn 23.0.0
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987466]: [2026-05-06 16:41:03 -0400] [2987466] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2987466)
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987466]: [2026-05-06 16:41:03 -0400] [2987466] [INFO] Using worker: sync
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987469]: [2026-05-06 16:41:03 -0400] [2987469] [INFO] Booting worker with pid: 2987469
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987470]: [2026-05-06 16:41:03 -0400] [2987470] [INFO] Booting worker with pid: 2987470
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987471]: [2026-05-06 16:41:03 -0400] [2987471] [INFO] Booting worker with pid: 2987471
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:41:03 EDT; 4min 59s ago
+   Main PID: 2987466 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.4M
+        CPU: 3.143s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2987466 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2990499 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2990500 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2990502 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:41:03 bmgt407.umd.edu gunicorn[2987471]: [2026-05-06 16:41:03 -0400] [2987471] [INFO] Booting worker with pid: 2987471
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987469]: [2026-05-06 16:45:49 -0400] [2987469] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987469]: [2026-05-06 16:45:49 -0400] [2987469] [INFO] Worker exiting (pid: 2987469)
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987470]: [2026-05-06 16:45:49 -0400] [2987470] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987470]: [2026-05-06 16:45:49 -0400] [2987470] [INFO] Worker exiting (pid: 2987470)
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2990499]: [2026-05-06 16:45:49 -0400] [2990499] [INFO] Booting worker with pid: 2990499
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2990500]: [2026-05-06 16:45:49 -0400] [2990500] [INFO] Booting worker with pid: 2990500
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987471]: [2026-05-06 16:45:49 -0400] [2987471] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2987471]: [2026-05-06 16:45:49 -0400] [2987471] [INFO] Worker exiting (pid: 2987471)
+May 06 16:45:49 bmgt407.umd.edu gunicorn[2990502]: [2026-05-06 16:45:49 -0400] [2990502] [INFO] Booting worker with pid: 2990502
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:46:32 EDT; 10s ago
+   Main PID: 2991010 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 443ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2991010 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2991013 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2991014 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2991015 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:46:32 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991010]: [2026-05-06 16:46:32 -0400] [2991010] [INFO] Starting gunicorn 23.0.0
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991010]: [2026-05-06 16:46:32 -0400] [2991010] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2991010)
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991010]: [2026-05-06 16:46:32 -0400] [2991010] [INFO] Using worker: sync
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991013]: [2026-05-06 16:46:32 -0400] [2991013] [INFO] Booting worker with pid: 2991013
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991014]: [2026-05-06 16:46:32 -0400] [2991014] [INFO] Booting worker with pid: 2991014
+May 06 16:46:32 bmgt407.umd.edu gunicorn[2991015]: [2026-05-06 16:46:32 -0400] [2991015] [INFO] Booting worker with pid: 2991015
+============================================================================================
+============================================================================================
+============================================================================================
+============================================================================================
+=============                  CURRENT STATUS                   ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:46:32 EDT; 7min ago
+   Main PID: 2991010 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 61.1M
+        CPU: 4.100s
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2991010 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2994762 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2994763 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2994765 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:53:07 bmgt407.umd.edu gunicorn[2994720]: [2026-05-06 16:53:07 -0400] [2994720] [INFO] Booting worker with pid: 2994720
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994717]: [2026-05-06 16:53:20 -0400] [2994717] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994717]: [2026-05-06 16:53:20 -0400] [2994717] [INFO] Worker exiting (pid: 2994717)
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994762]: [2026-05-06 16:53:20 -0400] [2994762] [INFO] Booting worker with pid: 2994762
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994719]: [2026-05-06 16:53:20 -0400] [2994719] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994719]: [2026-05-06 16:53:20 -0400] [2994719] [INFO] Worker exiting (pid: 2994719)
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994720]: [2026-05-06 16:53:20 -0400] [2994720] [INFO] Worker reloading: /home/bmgts101t03/flaskapp/app.py modified
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994720]: [2026-05-06 16:53:20 -0400] [2994720] [INFO] Worker exiting (pid: 2994720)
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994763]: [2026-05-06 16:53:20 -0400] [2994763] [INFO] Booting worker with pid: 2994763
+May 06 16:53:20 bmgt407.umd.edu gunicorn[2994765]: [2026-05-06 16:53:20 -0400] [2994765] [INFO] Booting worker with pid: 2994765
+============================================================================================
+=============                     NEW STATUS                    ============================
+============================================================================================
+● bmgts101t03_app.service - Gunicorn instance to serve bmgts101t03 Flask application
+     Loaded: loaded (/etc/systemd/system/bmgts101t03_app.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2026-05-06 16:54:03 EDT; 10s ago
+   Main PID: 2995249 (gunicorn)
+      Tasks: 7 (limit: 14209)
+     Memory: 58.5M
+        CPU: 458ms
+     CGroup: /system.slice/bmgts101t03_app.service
+             ├─2995249 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2995251 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             ├─2995265 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+             └─2995274 /home/bmgts301t01/flaskapp/venv/bin/python3 /home/bmgts101t03/flaskapp/venv/bin/gunicorn --workers 3 --reload --bind unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock -m 007 wsgi:app
+
+May 06 16:54:03 bmgt407.umd.edu systemd[1]: Started Gunicorn instance to serve bmgts101t03 Flask application.
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995249]: [2026-05-06 16:54:03 -0400] [2995249] [INFO] Starting gunicorn 23.0.0
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995249]: [2026-05-06 16:54:03 -0400] [2995249] [INFO] Listening at: unix:/home/bmgts101t03/flaskapp/bmgts101t03_app.sock (2995249)
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995249]: [2026-05-06 16:54:03 -0400] [2995249] [INFO] Using worker: sync
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995251]: [2026-05-06 16:54:03 -0400] [2995251] [INFO] Booting worker with pid: 2995251
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995265]: [2026-05-06 16:54:03 -0400] [2995265] [INFO] Booting worker with pid: 2995265
+May 06 16:54:03 bmgt407.umd.edu gunicorn[2995274]: [2026-05-06 16:54:03 -0400] [2995274] [INFO] Booting worker with pid: 2995274
+============================================================================================
+============================================================================================
+============================================================================================

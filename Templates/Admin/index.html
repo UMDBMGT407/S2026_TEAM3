@@ -79,6 +79,16 @@
           </div>
           {% endif %}
 
+          {% if login_db_error %}
+          <div
+            class="alert alert-warning w-75 mb-3"
+            role="alert"
+          >
+            Sign-in could not reach the database. Confirm <code>.env</code> has the correct
+            <code>MYSQL_*</code> settings on the server, then try again.
+          </div>
+          {% endif %}
+
           {% if login_error %}
           <div
             class="alert alert-danger w-75 mb-3"

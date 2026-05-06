@@ -48,19 +48,22 @@
 
             {% if edit_workout %}
             <form class="esga-form" method="post" action="/actions/group-admin/schedule/{{ edit_workout.group_workout_id }}/edit">
+              {% if request.args.get('err') %}
+              <div class="alert alert-danger mb-3" role="alert">All fields are required.</div>
+              {% endif %}
               <div class="row g-4">
                 <div class="col-12 col-lg-6">
                   <label class="esga-label" for="esga-session-name">Session Name</label>
-                  <input id="esga-session-name" name="title" class="esga-input" type="text" value="{{ edit_workout.group_workout_title }}" />
+                  <input id="esga-session-name" name="title" class="esga-input" type="text" value="{{ edit_workout.group_workout_title }}" required />
                 </div>
                 <div class="col-12 col-lg-6">
                   <label class="esga-label" for="esga-location">Location</label>
-                  <input id="esga-location" name="location" class="esga-input" type="text" value="{{ edit_workout.group_workout_location or '' }}" />
+                  <input id="esga-location" name="location" class="esga-input" type="text" value="{{ edit_workout.group_workout_location or '' }}" required />
                 </div>
                 <div class="col-12">
                   <label class="esga-label" for="esga-group">Group</label>
                   <div class="esga-select-wrap">
-                    <select id="esga-group" name="group_id" class="esga-select" aria-label="Group">
+                    <select id="esga-group" name="group_id" class="esga-select" aria-label="Group" required>
                       {% for g in groups %}
                       <option value="{{ g.group_id }}" {% if g.group_id == edit_workout.group_id %}selected{% endif %}>{{ g.group_name }}</option>
                       {% endfor %}
@@ -70,11 +73,11 @@
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="esga-label" for="esga-date">Date</label>
-                  <input id="esga-date" name="scheduled_date" class="esga-input" type="date" value="{{ edit_workout.group_workout_scheduled_date or '' }}" />
+                  <input id="esga-date" name="scheduled_date" class="esga-input" type="date" value="{{ edit_workout.group_workout_scheduled_date or '' }}" required />
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4">
                   <label class="esga-label" for="esga-time">Time</label>
-                  <input id="esga-time" name="scheduled_time" class="esga-input" type="time" value="{{ edit_workout_time }}" />
+                  <input id="esga-time" name="scheduled_time" class="esga-input" type="time" value="{{ edit_workout_time }}" required />
                 </div>
               </div>
 
